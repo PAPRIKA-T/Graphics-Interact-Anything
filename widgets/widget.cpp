@@ -70,17 +70,17 @@ Widget::Widget(QWidget *parent)
         view_list_container.setActivatdView(image_widget_2d->getGraphicsView());
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
+        //设置图像窗口工具控件
+        view_tool_bar = new ViewToolBar(this);
+        view_tool_bar->setObjectName("view_tool_bar");
+        view_tool_bar->setViewListContainer(&view_list_container);
+
         //设置图形栏底层控件
         graphicsitem_widget = new GraphicsItemWidget(this);
         graphicsitem_widget->setObjectName("graphicsitem_widget");
         graphicsitem_widget->setViewListContainer(&view_list_container);
         graphicsitem_widget->connectSceneSignal(view_list_container.getActivedView()->getGraphicsScene());
         draw_button_list = graphicsitem_widget->getDrawButtonList();
-
-        //设置图像窗口工具控件
-        view_tool_bar = new ViewToolBar(this);
-        view_tool_bar->setObjectName("view_tool_bar");
-        view_tool_bar->setViewListContainer(&view_list_container);
 
         center_scene_widget_hori_layout->addWidget(graphicsitem_widget);
         center_scene_widget_hori_layout->addWidget(image_widget_2d);
@@ -316,6 +316,11 @@ FileView* Widget::getFileView()
 SamWidget* Widget::getSamWidget()
 {
     return sam_widget;
+}
+
+ViewToolBar* Widget::getViewToolBar()
+{
+    return view_tool_bar;
 }
 
 //设置各个控件部分的大小
