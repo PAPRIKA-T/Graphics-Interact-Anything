@@ -153,12 +153,12 @@ void SamWidget::initSamModel()
     std::string pre_model_path{};
     std::string model_path{};
     if (selected_model == 0) {
-        pre_model_path = "ai_models/mobile_sam_preprocess.onnx";
-        model_path = "ai_models/mobile_sam.onnx";
+        pre_model_path = "ai_models/sam/mobile_sam_preprocess.onnx";
+        model_path = "ai_models/sam/mobile_sam.onnx";
     }
     else if (selected_model == 1) {
-        pre_model_path = "ai_models/sam_preprocess.onnx";
-        model_path = "ai_models/sam_vit_h_4b8939.onnx";
+        pre_model_path = "ai_models/sam/sam_preprocess.onnx";
+        model_path = "ai_models/sam/sam_vit_h_4b8939.onnx";
     }
 
     Sam::Parameter param(pre_model_path, model_path, std::thread::hardware_concurrency());
