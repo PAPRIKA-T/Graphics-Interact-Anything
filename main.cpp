@@ -6,6 +6,7 @@
 
 int GraphicsItem::count = 0;
 
+//wufei
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
