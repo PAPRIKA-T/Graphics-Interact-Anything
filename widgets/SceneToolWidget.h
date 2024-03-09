@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <QWidget>
+#include "UndoCommandModel.h"
 
 class FileView;
 class ViewListContainer;
@@ -18,6 +19,10 @@ public:
     virtual void paintEvent(QPaintEvent* event) override;
     void setViewListContainer(ViewListContainer*);
     void setFileView(FileView*);
+
+    UndoStack* getUndoStack();//get撤回堆栈
+    void initUndoAction();//撤回与重做Action初始化
+
 private slots:
     void onMaskToGraphicsItemBtn();
     void onCameraBtn(); //截图
@@ -45,4 +50,13 @@ private:
     GenericToolButton* clear_scene_btn = nullptr;
     GenericToolButton* turn_left_btn = nullptr;
     GenericToolButton* turn_right_btn = nullptr;
+
+    GenericToolButton* undo_btn = nullptr;
+    GenericToolButton* redo_btn = nullptr;
+
+    //撤回与重做功能模块
+    UndoStack* m_undoStack;//撤回与重做堆栈
+    QAction* m_undoAction;//撤回Action
+    QAction* m_redoAction;//重做Action
+
 };

@@ -12,6 +12,11 @@
 SceneToolWidget::SceneToolWidget(QWidget* parent)
     :QWidget(parent)
 {
+
+    initUndoAction();//撤回与重做Action初始化
+    GraphicsScene::setUndoStack(getUndoStack());
+    GraphicsView::setUndoStack(getUndoStack());
+
     setFixedHeight(32);
     main_layout = new QHBoxLayout(this);
     zoom_btn = new GenericToolButton(this);
@@ -40,17 +45,24 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     mask_to_graphicsitem = new GenericToolButton(this);
     mask_to_graphicsitem->setIcon(QIcon(":/res/background-image/mask_to_item.png"));
 
+    undo_btn = new GenericToolButton(this);
+    undo_btn->setIcon(QIcon(":/res/background-image/undo.png"));
+    redo_btn = new GenericToolButton(this);
+    redo_btn->setIcon(QIcon(":/res/background-image/redo.png"));
+
     mask_to_graphicsitem->setCustomTooltip("Mask To Item");
-    zoom_btn->setCustomTooltip("Zoom In");
-    camera_btn->setCustomTooltip("Camera");
+    zoom_btn->setCustomTooltip("放大所选视图");
+    camera_btn->setCustomTooltip("保存图像");
     color_reverse_btn->setCustomTooltip("Color Reverse");
-    fix_screen_btn->setCustomTooltip("Fit Screen");
-    center_on_btn->setCustomTooltip("Center On");
-    rotateR_btn->setCustomTooltip("Rotate Right");
-    rotateL_btn->setCustomTooltip("Rotate Left");
-    clear_scene_btn->setCustomTooltip("Clear");
-    turn_left_btn->setCustomTooltip("Previous");
-    turn_right_btn->setCustomTooltip("Next");
+    fix_screen_btn->setCustomTooltip("适应屏幕");
+    center_on_btn->setCustomTooltip("居中图像");
+    rotateR_btn->setCustomTooltip("逆时针旋转图像");
+    rotateL_btn->setCustomTooltip("顺时针旋转图像");
+    clear_scene_btn->setCustomTooltip("清空所有标注");
+    turn_left_btn->setCustomTooltip("上一张图片");
+    turn_right_btn->setCustomTooltip("下一张图片");
+    undo_btn->setCustomTooltip("撤回(ctrl+Z)");
+    redo_btn->setCustomTooltip("重做(ctrl+Y)");
 
     connect(mask_to_graphicsitem, &QPushButton::clicked, this, &SceneToolWidget::onMaskToGraphicsItemBtn);
     connect(camera_btn, &QPushButton::clicked, this, &SceneToolWidget::onCameraBtn);
@@ -64,7 +76,25 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     connect(turn_left_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnLeftBtn);
     connect(turn_right_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnRightBtn);
 
+
+    connect(undo_btn, &QPushButton::clicked, m_undoAction, &QAction::trigger); // 将按钮点击信号连接到撤销动作
+    connect(redo_btn, &QPushButton::clicked, m_redoAction, &QAction::trigger); // 将按钮点击信号连接到重做动作
+
     main_layout->addStretch();
+    main_layout->addWidget(undo_btn);
+    main_layout->addWidget(redo_btn);
+
+    QFrame* line_undo = new QFrame(this);
+    line_undo->setFrameShape(QFrame::VLine);
+    line_undo->setFrameShadow(QFrame::Plain);
+    line_undo->setLineWidth(1);
+    line_undo->setContentsMargins(2, 5, 2, 5);
+    QPalette palette = line_undo->palette();
+    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
+    line_undo->setPalette(palette);
+
+    main_layout->addWidget(line_undo);
+
     main_layout->addWidget(clear_scene_btn);
     main_layout->addWidget(turn_left_btn);
     main_layout->addWidget(turn_right_btn);
@@ -74,7 +104,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     line_thr->setFrameShadow(QFrame::Plain);
     line_thr->setLineWidth(1);
     line_thr->setContentsMargins(2, 5, 2, 5);
-    QPalette palette = line_thr->palette();
+    palette = line_thr->palette();
     palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
     line_thr->setPalette(palette);
 
@@ -108,6 +138,25 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
 SceneToolWidget::~SceneToolWidget()
 {
     delete main_layout;
+}
+
+void SceneToolWidget::initUndoAction()
+{
+    m_undoStack = new UndoStack(this);//存放操作的栈
+
+    m_undoAction = m_undoStack->createUndoAction(this, "Undo");
+    m_undoAction->setShortcut(QKeySequence::Undo);
+
+    m_redoAction = m_undoStack->createRedoAction(this, "Redo");
+    m_redoAction->setShortcut(QKeySequence::Redo);
+
+    this->addAction(m_undoAction);
+    this->addAction(m_redoAction);
+}
+
+UndoStack* SceneToolWidget::getUndoStack()
+{
+    return m_undoStack;
 }
 
 void SceneToolWidget::onMaskToGraphicsItemBtn()
@@ -204,4 +253,6 @@ void SceneToolWidget::onTurnRightBtn()
 {
     file_view->nextIndex();
 }
+
+
 

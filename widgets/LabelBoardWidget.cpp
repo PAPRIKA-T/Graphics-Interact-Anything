@@ -1,5 +1,5 @@
 ﻿#include "LabelBoardWidget.h"
-#include "Model/ViewListContainer.h"
+#include "model/ViewListContainer.h"
 #include "ColorButton.h"
 #include <QHBoxLayout>
 /*************************LabelBoard************************/

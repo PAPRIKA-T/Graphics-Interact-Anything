@@ -1,6 +1,6 @@
 ﻿#include "GiantInteractionModeWidget.h"
-#include "Graphs/Graphicsview.h"
-#include "Model/ViewListContainer.h"
+#include "graphs/Graphicsview.h"
+#include "model/ViewListContainer.h"
 #include "GenericToolButton.h"
 #include <QButtonGroup>
 #include <QHBoxLayout>

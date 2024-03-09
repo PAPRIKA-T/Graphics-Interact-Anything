@@ -11,10 +11,13 @@
 #include "Widgets/ImageSceneWidget2D.h"
 #include "GraphicsPolygon.h"
 #include <QTimer>
+#include <qdebug.h>
+#include <qfile.h>
+#include <memory>
 
 #define EPS (1e-5) //除数最小量
 
-GraphicsView::GraphicsView(QWidget *parent) :
+GraphicsView::GraphicsView(QWidget* parent) :
     QGraphicsView(parent)
 {
     setMinimumSize(250, 250);
@@ -124,34 +127,88 @@ void GraphicsView::grabItemForCalculate(const QPoint& p)
 void GraphicsView::keyDelete()
 {
     QList<QGraphicsItem*> scene_list = scene()->selectedItems();
-    if (scene_list.size() == 1)
-    {
+    if (scene_list.size() == 1) {
         GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(scene_list.at(0));
-        new_item->onActionRemoveSelf();
+
+        if (m2_undoStack != nullptr)
+        {
+            rubberCommand* command = new rubberCommand(scene(), scene_list);
+            m2_undoStack->push(command);
+
+            m_scene->removeItem(new_item);
+
+            qDebug() << "ok";
+        }
+        else
+        {
+            qDebug() << "m2_undoStack is nullptr, cannot push command";
+        }
+
         return;
-    }
-    foreach(QGraphicsItem *item, scene_list)
+    }//单点删除
+
+    foreach(QGraphicsItem * item, scene_list)
     {
         if (!items().contains(item)) continue;
-        if(m_scene->isPaintItem(item))
+        if (m_scene->isPaintItem(item))
         {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
             if (new_item->data(1) == "CalculateLine")
             {
+                if (m2_undoStack != nullptr)
+                {
+                    rubberCommand* command = new rubberCommand(scene(), scene_list);
+                    m2_undoStack->push(command);
+
+                    //m2_undoStack->setMaximumUndoSteps(100);
+
+                    //m_scene->removeItem(new_item);
+                    //delete command;
+
+                    qDebug() << "ok";
+                }
+                else
+                {
+                    qDebug() << "m2_undoStack is nullptr, cannot push command";
+                }
+
                 new_item->onActionRemoveSelf();
+
             }
         }
     }
-    foreach(QGraphicsItem *item, scene()->selectedItems())
+    foreach(QGraphicsItem * item, scene()->selectedItems())
     {
-        if(!m_scene->items().contains(item)) continue;
-        if(m_scene->isPaintItemWithChild(item))
+        if (!m_scene->items().contains(item)) continue;
+        if (m_scene->isPaintItemWithChild(item))
         {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+
+            if (m2_undoStack != nullptr)
+            {
+                rubberCommand* command = new rubberCommand(scene(), scene_list);
+                m2_undoStack->push(command);
+
+                //delete command;
+                //m_scene->removeItem(new_item);
+
+
+                qDebug() << "ok";
+            }
+            else
+            {
+                qDebug() << "m2_undoStack is nullptr, cannot push command";
+            }
+
             new_item->onActionRemoveSelf();
+
         }
-    }
+    }//框选批量删除
 }
+
+
+
+
 
 void GraphicsView::startPaintMode(QMouseEvent* event)
 {
@@ -166,7 +223,7 @@ void GraphicsView::startPaintMode(QMouseEvent* event)
     }
 }
 
-void GraphicsView::mousePressEvent(QMouseEvent *event)
+void GraphicsView::mousePressEvent(QMouseEvent* event)
 {
     m_press_pos = event->pos();
     mouse_interaction = MOUSE_INTERACTION::PRESSED_NO_MOVE;
@@ -184,12 +241,12 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
         setDragMode(QGraphicsView::NoDrag);
         m_scene->pixmapItemMoveStart();
     }
-    if (generic_interaction_model.getInteractionStatus() == 
+    if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SELECT) {
         if (event->button() == Qt::LeftButton) {
             setDragMode(QGraphicsView::RubberBandDrag);
         }
-        else if (event->button() == Qt::RightButton){
+        else if (event->button() == Qt::RightButton) {
         }
         QGraphicsView::mousePressEvent(event);
     }
@@ -197,24 +254,24 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_EDIT_POLYGON) {
         QGraphicsView::mousePressEvent(event);
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_OBSERVE) {
         if (event->button() == Qt::LeftButton) {
             m_scene->pixmapItemMoveStart();
         }
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_RUBBER) {
         if (event->button() == Qt::LeftButton) {
             setDragMode(QGraphicsView::RubberBandDrag);
             QGraphicsView::mousePressEvent(event);
         }
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         startPaintMode(event);
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
         if (event->button() == Qt::LeftButton) {
             m_scene->clearSelection();
@@ -223,7 +280,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void GraphicsView::mouseMoveEvent(QMouseEvent *event)
+void GraphicsView::mouseMoveEvent(QMouseEvent* event)
 {
     QGraphicsView::mouseMoveEvent(event);
     if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
@@ -247,18 +304,18 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         mouse_interaction = MOUSE_INTERACTION::PRESSED_AND_MOVE;
     }
     else if (mouse_press_status == MOUSE_PRESS_STATUS::NO_BUTTON_PRESSED) {
-		mouse_interaction = MOUSE_INTERACTION::HOVERING;
+        mouse_interaction = MOUSE_INTERACTION::HOVERING;
     }
     m_present_pos = event->pos();
-    
-    if (generic_interaction_model.getInteractionStatus() == 
+
+    if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_OBSERVE) {
         if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
             QPointF delta = mapToScene(m_present_pos) - mapToScene(m_press_pos);
             m_scene->pixmapItemMoveBy(delta);
         }
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         if (m_scene->getIsCreatePolygon()) {
             if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
@@ -270,10 +327,10 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
     updateLtText();
 }
 
-void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
+void GraphicsView::mouseReleaseEvent(QMouseEvent* event)
 {
     mouse_press_status = MOUSE_PRESS_STATUS::NO_BUTTON_PRESSED;
-    if (generic_interaction_model.getInteractionStatus() == 
+    if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SELECT) {
         if (event->button() == Qt::LeftButton) {
             m_scene->updateItemIndexView();
@@ -285,28 +342,41 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
             }
         }
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         if (event->button() == Qt::LeftButton) {
             m_scene->afterSetPaintItemPoint(mapToScene(event->pos()));
         }
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
-        GenericInteractionModel::InteractionStatus::INTERACTION_RUBBER) {
+
+
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_RUBBER)
+    {
+
         keyDelete();
-        if (m_scene->getIsCreatePolygon()) {
+
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
+
+
+        if (m_scene->getIsCreatePolygon())
+        {
             if (m_scene->painting_pol_item->getPointItemList().size() == 0)
                 emit m_scene->paintContinue();
         }
     }
-    else if (generic_interaction_model.getInteractionStatus() == 
+
+
+    else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_OBSERVE) {
 
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
 
-void GraphicsView::wheelEvent(QWheelEvent *event)
+void GraphicsView::wheelEvent(QWheelEvent* event)
 {
     int WheelDeltaValue = event->angleDelta().y();
     if (event->modifiers() == Qt::ControlModifier) {
@@ -322,16 +392,24 @@ void GraphicsView::wheelEvent(QWheelEvent *event)
     }
 }
 
-void GraphicsView::contextMenuEvent(QContextMenuEvent *event)
+void GraphicsView::contextMenuEvent(QContextMenuEvent* event)
 {
-    if(is_context_menu)
+    if (is_context_menu)
     {
         QMenu menu;
-        QAction *showAllTextAction = menu.addAction(QStringLiteral("Show All Item Text"),this,&GraphicsView::showAllText);
-        QAction *hideAllTextAction = menu.addAction(QStringLiteral("Hide All Item Text"),this,&GraphicsView::hideAllText);
+
+        QFile file(":/res/qss/Default.qss");
+        if (file.open(QFile::ReadOnly)) {
+            QString stylesheet = QLatin1String(file.readAll());
+            menu.setStyleSheet(stylesheet);
+            file.close();
+        }
+
+        QAction* showAllTextAction = menu.addAction(QStringLiteral("Show All Item Text"), this, &GraphicsView::showAllText);
+        QAction* hideAllTextAction = menu.addAction(QStringLiteral("Hide All Item Text"), this, &GraphicsView::hideAllText);
         QAction* showAllItemMessage = menu.addAction(QStringLiteral("Show All Item Message"), this, &GraphicsView::showAllItemMessage);
         QAction* hideAllItemMessage = menu.addAction(QStringLiteral("Hide All Item Message"), this, &GraphicsView::hideAllItemMessage);
-        QAction *deCalLineAction = menu.addAction(QStringLiteral("Del All Measure Line"),this,&GraphicsView::deCalLine);
+        QAction* deCalLineAction = menu.addAction(QStringLiteral("Del All Measure Line"), this, &GraphicsView::deCalLine);
         Q_UNUSED(showAllTextAction);
         Q_UNUSED(hideAllTextAction);
         Q_UNUSED(deCalLineAction);
@@ -342,6 +420,9 @@ void GraphicsView::contextMenuEvent(QContextMenuEvent *event)
         menu.clear();
         is_context_menu = false;
         event->accept();
+
+
+
     }
     if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SELECT) {
@@ -350,33 +431,33 @@ void GraphicsView::contextMenuEvent(QContextMenuEvent *event)
     }
 }
 
-void GraphicsView::keyPressEvent(QKeyEvent *event)
+void GraphicsView::keyPressEvent(QKeyEvent* event)
 {
     if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_A)
     {
-        foreach (QGraphicsItem* item, m_scene->items())
+        foreach(QGraphicsItem * item, m_scene->items())
             item->setSelected(true);
         return;
     }
-    switch(event->key())
+    switch (event->key())
     {
     case Qt::Key_Delete:
         keyDelete();
         break;
     case Qt::Key_F:
-        foreach(QGraphicsItem *item, scene()->selectedItems())
+        foreach(QGraphicsItem * item, scene()->selectedItems())
         {
-            if(m_scene->isPaintItem(item)) {
+            if (m_scene->isPaintItem(item)) {
                 GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-                if(new_item->getGraphicsPaintModel().getIsCloseItem())
+                if (new_item->getGraphicsPaintModel().getIsCloseItem())
                     new_item->getGraphicsPaintModel().setIsFillItem(!new_item->getGraphicsPaintModel().getIsFillItem());
             }
         }
         break;
     case Qt::Key_T:
-        foreach(QGraphicsItem *item, scene()->selectedItems())
+        foreach(QGraphicsItem * item, scene()->selectedItems())
         {
-            if(m_scene->isPaintItem(item)) {
+            if (m_scene->isPaintItem(item)) {
                 GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
                 new_item->getGraphicsTextModel().setIsHideText(!new_item->getGraphicsTextModel().getIsHideText());
             }
@@ -428,23 +509,23 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
 
 void GraphicsView::hideAllText()
 {
-    foreach(QGraphicsItem *item, items())
+    foreach(QGraphicsItem * item, items())
     {
-        if(m_scene->isPaintItemWithChild(item))
+        if (m_scene->isPaintItemWithChild(item))
         {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-                if(new_item->parentItem()==nullptr)new_item->getGraphicsTextModel().setIsHideText(true);
+            if (new_item->parentItem() == nullptr)new_item->getGraphicsTextModel().setIsHideText(true);
         }
     }
 }
 
 void GraphicsView::showAllText()
 {
-    foreach(QGraphicsItem *item, items())
+    foreach(QGraphicsItem * item, items())
     {
-        if(m_scene->isPaintItem(item)) {
+        if (m_scene->isPaintItem(item)) {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-                if(new_item->parentItem()==nullptr)new_item->getGraphicsTextModel().setIsHideText(false);
+            if (new_item->parentItem() == nullptr)new_item->getGraphicsTextModel().setIsHideText(false);
         }
     }
 }
@@ -473,13 +554,13 @@ void GraphicsView::hideAllItemMessage()
 
 void GraphicsView::deCalLine()
 {
-    m_scene = dynamic_cast<GraphicsScene *>(scene());
-    foreach(QGraphicsItem *item, items())
+    m_scene = dynamic_cast<GraphicsScene*>(scene());
+    foreach(QGraphicsItem * item, items())
     {
-        if(m_scene->isPaintItem(item)) {
+        if (m_scene->isPaintItem(item)) {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-            if(new_item->data(1)=="CalculateLine")
-                    new_item->onActionRemoveSelf();
+            if (new_item->data(1) == "CalculateLine")
+                new_item->onActionRemoveSelf();
         }
     }
 }
@@ -495,11 +576,11 @@ void GraphicsView::saveViewImage()
     hideAllText();//隐藏文本
     m_transform_model.resetTransform(); //重置图像
     QPixmap pix;
-    if(pixmap_item !=nullptr){
-        pix = grab(QRect(static_cast<int>(pixmap_item->x()+1),
-                                 static_cast<int>(pixmap_item->y()+1),
-                                 static_cast<int>(pixmap_item->getFscaleW()-2),
-                                 static_cast<int>(pixmap_item->getFscaleH())-2));
+    if (pixmap_item != nullptr) {
+        pix = grab(QRect(static_cast<int>(pixmap_item->x() + 1),
+            static_cast<int>(pixmap_item->y() + 1),
+            static_cast<int>(pixmap_item->getFscaleW() - 2),
+            static_cast<int>(pixmap_item->getFscaleH()) - 2));
     }
     else pix = grab(viewport()->rect());
     // 抓取图像后,开启信息显示
@@ -515,19 +596,19 @@ void GraphicsView::saveViewImage()
         tr("*.bmp;; *.jpg;; *.png;; *.tif;; *.GIF")
     );
 
-    if (savepath.isEmpty()){
+    if (savepath.isEmpty()) {
         return;
     }
-    else{
+    else {
         if (!(pix.save(savepath)))
         {
-            QMessageBox *m_box = new QMessageBox(QMessageBox::Information, QString("Save"), QString("Save Failed！"));
+            QMessageBox* m_box = new QMessageBox(QMessageBox::Information, QString("Save"), QString("Save Failed！"));
             QTimer::singleShot(500, m_box, SLOT(accept()));    // 在500ms后退出
             m_box->exec();
         }
         else
         {
-            QMessageBox *m_box = new QMessageBox(QMessageBox::Information, QString("Save"), QString("Save Success！"));
+            QMessageBox* m_box = new QMessageBox(QMessageBox::Information, QString("Save"), QString("Save Success！"));
             QTimer::singleShot(500, m_box, SLOT(accept()));    // 在500ms后退出
             m_box->exec();
         }
@@ -545,10 +626,10 @@ void GraphicsView::setActived(bool ok)
     is_actived = ok;
 }
 
-void GraphicsView::paintEvent(QPaintEvent *event)
+void GraphicsView::paintEvent(QPaintEvent* event)
 {
     QGraphicsView::paintEvent(event);
-    if(is_enter_view && paint_cross)
+    if (is_enter_view && paint_cross)
     {
         //画一个交叉线，显示鼠标此时的位置
         QPainter painter(viewport());
@@ -570,7 +651,7 @@ void GraphicsView::enterEvent(QEnterEvent* event)
 {
     emit mouseEnter(dynamic_cast<ImageSceneWidget2D*>(parentWidget()));
     is_enter_view = true;
-	event->accept();
+    event->accept();
     viewport()->update();
 }
 
@@ -578,7 +659,7 @@ void GraphicsView::leaveEvent(QEvent* event)
 {
     emit mouseLeave(dynamic_cast<ImageSceneWidget2D*>(parentWidget()));
     is_enter_view = false;
-	event->accept();
+    event->accept();
     viewport()->update();
 }
 
@@ -591,3 +672,5 @@ void GraphicsView::resizeEvent(QResizeEvent* event)
         (m_scene->height() - m_scene->getPixmapItem()->getFscaleH()) / 2));
     m_transform_model.originPositonReturn();
 }
+
+UndoStack* GraphicsView::m2_undoStack = nullptr;

@@ -2,6 +2,8 @@
 #include <QGraphicsView>
 #include <QKeyEvent>
 #include "GraphicsItem.h"
+#include <qfile.h>
+#include <QQueue.h>
 
 #define EPS (1e-5) //除数最小量
 
@@ -21,13 +23,13 @@ void GraphicsItem::initGraphicItem()
     // called in the construction
     ++count;
     this->setFlags(QGraphicsItem::ItemIsSelectable |
-                   QGraphicsItem::ItemIsMovable |
-                   QGraphicsItem::ItemIsFocusable);
+        QGraphicsItem::ItemIsMovable |
+        QGraphicsItem::ItemIsFocusable);
     setAcceptHoverEvents(true);
-    m_center = ItemPointF(0,0,PointType::Center);
-    m_start = ItemPointF(0,0,PointType::Start);
-    m_edge = ItemPointF(0,0,PointType::Edge);
-    m_press_pos = QPointF(0,0);
+    m_center = ItemPointF(0, 0, PointType::Center);
+    m_start = ItemPointF(0, 0, PointType::Start);
+    m_edge = ItemPointF(0, 0, PointType::Edge);
+    m_press_pos = QPointF(0, 0);
     initColorSetting();
     connect(this, &GraphicsItem::updatePointMessage, this, &GraphicsItem::onUpdatePointMessage);
 }
@@ -68,6 +70,7 @@ void GraphicsItem::setRotateAngle(qreal r)
 GraphicsItem::~GraphicsItem()
 {
     count--;
+    qDebug() << count;
 }
 
 void GraphicsItem::setDeleteDirectly(bool ok)
@@ -124,7 +127,7 @@ ItemPointF& GraphicsItem::getRStart()
 
 void GraphicsItem::setStart(const QPointF& p)
 {
-    m_start = p; 
+    m_start = p;
     emit updatePointMessage();
 }
 
@@ -140,14 +143,14 @@ ItemPointF& GraphicsItem::getREdge()
 
 void GraphicsItem::setEdge(const QPointF& p)
 {
-    m_edge = p; 
+    m_edge = p;
     emit updatePointMessage();
 }
 
 void GraphicsItem::setSE(const QPointF& s, const QPointF& e)
 {
-    m_start = s; 
-    m_edge = e; 
+    m_start = s;
+    m_edge = e;
     emit updatePointMessage();
 }
 
@@ -165,9 +168,7 @@ const QPointF& GraphicsItem::getEdgeMeasurePos()
 
 const QPointF& GraphicsItem::getCenterMeasurePos()
 {
-    if (graphics_transform_model.getMeasureObject()) {
-        return m_center_map_to_measure_ob;
-    }
+    if (graphics_transform_model.getMeasureObject())return m_center_map_to_measure_ob;
     else return m_center;
 }
 
@@ -208,27 +209,27 @@ bool GraphicsItem::getIsAcceptOthersSetting()
     return is_accept_others_setting;
 }
 
-void GraphicsItem::receptItemPointF(ItemPointF &p, GraphicsItem *item)
+void GraphicsItem::receptItemPointF(ItemPointF& p, GraphicsItem* item)
 {
-    if(p.getPointType() == PointType::Start)
+    if (p.getPointType() == PointType::Start)
     {
-        if(item) m_start = mapFromItem(item, p);
+        if (item) m_start = mapFromItem(item, p);
         else m_start = p;
         emit updatePointMessage();
     }
-    else if(p.getPointType() == PointType::Edge)
+    else if (p.getPointType() == PointType::Edge)
     {
-        if(item) m_edge = mapFromItem(item, p);
+        if (item) m_edge = mapFromItem(item, p);
         else m_edge = p;
         emit updatePointMessage();
     }
-    else if(p.getPointType() == PointType::Center)
+    else if (p.getPointType() == PointType::Center)
     {
-        if(item) m_center = mapFromItem(item, p);
+        if (item) m_center = mapFromItem(item, p);
         else m_center = p;
         emit updatePointMessage();
     }
-    else if(p.getPointType() == PointType::Other)
+    else if (p.getPointType() == PointType::Other)
     {
     }
 }
@@ -269,15 +270,15 @@ QPainterPath GraphicsItem::getFillPath()
     return shape();
 }
 
-void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void GraphicsItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    if(graphics_paint_model.getIsCloseItem())
+    if (graphics_paint_model.getIsCloseItem())
     {
-        if(isSelected())
+        if (isSelected())
         {
-            if(graphics_paint_model.getIsFillItem())
+            if (graphics_paint_model.getIsFillItem())
             {
                 painter->setBrush(graphics_paint_model.getRFillColorUnselected());
                 painter->drawPath(getFillPath());
@@ -289,7 +290,7 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         }
         else
         {
-            if(graphics_paint_model.getIsFillItem())
+            if (graphics_paint_model.getIsFillItem())
             {
                 painter->setBrush(graphics_paint_model.getRFillColorUnselected());
                 painter->drawPath(getFillPath());
@@ -303,17 +304,17 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
             }
         }
     }
-    if(isSelected())
+    if (isSelected())
     {
-        if(graphics_paint_model.getIsPaintStrokeShape())
+        if (graphics_paint_model.getIsPaintStrokeShape())
         {
-            QPen pen(QColor(255,255,255), graphics_paint_model.getRPenIsSelected().width());
+            QPen pen(QColor(255, 255, 255), graphics_paint_model.getRPenIsSelected().width());
             pen.setStyle(Qt::DashLine);
             painter->setPen(pen);
             painter->drawPath(getStrokePath());
             painter->setPen(Qt::NoPen);
         }
-        if(graphics_paint_model.getIsPaintCenter())
+        if (graphics_paint_model.getIsPaintCenter())
         {
             painter->setPen(QPen(DEFAULT_COLOR_UNIQUE_POINT, graphics_paint_model.getRPenIsSelected().width()));
             painter->setBrush(DEFAULT_COLOR_UNIQUE_POINT);
@@ -324,18 +325,18 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     }
     else
     {
-        if(is_show_others_no_selected)
+        if (is_show_others_no_selected)
         {
-            if(graphics_paint_model.getIsPaintStrokeShape())
+            if (graphics_paint_model.getIsPaintStrokeShape())
             {
-                QPen pen(Qt::black,2);
+                QPen pen(Qt::black, 2);
                 pen.setStyle(Qt::DashLine);
                 painter->setPen(pen);
                 painter->drawPath(getStrokePath());
                 painter->setPen(Qt::NoPen);
             }
         }
-        if(graphics_paint_model.getIsPaintCenter())
+        if (graphics_paint_model.getIsPaintCenter())
         {
             painter->setPen(QPen(DEFAULT_COLOR_UNIQUE_POINT, graphics_paint_model.getRPenNoSelected().width()));
             painter->setBrush(DEFAULT_COLOR_UNIQUE_POINT);
@@ -344,9 +345,9 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         }
         setPen(graphics_paint_model.getRPenNoSelected());
     }
-    if(parentItem()!=nullptr)
+    if (parentItem() != nullptr)
     {
-        if(graphics_relation_model.getUnselectedWhileParentSelected() && parentItem()->isSelected()) {
+        if (graphics_relation_model.getUnselectedWhileParentSelected() && parentItem()->isSelected()) {
             setSelected(false);
             setPen(graphics_paint_model.getRPenIsSelected());
         }
@@ -356,24 +357,24 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 QRectF GraphicsItem::boundingRect() const
 {
     const qreal adjust_size = graphics_paint_model.getAdjustSize();
-    return QRectF(m_center.x()-abs(m_edge.x()-m_center.x())*2,
-                  m_center.y()-abs(m_edge.y()-m_center.y())*2,
-                  abs(m_edge.x()-m_center.x())*4,
-                  abs(m_edge.y()-m_center.y())*4).
-            adjusted(-adjust_size, -adjust_size, 
-                adjust_size, adjust_size);
+    return QRectF(m_center.x() - abs(m_edge.x() - m_center.x()) * 2,
+        m_center.y() - abs(m_edge.y() - m_center.y()) * 2,
+        abs(m_edge.x() - m_center.x()) * 4,
+        abs(m_edge.y() - m_center.y()) * 4).
+        adjusted(-adjust_size, -adjust_size,
+            adjust_size, adjust_size);
 }
 
-void GraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void GraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (scene()->selectedItems().size() > 0)
         scene()->clearSelection();
     QGraphicsItem::mousePressEvent(event);
-    if (event->button() == Qt::LeftButton){
+    if (event->button() == Qt::LeftButton) {
         m_press_pos = event->pos();
         if (mouse_selected_status == MouseSelectedStatus::SELECTED_ROTATE) return;
-        if(parentItem()){
-            if(!graphics_relation_model.getIsDependWithparent()){
+        if (parentItem()) {
+            if (!graphics_relation_model.getIsDependWithparent()) {
                 move_parent_item = true;
                 graphics_relation_model.findOriginParentItem(this)->setSelected(true);
             }
@@ -381,7 +382,7 @@ void GraphicsItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void GraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void GraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if (mouse_selected_status == MouseSelectedStatus::SELECTED_NODE) {
         QGraphicsItem::mouseMoveEvent(event);
@@ -391,7 +392,7 @@ void GraphicsItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void GraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void GraphicsItem::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
     if (mouse_selected_status == MouseSelectedStatus::SELECTED_ROTATE)
@@ -437,7 +438,7 @@ void GraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
     QGraphicsItem::hoverEnterEvent(event);
 }
 
-void GraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+void GraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
 {
     if (graphics_relation_model.getIsHideChildItemList()) {
         for (GraphicsItem* item : graphics_relation_model.getChildItemList()) {
@@ -448,12 +449,21 @@ void GraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
-void GraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+void GraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent* event)
 {
     if (is_generate_context_menu)
     {
         setSelected(true);
+
+        QFile file(":/res/qss/Default.qss");
+        if (file.open(QFile::ReadOnly)) {
+            QString stylesheet = QLatin1String(file.readAll());
+            menu.setStyleSheet(stylesheet);
+            file.close();
+        }
+
         QAction* textEditAction = menu.addAction(QStringLiteral("Edit Text"), &graphics_text_model, &GraphicsTextModel::onActionEditText);
+        //graphics_text_model.setIsHideText(!graphics_text_model.getIsHideText());
         QAction* text_status = menu.addAction(QStringLiteral("Text Status"), [=]() {
             graphics_text_model.setIsHideText(!graphics_text_model.getIsHideText());
             });
@@ -491,31 +501,31 @@ void GraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else menu.clear();
 }
 
-void GraphicsItem::keyPressEvent(QKeyEvent *event)
+void GraphicsItem::keyPressEvent(QKeyEvent* event)
 {
-    switch(event->key())
+    switch (event->key())
     {
     case Qt::Key_F:
-        if(graphics_paint_model.getIsCloseItem()) 
+        if (graphics_paint_model.getIsCloseItem())
             graphics_paint_model.setIsFillItem(!graphics_paint_model.getIsFillItem());
         break;
     case Qt::Key_R:
-        if(is_rotate_action) onActionRotate();
+        if (is_rotate_action) onActionRotate();
         break;
     case Qt::Key_T:
         graphics_text_model.setIsHideText(!graphics_text_model.getIsHideText());
         break;
     case Qt::Key_Down:
-        if(isSelected()&&parentItem()==nullptr)moveBy(0, 10);
+        if (isSelected() && parentItem() == nullptr)moveBy(0, 10);
         break;
     case Qt::Key_Up:
-        if(isSelected()&&parentItem()==nullptr)moveBy(0, -10);
+        if (isSelected() && parentItem() == nullptr)moveBy(0, -10);
         break;
     case Qt::Key_Right:
-        if(isSelected()&&parentItem()==nullptr)moveBy(10, 0);
+        if (isSelected() && parentItem() == nullptr)moveBy(10, 0);
         break;
     case Qt::Key_Left:
-        if(isSelected()&&parentItem()==nullptr)moveBy(-10, 0);
+        if (isSelected() && parentItem() == nullptr)moveBy(-10, 0);
         break;
     default:
         break;
@@ -526,7 +536,7 @@ void GraphicsItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
     is_double_clicked = true;
 
-    if (parentItem() && !graphics_relation_model.getIsDependWithparent()){
+    if (parentItem() && !graphics_relation_model.getIsDependWithparent()) {
         move_parent_item = true;
         graphics_relation_model.findOriginParentItem(this)->setSelected(true);
     }
@@ -540,11 +550,18 @@ void GraphicsItem::onActionRemoveSelf()
     {
         //qDebug() << "null" << data(1);
         emit prepareToRemove();
-        if (!delete_direct){
+        if (!delete_direct) {
             //qDebug() << "deletelater";
-            deleteLater();
+
+            scene()->removeItem(this);
+            //deleteLater();
+
         }
+
         else delete this;
+
+        //else scene()->removeItem(this);
+
         //qDebug() << "delete";
         //qDebug() << "------------------------------------";
         return;
@@ -552,14 +569,64 @@ void GraphicsItem::onActionRemoveSelf()
     else
     {
         //qDebug()<<"par"<<data(1);
-        QGraphicsItem *origin_parent = parentItem();
-        while(origin_parent->parentItem()!=nullptr) origin_parent = origin_parent->parentItem();
-        GraphicsItem *item = dynamic_cast<GraphicsItem*>(origin_parent);
+        QGraphicsItem* origin_parent = parentItem();
+        while (origin_parent->parentItem() != nullptr) origin_parent = origin_parent->parentItem();
+        GraphicsItem* item = dynamic_cast<GraphicsItem*>(origin_parent);
         //qDebug() << "called parent slotRemoveSelf method";
         //qDebug() << "------------------------------------";
-        if(item)item->onActionRemoveSelf();
+        if (item)item->onActionRemoveSelf();
     }
 }
+
+//void GraphicsItem::onActionRemoveSelf()
+//{
+//    // 如果当前项没有父项，它可能是多边形的“根”项
+//    if (parentItem() == nullptr)
+//    {
+//        // 首先移除所有子项
+//        QList<QGraphicsItem*> children = this->childItems();
+//        for (QGraphicsItem* child : children)
+//        {
+//            // 动态转换为GraphicsItem，以便我们可以调用特定的方法
+//            GraphicsItem* childItem = dynamic_cast<GraphicsItem*>(child);
+//            if (childItem)
+//            {
+//                // 如果可能，先递归地移除子项的子项
+//                childItem->onActionRemoveSelf();
+//            }
+//            else
+//            {
+//                // 如果子项不是GraphicsItem，直接从场景中移除
+//                scene()->removeItem(child);
+//            }
+//        }
+//
+//        // 现在所有子项都已被移除，可以安全地移除自己
+//        emit prepareToRemove();
+//        scene()->removeItem(this);
+//
+//        // 根据需要选择deleteLater()或delete
+//        /*if (!delete_direct)
+//        {
+//            deleteLater();
+//        }
+//        else
+//        {
+//            delete this;
+//        }*/
+//    }
+//    else
+//    {
+//        // 如果当前项有父项，找到最顶层的父项并调用其onActionRemoveSelf
+//        QGraphicsItem* origin_parent = parentItem();
+//        while (origin_parent->parentItem() != nullptr)
+//        {
+//            origin_parent = origin_parent->parentItem();
+//        }
+//        GraphicsItem* item = dynamic_cast<GraphicsItem*>(origin_parent);
+//        if (item) item->onActionRemoveSelf();
+//    }
+//}
 
 void GraphicsItem::onPointSelected()
 {
@@ -577,10 +644,10 @@ QPointF GraphicsItem::getCenterFromTwoPoint(QPointF& p, QPointF& q)
     return QPointF((p.x() + q.x()) / 2, (p.y() + q.y()) / 2);
 }
 
-QPointF GraphicsItem::getStartFromTwoPoint(QPointF &center, QPointF &edge)
+QPointF GraphicsItem::getStartFromTwoPoint(QPointF& center, QPointF& edge)
 {
-    return QPointF(center.x()-abs(edge.x()-center.x()),
-                   center.y()-abs(edge.y()-center.y()));
+    return QPointF(center.x() - abs(edge.x() - center.x()),
+        center.y() - abs(edge.y() - center.y()));
 }
 
 void GraphicsItem::rotate(const QPointF& mousePos)

@@ -9,19 +9,24 @@
 #include "Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 
+#include "UndoCommandModel.h"
+
+
 class LabelBoardWidget;
 class ItemIndexView;
 class GraphicsView;
 class InteractionPolygon;
 class ThumbnailPixmapItem;
 class GraphicsTextItem;
+class UndoStack;
 
-class GraphicsScene: public QGraphicsScene
+class GraphicsScene : public QGraphicsScene
 {
     Q_OBJECT
         friend class GraphicsView;
 public:
-    explicit GraphicsScene(QWidget *parent = nullptr); //构造函数
+
+    explicit GraphicsScene(QWidget* parent = nullptr); //构造函数
     ~GraphicsScene() override; //析构函数
     void setGraphicsView(GraphicsView* v);
     GraphicsView* getGraphicsView();
@@ -68,17 +73,17 @@ public:
     void finishCreatePolygon(); //完成绘制多边形
     void setContinuousPointDrawInterval(int intercal); //设置连续点绘制间隔
 
-    bool isPaintItem(QGraphicsItem *item); //判断是否是继承GraphicsItem
-    bool isPaintItemWithChild(QGraphicsItem *item); //判断是否是继承GraphicsItem包含子item
+    bool isPaintItem(QGraphicsItem* item); //判断是否是继承GraphicsItem
+    bool isPaintItemWithChild(QGraphicsItem* item); //判断是否是继承GraphicsItem包含子item
     bool isPaintItemOnScene(); //判断是否有绘制图元在scene上
 
     void clearSceneGraphicsItem();//删除所有图元
     void resetScene();//重置界面
     void clearPaintCache(); /******每次绘制完图元时，会自动补充
     下一个图元，有时我们需要清除这个图元的补充******/
- 
+
 signals:
-    void updatePoint(const QPointF &p,bool isCenter); //传递多边形点链表进item信号
+    void updatePoint(const QPointF& p, bool isCenter); //传递多边形点链表进item信号
     void paintContinue(); //继续绘画
     void createItemIndex(GraphicsItem* item); //在item索引控件中添加index元素
     void zoom3DLayout(bool); //true为放大，false为缩小
@@ -102,6 +107,14 @@ public slots:
     void PPlineSegmentClicked(int checked);
     void NPlineSegmentClicked(int checked);
 
+
+
+    //撤回与重做堆栈设置
+    static void setUndoStack(UndoStack* undoStack)
+    {
+        m1_undoStack = undoStack;
+    }
+
 private:
     void addItemInitAfterPaint(GraphicsItem* item);//scene添加item初始化设置(通过绘制方式)
     void initPaintGraphicsItem(); //初始化绘画操作
@@ -112,7 +125,7 @@ private:
     void startCreatePolygon(); //开始绘制多边形
     void cancelCreatePolygon(); //取消绘制多边形
     void createPromptItem(); //生成模型提示图元（一次只允许输入一个提示矩形框）
-    
+
     void startAiModelSegment(); //使用自动分割模块,添加完提示图元之后，更新mask
     /***********用于绘制graphicsItem, 参数点坐标需要映射到scene上,
   三条函数基本配合使用，目前用在鼠标事件中***********/
@@ -125,7 +138,7 @@ private:
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{};
 
-    GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
+    GraphicsItem* painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象
     QList<QPointF> polygon_list; //多边形点链表
     bool is_creating_polygon = false; //判断是否在绘制多边形
@@ -133,14 +146,18 @@ private:
     int Continuous_point_draw_interval = 20; //连续点绘制间隔
 
     QPointF image_pos_before_move{}; //图像移动前位置
-    GraphicsPixmapItem *pixmap_item= nullptr; //图像项
+    GraphicsPixmapItem* pixmap_item = nullptr; //图像项
     ThumbnailPixmapItem* thumbnail_item = nullptr; //图像缩略图
     GraphicsTextItem* text_left_bottom = nullptr; //左下文本
     GraphicsTextItem* text_left_up = nullptr; //左上文本
     GraphicsTextItem* text_right_bottom = nullptr; //右下文本
     GraphicsTextItem* text_right_up = nullptr; //右上文本
 
+    static UndoStack* m1_undoStack;
+
     bool is_paint_prompt_item = false; //是否在绘制模型提示图元
 };
+
+
 
 #endif // GRAPHICSSCENE_H

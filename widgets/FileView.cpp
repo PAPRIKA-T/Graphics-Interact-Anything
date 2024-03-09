@@ -1,6 +1,6 @@
 ﻿#include "FileView.h"
-#include "Model/ViewListContainer.h"
-#include "Model/ItkTool/ITKImageIoModel.h"
+#include "model/ViewListContainer.h"
+#include "model/ItkTool/ITKImageIoModel.h"
 #include "ForePlayWidget.h"
 #include "graphs/ThumbnailPixmapItem.h"
 #include "graphs/Graphicspixmapitem.h"

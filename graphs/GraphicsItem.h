@@ -7,10 +7,10 @@
 #include <QMenu>
 #include <opencv2/opencv.hpp>
 #include "utils/CoordinateCalculation.h"
-#include "Model/GraphicsPaintModel.h"
-#include "Model/GraphicsTextModel.h"
-#include "Model/GraphicsRelationModel.h"
-#include "Model/GraphicsTransformModel.h"
+#include "model/GraphicsPaintModel.h"
+#include "model/GraphicsTextModel.h"
+#include "model/GraphicsRelationModel.h"
+#include "model/GraphicsTransformModel.h"
 
 enum itemType
 {

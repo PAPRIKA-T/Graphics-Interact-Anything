@@ -70,5 +70,7 @@
         <file>res/background-image/setting_btn.png</file>
         <file>res/background-image/uncheckbox.png</file>
         <file>res/background-image/zoom_in.png</file>
+        <file>res/background-image/redo.png</file>
+        <file>res/background-image/undo.png</file>
     </qresource>
 </RCC>

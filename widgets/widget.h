@@ -2,7 +2,7 @@
 #define WIDGET_H
 
 #include <QWidget>
-#include "Model/ViewListContainer.h"
+#include "model/ViewListContainer.h"
 
 /*****************************************Widget***************************************/
 #define PADDING 5

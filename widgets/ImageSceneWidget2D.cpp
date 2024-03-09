@@ -1,6 +1,6 @@
 #include "ImageSceneWidget2D.h"
-#include "Graphs/Graphicsview.h"
-#include "Graphs/Graphicsscene.h"
+#include "graphs/Graphicsview.h"
+#include "graphs/Graphicsscene.h"
 
 ImageSceneWidget2D::ImageSceneWidget2D(QWidget *parent)
 	: QWidget(parent)

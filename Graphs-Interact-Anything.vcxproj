@@ -62,9 +62,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
     <Import Project="$(QtMsBuild)\Qt.props" />
-    <Import Project="props\Debug_x64_itk.props" />
-    <Import Project="props\Debug_x64_opencv.props" />
-    <Import Project="props\Debug_x64_vtk.props" />
+    <Import Project="..\Debug_x64_itk.props" />
+    <Import Project="..\Debug_x64_vtk.props" />
+    <Import Project="..\opencv\Debug_x64_opencv.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -79,7 +79,7 @@
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Qt\6.6.0\msvc2019_64\include;E:\Project\C++\QT\Graphs-Interact-Anything;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\86186\Desktop\intelligence\gitClone;C:\Qt\6.6.0\msvc2019_64\include;E:\Project\C++\QT\Graphs-Interact-Anything;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;$(QTDIR)\include\QtOpenGLWidgets;$(QTDIR)\include;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtCore;debug;/include;$(QTDIR)\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\86186\Desktop\intelligence\gitClone\graphs;GeneratedFiles\$(ConfigurationName);GeneratedFiles;$(QTDIR)\include\QtOpenGLWidgets;$(QTDIR)\include;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtXml;$(QTDIR)\include\QtCore;debug;/include;$(QTDIR)\mkspecs\win32-msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -permissive- -Zc:__cplusplus -Zc:externConstexpr -utf-8 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -219,6 +219,7 @@
   <ItemGroup>
     <ClCompile Include="graphs\GraphicsItemIoParameter.cpp" />
     <ClCompile Include="model\XmlIOstreamModel.cpp" />
+    <ClCompile Include="UndoCommandModel.cpp" />
     <ClCompile Include="utils\ColorOperation.cpp" />
     <ClCompile Include="utils\GiantTxtIOstream.cpp" />
     <ClCompile Include="graphs\GraphicsEllipse.cpp" />
@@ -304,7 +305,10 @@
     <QtMoc Include="graphs\GraphicsRound.h" />
     <QtMoc Include="graphs\GraphicsRect.h" />
     <ClInclude Include="graphs\GraphicsItemIoParameter.h" />
+    <QtMoc Include="graphs\Graphicsscene.h" />
+    <QtMoc Include="graphs\Graphicsview.h" />
     <ClInclude Include="model\XmlIOstreamModel.h" />
+    <ClInclude Include="UndoCommandModel.h" />
     <ClInclude Include="utils\ColorOperation.h" />
     <ClInclude Include="utils\GiantTxtIOstream.h" />
     <ClInclude Include="graphs\GraphicsEllipse.h" />
@@ -354,8 +358,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </QtMoc>
     <QtMoc Include="graphs\Graphicspixmapitem.h" />
-    <QtMoc Include="graphs\Graphicsscene.h" />
-    <QtMoc Include="graphs\Graphicsview.h" />
     <QtMoc Include="widgets\graphicsItemEditTextDialog.h" />
     <QtMoc Include="graphs\ThumbnailPixmapItem.h" />
     <ClInclude Include="itkTool\ITKImageIoModel.h" />

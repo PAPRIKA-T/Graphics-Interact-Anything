@@ -31,7 +31,7 @@
 #include "SceneToolWidget.h"
 #include "GiantInteractionModeWidget.h"
 
-Widget::Widget(QWidget *parent)
+Widget::Widget(QWidget* parent)
     : QWidget(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint);//隐藏边框 
@@ -70,17 +70,17 @@ Widget::Widget(QWidget *parent)
         view_list_container.setActivatdView(image_widget_2d->getGraphicsView());
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
+        //设置图像窗口工具控件
+        view_tool_bar = new ViewToolBar(this);
+        view_tool_bar->setObjectName("view_tool_bar");
+        view_tool_bar->setViewListContainer(&view_list_container);
+
         //设置图形栏底层控件
         graphicsitem_widget = new GraphicsItemWidget(this);
         graphicsitem_widget->setObjectName("graphicsitem_widget");
         graphicsitem_widget->setViewListContainer(&view_list_container);
         graphicsitem_widget->connectSceneSignal(view_list_container.getActivedView()->getGraphicsScene());
         draw_button_list = graphicsitem_widget->getDrawButtonList();
-
-        //设置图像窗口工具控件
-        view_tool_bar = new ViewToolBar(this);
-        view_tool_bar->setObjectName("view_tool_bar");
-        view_tool_bar->setViewListContainer(&view_list_container);
 
         center_scene_widget_hori_layout->addWidget(graphicsitem_widget);
         center_scene_widget_hori_layout->addWidget(image_widget_2d);
@@ -97,7 +97,7 @@ Widget::Widget(QWidget *parent)
         file_view->setObjectName("file_view");
         file_view->setViewListContainer(&view_list_container);
         view_tool_bar->getSceneToolWidget()->setFileView(file_view);
-        
+
         //LabelBoardWidget
         label_board_widget = new LabelBoardWidget(label_board_under_widget);
         label_board_under_widget = new QWidget(this);
@@ -114,7 +114,7 @@ Widget::Widget(QWidget *parent)
         label_board_widget_layout->setSpacing(0);
         label_board_widget_layout->setContentsMargins(0, 0, 0, 0);
         label_board_under_widget->setLayout(label_board_widget_layout);
-        
+
         //设置图元索引控件
         item_index_view = new ItemIndexView(this);
         item_index_view->setObjectName("item_index_widget");
@@ -163,15 +163,15 @@ Widget::Widget(QWidget *parent)
 
     /*****************连接信号*****************/
     {
-        connect(view_list_container.getActivedView()->getGraphicsScene(), 
+        connect(view_list_container.getActivedView()->getGraphicsScene(),
             SIGNAL(paintContinue()), this, SLOT(paintContinue()));
         connect(view_list_container.getActivedView()->getGraphicsScene(),
-            &GraphicsScene::createItemIndex,item_index_view,&ItemIndexView::addItemInitAfterPaint);
+            &GraphicsScene::createItemIndex, item_index_view, &ItemIndexView::addItemInitAfterPaint);
         connect(file_view, &FileView::sceneClear, view_list_container.getActivedView()->getGraphicsScene(), &GraphicsScene::resetScene);
         connect(file_view, &FileView::viewClear, foreplay_widget, &ForePlayWidget::onPathClear);
     }
 
-/**************************************************设置布局器********************************************************/
+    /**************************************************设置布局器********************************************************/
     {
         //界面右侧部分控件垂直
         right_widget_splitter = new QSplitter(this);
@@ -211,7 +211,7 @@ Widget::Widget(QWidget *parent)
     draw_button_list.append(sam_widget->getBoxPromptWidget()->getButton());
     draw_button_list.append(sam_widget->getPPListPromptWidget()->getButton());
     draw_button_list.append(sam_widget->getNPListPromptWidget()->getButton());
-    foreach(QPushButton* btn, draw_button_list) {
+    foreach(QPushButton * btn, draw_button_list) {
         exclusive_graphics_btn_box->addButton(btn);
     }
     draw_button_list[0]->setChecked(true);
@@ -224,21 +224,22 @@ Widget::~Widget()
 
 QVBoxLayout* Widget::getMainLayout()
 {
-	return main_layout;
+    return main_layout;
 }
 
 /*****************其他函数*********************/
 // 更改样式表
 void Widget::setStyle(QString fileName)
 {
-    QString path = ":/res/qss/"+ fileName + ".qss";
+    QString path = ":/res/qss/" + fileName + ".qss";
     QFile file(path);
-    if ( file.open(QFile::ReadOnly) )
+    if (file.open(QFile::ReadOnly))
     {
         QString qss = QLatin1String(file.readAll());
         setStyleSheet(qss);
         file.close();
-    }else qDebug()<<"Widget::setStyle:open qss file wrong!";
+    }
+    else qDebug() << "Widget::setStyle:open qss file wrong!";
 }
 
 void Widget::region(const QPoint& cursorGlobalPoint)
@@ -341,7 +342,7 @@ void Widget::imageWidgetAdd(ImageSceneWidget2D* image_widget)
     m_scene->getScenePromptItemModel()->setSamWidget(sam_widget);
     m_scene->setLabelBoardWidget(label_board_widget);
     m_scene->setItemIndexView(item_index_view);
-    connect(m_scene, &GraphicsScene::createItemIndex, item_index_view, 
+    connect(m_scene, &GraphicsScene::createItemIndex, item_index_view,
         &ItemIndexView::addItemInitAfterPaint);
 }
 
@@ -376,20 +377,20 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
 void Widget::connectToolButton(ImageSceneWidget2D* image_widget)
 {
     GraphicsScene* scene = image_widget->getGraphicsScene();
-    connect(file_view, &FileView::sceneClear, 
+    connect(file_view, &FileView::sceneClear,
         scene, &GraphicsScene::resetScene);
 }
 
 void Widget::disConnectToolButton(ImageSceneWidget2D* image_widget)
 {
     GraphicsScene* scene = image_widget->getGraphicsScene();
-    disconnect(file_view, &FileView::sceneClear, 
+    disconnect(file_view, &FileView::sceneClear,
         scene, &GraphicsScene::resetScene);
 }
 
 void Widget::paintContinue()
 {
-    foreach(QPushButton * btn, draw_button_list){
+    foreach(QPushButton * btn, draw_button_list) {
         if (btn->isChecked()) {
             if (!btn->isEnabled())return;
             emit btn->toggled(true);
@@ -451,7 +452,7 @@ void Widget::DimensionTrans()
         imageWidgetAdd(image_widget_2d);
         center_scene_widget_hori_layout->addWidget(image_widget_2d);
         connectToolButton(image_widget_2d);
-        connect(image_widget_2d->getGraphicsScene(), &GraphicsScene::paintContinue, 
+        connect(image_widget_2d->getGraphicsScene(), &GraphicsScene::paintContinue,
             this, &Widget::paintContinue);
     }
     view_tool_bar->getInteractionModeWidget()->returnToDefaultMode();
@@ -459,7 +460,7 @@ void Widget::DimensionTrans()
 
 /*******************override virtual function********************/
 
-void Widget::paintEvent(QPaintEvent *event)
+void Widget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
     QStyleOption opt;
@@ -470,9 +471,9 @@ void Widget::paintEvent(QPaintEvent *event)
     painter.drawRect(rect().adjusted(15, 15, -15, -15));
 }
 
-void Widget::keyPressEvent(QKeyEvent *event)
+void Widget::keyPressEvent(QKeyEvent* event)
 {
-    switch(event->key())
+    switch (event->key())
     {
     case Qt::Key_Q:
         file_view->PreviousIndex();
@@ -485,7 +486,7 @@ void Widget::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Widget::closeEvent(QCloseEvent *event)
+void Widget::closeEvent(QCloseEvent* event)
 {
     if (foreplay_widget->getAutoSave())
         foreplay_widget->saveItemToPathAllFormAllScene();
@@ -494,16 +495,16 @@ void Widget::closeEvent(QCloseEvent *event)
 
 void Widget::changeEvent(QEvent* event)
 {
-    if (event->type() == QEvent::WindowStateChange){
-        if (isMaximized()){
+    if (event->type() == QEvent::WindowStateChange) {
+        if (isMaximized()) {
             // 窗口被最大化时的处理
             status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;}");
             title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 0px;border-top-right-radius: 0px;}");
             main_under_widget->move(0, 0);
             main_under_widget->resize(width(), height());
         }
-        else if(isMinimized()){
-			// 窗口被最小化时的处理
+        else if (isMinimized()) {
+            // 窗口被最小化时的处理
         }
         else {
             // 窗口被还原时的处理
@@ -521,9 +522,9 @@ void Widget::leaveEvent(QEvent* event)
     this->unsetCursor();
 }
 
-void Widget::mousePressEvent(QMouseEvent *event)
+void Widget::mousePressEvent(QMouseEvent* event)
 {
-    if (event->button()==Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton) {
         is_left_mouse_pressed = true;
         if (cursor() != Qt::ArrowCursor) {
             this->mouseGrabber();
@@ -533,7 +534,7 @@ void Widget::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void Widget::mouseMoveEvent(QMouseEvent *event)
+void Widget::mouseMoveEvent(QMouseEvent* event)
 {
     if (geometry() != QGuiApplication::screens().at(0)->availableVirtualGeometry()) {
         global_point = event->globalPos();
@@ -544,7 +545,7 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     QWidget::mouseMoveEvent(event);
 }
 
-void Widget::mouseReleaseEvent(QMouseEvent *event)
+void Widget::mouseReleaseEvent(QMouseEvent* event)
 {
     is_left_mouse_pressed = false;
     if (event->button() == Qt::LeftButton) {

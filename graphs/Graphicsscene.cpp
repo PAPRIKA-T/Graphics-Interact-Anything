@@ -7,10 +7,11 @@
 #include "GraphicsTextItem.h"
 #include "utils/ColorOperation.h"
 #include "AllGraphics.h"
+#include <qdebug.h>
 #define EPS (1e-5)
 
-GraphicsScene::GraphicsScene(QWidget *parent)
-    :QGraphicsScene (parent)
+GraphicsScene::GraphicsScene(QWidget* parent)
+    :QGraphicsScene(parent)
 {
     QPixmap pix;
     pixmap_item = new GraphicsPixmapItem(pix);
@@ -19,7 +20,7 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     setItemIndexMethod(QGraphicsScene::NoIndex);
     addItem(pixmap_item);
     addItem(thumbnail_item);
-    pixmap_item->setFlag(QGraphicsItem::ItemIsMovable,false);
+    pixmap_item->setFlag(QGraphicsItem::ItemIsMovable, false);
     initTextItem();
     scene_prompt_model.setGraphicsScene(this);
 }
@@ -36,7 +37,7 @@ GraphicsScene::~GraphicsScene()
 
 void GraphicsScene::setGraphicsView(GraphicsView* v)
 {
-    m_view = v; 
+    m_view = v;
     updateRtText();
 }
 
@@ -143,7 +144,7 @@ void GraphicsScene::initTextItem()
     text_left_up->setPlainText(str1 + str2);
 
     //初始化左下文本item
-    text_left_bottom = new GraphicsTextItem(QPointF(0,0));
+    text_left_bottom = new GraphicsTextItem(QPointF(0, 0));
     text_left_bottom->setFont(font);
     text_left_bottom->setDefaultTextColor(Qt::green);
     text_left_bottom->setTextWidth(-1);
@@ -248,7 +249,7 @@ void GraphicsScene::afterSetPaintItemPoint(const QPointF& p)
         }
         return;
     }
-    QList<std::pair<GraphicsItem*, void (GraphicsItem::*)(const QPointF&)>>& 
+    QList<std::pair<GraphicsItem*, void (GraphicsItem::*)(const QPointF&)>>&
         set_point_fp_list = painting_item->getSetPointFunctionList();
     if (!set_point_fp_list.isEmpty()) {
         set_point_fp_list.removeFirst();
@@ -271,22 +272,38 @@ void GraphicsScene::afterSetPaintItemPoint(const QPointF& p)
 void GraphicsScene::initPaintGraphicsItem()
 {
     is_paint_new_item = true;
-    if (painting_item) {
+
+    if (painting_item)
+    {
         emit painting_item->prepareToRemove();
-        delete painting_item;
-        painting_item = nullptr;
+
+        addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);
+
+        this->removeItem(painting_item);
+        //delete painting_item;
+        //painting_item = nullptr;
+
+        qDebug() << "pointDelete";
     }
 }
 
 void GraphicsScene::initPaintFinishGraphicsItem()
 {
-    if (painting_item != nullptr) {
-        if (is_creating_polygon) {
+
+
+
+    if (painting_item != nullptr)
+    {
+
+
+        if (is_creating_polygon)
+        {
             finishCreatePolygon();
         }
         else {
             emit painting_item->prepareToRemove();
-            delete painting_item;
+            this->removeItem(painting_item);
         }
         painting_item = nullptr;
     }
@@ -303,16 +320,16 @@ void GraphicsScene::initPaintFinishPromptItem()
     is_paint_prompt_item = false;
 }
 
-bool GraphicsScene::isPaintItem(QGraphicsItem *item)
+bool GraphicsScene::isPaintItem(QGraphicsItem* item)
 {
-    if(
-        item!=nullptr&&
-        item!=pixmap_item&&
-        item!=thumbnail_item&&
-        item!=text_left_up&&
-        item!=text_left_bottom&&
-        item!=text_right_up&&
-        item!=text_right_bottom&&
+    if (
+        item != nullptr &&
+        item != pixmap_item &&
+        item != thumbnail_item &&
+        item != text_left_up &&
+        item != text_left_bottom &&
+        item != text_right_up &&
+        item != text_right_bottom &&
         item->parentItem() == nullptr)
     {
         return true;
@@ -320,17 +337,17 @@ bool GraphicsScene::isPaintItem(QGraphicsItem *item)
     else return false;
 }
 
-bool GraphicsScene::isPaintItemWithChild(QGraphicsItem *item)
+bool GraphicsScene::isPaintItemWithChild(QGraphicsItem* item)
 {
-    if(
-        item!=nullptr&&
-        item->data(0)!="GraphicsTextItem"&&
-        item!=pixmap_item&&
-        item!=thumbnail_item &&
-        item!=text_left_up&&
-        item!=text_left_bottom&&
-        item!=text_right_up&&
-        item!=text_right_bottom)
+    if (
+        item != nullptr &&
+        item->data(0) != "GraphicsTextItem" &&
+        item != pixmap_item &&
+        item != thumbnail_item &&
+        item != text_left_up &&
+        item != text_left_bottom &&
+        item != text_right_up &&
+        item != text_right_bottom)
     {
         return true;
     }
@@ -395,7 +412,7 @@ void GraphicsScene::updateRtText()
 
     qreal image_scale_total = m_view->getViewTransFormModel()->getImageScaleTotal();
     if (pixmap_item->getPixmap().isNull()) image_scale_total = 0;
-    else image_scale_total = pixmap_item->getFscaleW() / pixmap_item->getOriginWidth() * 
+    else image_scale_total = pixmap_item->getFscaleW() / pixmap_item->getOriginWidth() *
         m_view->getViewTransFormModel()->getViewScale();
     QString str3 = "Zoom:" + QString::number(image_scale_total, 'f', 2) + " ";
     text_right_up->setPlainText(str1 + str2 + "\n" + str3);
@@ -406,7 +423,7 @@ void GraphicsScene::initItemSettingAfterPaint(GraphicsItem* item)
 {
     qreal scale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
     qreal view_scale = m_view->getViewTransFormModel()->getViewScale();
-    if (!pixmap_item->getPixmap().isNull()){
+    if (!pixmap_item->getPixmap().isNull()) {
         item->getGraphicsTransformModel().setMeasureObject(pixmap_item);
         item->getGraphicsTransformModel().setImageScale(scale);
     }
@@ -422,11 +439,11 @@ void GraphicsScene::initItemSettingAfterPaint(GraphicsItem* item)
     emit createItemIndex(item);
 }
 
-void GraphicsScene::addItemInitAfterPaint(GraphicsItem *item)
+void GraphicsScene::addItemInitAfterPaint(GraphicsItem* item)
 {
     initItemSettingAfterPaint(item);
     addItem(item);
-    if (scene_prompt_model.getIsAiSegment()&&is_paint_prompt_item)
+    if (scene_prompt_model.getIsAiSegment() && is_paint_prompt_item)
         createPromptItem();
 }
 
@@ -492,8 +509,8 @@ void GraphicsScene::cancelCreatePolygon()
 {
     if (polygon_list.size() >= 1)painting_pol_item->onActionRemoveSelf();
     else {
-        if(painting_pol_item)
-            delete painting_pol_item;
+        if (painting_pol_item)
+            this->removeItem(painting_pol_item);
     }
     painting_pol_item = nullptr;
     painting_item = nullptr;
@@ -547,7 +564,7 @@ void GraphicsScene::finishCreatePolygon()
                 qDebug() << "no load iamge";
                 return;
             }
-            if(is_paint_prompt_item){
+            if (is_paint_prompt_item) {
                 scene_prompt_model.generateAnnotation();
             }
         }
@@ -559,22 +576,51 @@ void GraphicsScene::finishCreatePolygon()
     }
 }
 
+//void GraphicsScene::pointClicked(int checked)
+//{
+//    if(checked){
+//        initPaintGraphicsItem();
+//        painting_item = new BPoint{};
+//
+//    }
+//    else {
+//        initPaintFinishGraphicsItem();
+//    }
+//}
+
 void GraphicsScene::pointClicked(int checked)
 {
-    if(checked){
+    if (checked) {
+
+
+        painting_item = new BPoint{};  // 创建BPoint对象
         initPaintGraphicsItem();
-        painting_item = new BPoint{};
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
+
+
+        qDebug() << "pointClicked";
     }
-    else {
+    else
+    {
         initPaintFinishGraphicsItem();
+        qDebug() << "pointClickedFinish";
     }
 }
+
 
 void GraphicsScene::ellipseClicked(int checked)
 {
     if (checked) {
-        initPaintGraphicsItem();
+
         painting_item = new InteractionEllipse{};
+        initPaintGraphicsItem();
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
+
+        qDebug() << "ellipseClicked";
     }
     else {
         initPaintFinishGraphicsItem();
@@ -583,9 +629,14 @@ void GraphicsScene::ellipseClicked(int checked)
 
 void GraphicsScene::roundClicked(int checked)
 {
-    if(checked){
-        initPaintGraphicsItem();
+    if (checked) {
+
         painting_item = new InteractionRound{};
+        initPaintGraphicsItem();
+
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
     }
     else {
         initPaintFinishGraphicsItem();
@@ -595,8 +646,14 @@ void GraphicsScene::roundClicked(int checked)
 void GraphicsScene::lineClicked(int checked)
 {
     if (checked) {
-        initPaintGraphicsItem();
         painting_item = new DoubleEndPointLine{};
+        initPaintGraphicsItem();
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
+
+        qDebug() << "lineClicked";
+
     }
     else {
         initPaintFinishGraphicsItem();
@@ -606,8 +663,12 @@ void GraphicsScene::lineClicked(int checked)
 void GraphicsScene::rectClicked(int checked)
 {
     if (checked) {
-        initPaintGraphicsItem();
         painting_item = new InteractionRect{};
+        initPaintGraphicsItem();
+
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
     }
     else {
         initPaintFinishGraphicsItem();
@@ -620,6 +681,10 @@ void GraphicsScene::polygonClicked(int checked)
         startCreatePolygon();
         painting_pol_item = new InteractionPolygon{};
         painting_item = painting_pol_item;
+
+        addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);
+
         connect(this, SIGNAL(updatePoint(QPointF, bool)), painting_pol_item, SLOT(pullPoint(QPointF, bool)));
     }
     else {
@@ -630,8 +695,11 @@ void GraphicsScene::polygonClicked(int checked)
 void GraphicsScene::angleClicked(int checked)
 {
     if (checked) {
-        initPaintGraphicsItem();
         painting_item = new Angle{};
+        initPaintGraphicsItem();
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
     }
     else {
         initPaintFinishGraphicsItem();
@@ -641,8 +709,11 @@ void GraphicsScene::angleClicked(int checked)
 void GraphicsScene::parallelLineClicked(int checked)
 {
     if (checked) {
-        initPaintGraphicsItem();
         painting_item = new ParallelLine{};
+        initPaintGraphicsItem();
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
     }
     else {
         initPaintFinishGraphicsItem();
@@ -652,8 +723,11 @@ void GraphicsScene::parallelLineClicked(int checked)
 void GraphicsScene::pieClicked(int checked)
 {
     if (checked) {
-        initPaintGraphicsItem();
         painting_item = new InteractionPie{};
+        initPaintGraphicsItem();
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
     }
     else {
         initPaintFinishGraphicsItem();
@@ -666,8 +740,11 @@ void GraphicsScene::lineSegmentClicked(int checked)
         startCreatePolygon();
         painting_pol_item = new LineSegment{};
         painting_item = painting_pol_item;
-        
-        connect(this, SIGNAL(updatePoint(QPointF, bool)), 
+
+        addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);
+
+        connect(this, SIGNAL(updatePoint(QPointF, bool)),
             painting_pol_item, SLOT(pullPoint(QPointF, bool)));
     }
     else {
@@ -678,9 +755,13 @@ void GraphicsScene::lineSegmentClicked(int checked)
 void GraphicsScene::positivePointClicked(int checked)
 {
     if (checked) {
+        painting_item = new PositivePoint{};
+
         initPaintGraphicsItem();
         initPaintPromptItem();
-        painting_item = new PositivePoint{};
+
+        /*addCommand* command = new addCommand(this, painting_item);
+        m1_undoStack->push(command);*/
     }
     else {
         initPaintFinishGraphicsItem();
@@ -691,9 +772,10 @@ void GraphicsScene::positivePointClicked(int checked)
 void GraphicsScene::negativePointClicked(int checked)
 {
     if (checked) {
+        painting_item = new NegativePoint{};
+
         initPaintGraphicsItem();
         initPaintPromptItem();
-        painting_item = new NegativePoint{};
     }
     else {
         initPaintFinishGraphicsItem();
@@ -704,9 +786,10 @@ void GraphicsScene::negativePointClicked(int checked)
 void GraphicsScene::promptRectClicked(int checked)
 {
     if (checked) {
+        painting_item = new PromptRect{};
+
         initPaintGraphicsItem();
         initPaintPromptItem();
-        painting_item = new PromptRect{};
     }
     else {
         initPaintFinishGraphicsItem();
@@ -717,9 +800,10 @@ void GraphicsScene::promptRectClicked(int checked)
 void GraphicsScene::PPlineSegmentClicked(int checked)
 {
     if (checked) {
+        painting_pol_item = new LineSegment{};
+
         startCreatePolygon();
         initPaintPromptItem();
-        painting_pol_item = new LineSegment{};
         painting_pol_item->setFlag(QGraphicsItem::ItemIsMovable, false);
         painting_pol_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         painting_item = painting_pol_item;
@@ -738,9 +822,10 @@ void GraphicsScene::PPlineSegmentClicked(int checked)
 void GraphicsScene::NPlineSegmentClicked(int checked)
 {
     if (checked) {
+        painting_pol_item = new LineSegment{};
+
         startCreatePolygon();
         initPaintPromptItem();
-        painting_pol_item = new LineSegment{};
         painting_pol_item->setFlag(QGraphicsItem::ItemIsMovable, false);
         painting_pol_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         painting_item = painting_pol_item;
@@ -758,21 +843,26 @@ void GraphicsScene::NPlineSegmentClicked(int checked)
 
 void GraphicsScene::clearSceneGraphicsItem()
 {
-    if (is_creating_polygon)finishCreatePolygon();
-    QList<QGraphicsItem *>item_list = items();
-    foreach(QGraphicsItem *item, item_list)
-    {
+    if (is_creating_polygon) finishCreatePolygon();
+
+    QList<QGraphicsItem*> item_list = items();
+    foreach(QGraphicsItem * item, item_list) {
         if (!items().contains(item)) continue;
-        if(isPaintItem(item)){
+        if (isPaintItem(item)) {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-            if (new_item->parentItem() == nullptr) {
+            // 在使用 new_item 之前检查它是否为 nullptr
+            if (new_item && new_item->parentItem() == nullptr) {
                 new_item->onActionRemoveSelf();
+
+                rubberCommand* command = new rubberCommand(this, item_list);
+                m1_undoStack->push(command);
             }
         }
     }
     initPaintFinishGraphicsItem();
     emit paintContinue();
 }
+
 
 void GraphicsScene::resetScene()
 {
@@ -790,3 +880,4 @@ void GraphicsScene::clearPaintCache()
     initPaintFinishPromptItem();
 }
 
+UndoStack* GraphicsScene::m1_undoStack = nullptr;

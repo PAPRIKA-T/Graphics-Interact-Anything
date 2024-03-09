@@ -1,7 +1,7 @@
 ﻿#include "samwidget.h"
 #include "graphs/Graphicsscene.h"
 #include "widgets/ComboBoxVWidget.h"
-#include "Widgets/GenericToolButton.h"
+#include "widgets/GenericToolButton.h"
 #include <QWidget>
 #include <locale>
 #include <codecvt>
