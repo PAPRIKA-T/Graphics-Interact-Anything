@@ -1,0 +1,644 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="graphs\GraphicsPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\GOpenGLWidgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\Graphicspixmapitem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\Graphicsscene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\Graphicsview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\graphicsItemEditTextDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\FilePathOperation.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\ThumbnailPixmapItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\LabelBoardWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ItemIndexView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\FileView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ForePlayWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\StatusWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\TitleWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\SceneToolWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\MagnifyingGlassWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\TabWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ImageSceneWidget3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\LabelBoardToolWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsTextItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\TimeTextItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\ItemPointF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\VTKWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsAngle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsPolygon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsLineSegment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsCalculateLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsPie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsRound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsRect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsEllipse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\GenericInteractionModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\GraphicsPaintModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\GraphicsTextModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\GraphicsRelationModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\CoordinateCalculation.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\GraphicsTransformModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ColorButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ColorWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\HelpDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ChosePathWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\InteractionPaintModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ViewTransFormModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\GenericToolButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\GraphicsItemWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\HeaderButtonWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\GraphicsCalculateModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ViewListContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ScenePromptItemModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ComboBoxVWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\CVOperation.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\style\ToolTipWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\GiantPushButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\GiantTxtIOstream.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\ColorOperation.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\XmlIOstreamModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphs\GraphicsItemIoParameter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model\ItkTool\ITKImageIoModel.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\thread\ImageCvLoaderThread.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\SAM\sam.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\SAM\samwidget.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\style\CustomTabStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\StackIconWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\StackWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ImageSceneWidget2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\GiantInteractionModeWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\ViewToolBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="graphs\GraphicsPoint.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\Graphicspixmapitem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\Graphicsscene.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\Graphicsview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\graphicsItemEditTextDialog.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\widget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\GOpenGLWidgets.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\ThumbnailPixmapItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\LabelBoardWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ItemIndexView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\FileView.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ForePlayWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\StatusWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\TitleWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\SceneToolWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\MagnifyingGlassWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ImageSceneWidget3D.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\LabelBoardToolWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsTextItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\TimeTextItem.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\VTKWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsAngle.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsLine.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsPolygon.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsLineSegment.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsCalculateLine.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsPie.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsRound.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="graphs\GraphicsRect.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="model\GraphicsTextModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ColorButton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ColorWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ChosePathWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="model\InteractionPaintModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\GenericToolButton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\GraphicsItemWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\HeaderButtonWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="model\GraphicsCalculateModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ComboBoxVWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="model\ScenePromptItemModel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\style\ToolTipWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="utils\thread\ImageCvLoaderThread.h">
+      <Filter>Generated Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\SAM\samwidget.h">
+      <Filter>Generated Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\style\CustomTabStyle.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\StackIconWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\StackWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ImageSceneWidget2D.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\GiantInteractionModeWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="widgets\ViewToolBar.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\background-image\AI_SAM.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\DRAW_ICON.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\qss\Default.qss">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\Parallel_line.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\angle.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\branch_fold.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\branch_unfold.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\center.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\checkbox.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\close.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\delete.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\ellipse.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\ellipsis.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\eye.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\fix_screen.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\folder_icon.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\help.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\input.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\input2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\label.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\left.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\line.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\line_segment.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\max.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\min.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\move.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\neg_point_list.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\negative_point.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\open_annotation.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\paintpen.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\paintpoint.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\picture_item.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\pie.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\point.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\polygon.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\pos_point_list.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\positive_point.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\prompt_rect.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\rect.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="resource.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="res\background-image\restore.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\reverse.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\right.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\rotate.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\rotate_view.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\round.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\rubber.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\rubber_view.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\save.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\setting.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\background-image\uncheckbox.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils\FilePathOperation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="itkTool\ITKImageIoModel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\TabWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphs\ItemPointF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphs\AllGraphics.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphs\GraphicsEllipse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\GenericInteractionModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\GraphicsPaintModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\GraphicsRelationModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\CoordinateCalculation.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\GraphicsTransformModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\HelpDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ViewTransFormModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ViewListContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\CVOperation.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\GiantPushButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\GiantTxtIOstream.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\ColorOperation.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\XmlIOstreamModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphs\GraphicsItemIoParameter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\SAM\sam.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
