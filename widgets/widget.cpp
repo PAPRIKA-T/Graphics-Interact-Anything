@@ -228,19 +228,6 @@ QVBoxLayout* Widget::getMainLayout()
 }
 
 /*****************其他函数*********************/
-// 更改样式表
-void Widget::setStyle(QString fileName)
-{
-    QString path = ":/res/qss/Dark/"+ fileName + ".qss";
-    QFile file(path);
-    if ( file.open(QFile::ReadOnly) )
-    {
-        QString qss = QLatin1String(file.readAll());
-        setStyleSheet(qss);
-        file.close();
-    }else qDebug()<<"Widget::setStyle:open qss file wrong!";
-}
-
 void Widget::region(const QPoint& cursorGlobalPoint)
 {
     // 获取窗体在屏幕上的位置区域，tl为topleft点，rb为rightbottom点

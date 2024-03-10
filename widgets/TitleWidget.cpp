@@ -2,6 +2,7 @@
 #include "widget.h"
 #include "HelpDialog.h"
 #include "GenericToolButton.h"
+#include "model/StyleSheetConfigModel.h"
 #include "FileView.h"
 #include <QLabel>
 #include <QDesktopServices>
@@ -148,6 +149,13 @@ TitleWidget::TitleWidget(QWidget* parent)
     main_layout->setContentsMargins(0, 0, 2, 0);
     main_layout->setSpacing(0);
     setLayout(main_layout);
+
+    StyleSheetConfigModel style_model;
+    style_model.setMenuStyle(file_menu);
+    style_model.setMenuStyle(edit_menu);
+    style_model.setMenuStyle(segment_menu);
+    style_model.setMenuStyle(view_menu);
+    style_model.setMenuStyle(help_menu);
 }
 
 TitleWidget::~TitleWidget()

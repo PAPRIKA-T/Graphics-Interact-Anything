@@ -9,6 +9,7 @@
 #include "widgets/GOpenGLWidgets.h"
 #include "Model/ScenePromptItemModel.h"
 #include "Widgets/ImageSceneWidget2D.h"
+#include "model/StyleSheetConfigModel.h"
 #include "GraphicsPolygon.h"
 #include <QTimer>
 
@@ -327,6 +328,8 @@ void GraphicsView::contextMenuEvent(QContextMenuEvent *event)
     if(is_context_menu)
     {
         QMenu menu;
+        StyleSheetConfigModel style_model;
+        style_model.setMenuStyle(&menu);
         QAction *showAllTextAction = menu.addAction(QStringLiteral("Show All Item Text"),this,&GraphicsView::showAllText);
         QAction *hideAllTextAction = menu.addAction(QStringLiteral("Hide All Item Text"),this,&GraphicsView::hideAllText);
         QAction* showAllItemMessage = menu.addAction(QStringLiteral("Show All Item Message"), this, &GraphicsView::showAllItemMessage);

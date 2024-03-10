@@ -1,10 +1,11 @@
 #include "StyleSheetConfigModel.h"
 #include <QMenu>
 #include <QFile>
+#include <QString>
 
 void StyleSheetConfigModel::setGlobalStyleSheet(QWidget* w)
 {
-    QFile file(":/res/qss/Default.qss");
+    QFile file(getStyleSheetParentPath() + "Default.qss");
     if (file.open(QFile::ReadOnly)) {
         QString stylesheet = QLatin1String(file.readAll());
         w->setStyleSheet(stylesheet);
@@ -17,7 +18,7 @@ void StyleSheetConfigModel::setGlobalStyleSheet(QWidget* w)
 
 void StyleSheetConfigModel::setMenuStyle(QMenu* menu)
 {
-    QFile file(":/res/qss/MenuStyle.qss");
+    QFile file( getStyleSheetParentPath() + "MenuStyle.qss");
     if (file.open(QFile::ReadOnly)) {
         QString stylesheet = QLatin1String(file.readAll());
         menu->setStyleSheet(stylesheet);
@@ -26,4 +27,21 @@ void StyleSheetConfigModel::setMenuStyle(QMenu* menu)
     else {
         qDebug() << "StyleSheetConfig::setMenuStyle: open file failed";
     }
+}
+
+QString StyleSheetConfigModel::getStyleSheetParentPath()
+{
+    QString p{};
+    if(sheet_type == StyleSheetType::Dark)
+		p = ":/res/qss/Dark/";
+	else if(sheet_type == StyleSheetType::White)
+		p = ":/res/qss/White/";
+	else
+		qDebug() << "StyleSheetConfig::getStyleSheetParentPath: invalid type";
+    return p;
+}
+
+void StyleSheetConfigModel::setStyleType(StyleSheetType t)
+{
+    sheet_type = t;
 }
