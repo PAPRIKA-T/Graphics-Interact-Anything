@@ -68,6 +68,7 @@ void GraphicsItem::setRotateAngle(qreal r)
 GraphicsItem::~GraphicsItem()
 {
     count--;
+    qDebug()<<"ItemCount: "<<count;
 }
 
 void GraphicsItem::setDeleteDirectly(bool ok)
