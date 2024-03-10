@@ -1306,11 +1306,12 @@ void XmlIOstreamModel::createSaveXmlGraphicsItemInfo(QDomDocument& domDoc, QDomE
     //计算item坐标系映射到图像坐标系的参数
     double m_fscale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
     QPointF point_scale(m_fscale, m_fscale);
+
     foreach(GraphicsItem* item, sort_item_list)
     {
-        QPointF start = QpointFMultiplication(item->getStartMeasurePos(), point_scale);
-        QPointF edge = QpointFMultiplication(item->getEdgeMeasurePos(), point_scale);
-        QPointF center = QpointFMultiplication(item->getCenterMeasurePos(), point_scale);
+        QPointF start = item->getStartMeasurePos();
+        QPointF edge = item->getEdgeMeasurePos();
+        QPointF center = item->getCenterMeasurePos();
 
         QDomElement objectElement = domDoc.createElement("object");  //创建父节点
         {
