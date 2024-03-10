@@ -231,7 +231,7 @@ QVBoxLayout* Widget::getMainLayout()
 // 更改样式表
 void Widget::setStyle(QString fileName)
 {
-    QString path = ":/res/qss/"+ fileName + ".qss";
+    QString path = ":/res/qss/Dark/"+ fileName + ".qss";
     QFile file(path);
     if ( file.open(QFile::ReadOnly) )
     {
