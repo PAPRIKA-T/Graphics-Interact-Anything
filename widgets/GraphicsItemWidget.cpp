@@ -1,10 +1,7 @@
 ﻿#include "GraphicsItemWidget.h"
 #include "GenericToolButton.h"
 #include "Model/ViewListContainer.h"
-#include "ViewToolBar.h"
-#include "GiantInteractionModeWidget.h"
 #include "graphs/GraphicsRect.h"
-#include "widget.h"
 #include <QStyleOption>
 #include <QVBoxLayout>
 #include <QButtonGroup>

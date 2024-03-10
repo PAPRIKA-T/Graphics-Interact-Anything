@@ -3,8 +3,9 @@
 #include <QPointF>
 class GraphicsItem;
 
-struct GraphicsItemIoParameter
+class GraphicsItemIoParameter
 {
+public:
 	void setGraphicsItemIoParameter(GraphicsItem*);
 
 	QString text{};
