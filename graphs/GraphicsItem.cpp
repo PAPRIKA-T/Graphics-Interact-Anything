@@ -2,6 +2,7 @@
 #include <QGraphicsView>
 #include <QKeyEvent>
 #include "GraphicsItem.h"
+#include "model/StyleSheetConfigModel.h"
 
 #define EPS (1e-5) //除数最小量
 
@@ -68,6 +69,7 @@ void GraphicsItem::setRotateAngle(qreal r)
 GraphicsItem::~GraphicsItem()
 {
     count--;
+    qDebug()<<"ItemCount: "<<count;
 }
 
 void GraphicsItem::setDeleteDirectly(bool ok)
@@ -422,6 +424,7 @@ QVariant GraphicsItem::itemChange(GraphicsItemChange change, const QVariant& val
 
 void GraphicsItem::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
+    Q_UNUSED(event);
 }
 
 void GraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
@@ -453,6 +456,9 @@ void GraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     if (is_generate_context_menu)
     {
         setSelected(true);
+        StyleSheetConfigModel style_model;
+        style_model.setMenuStyle(&menu);
+
         QAction* textEditAction = menu.addAction(QStringLiteral("Edit Text"), &graphics_text_model, &GraphicsTextModel::onActionEditText);
         QAction* text_status = menu.addAction(QStringLiteral("Text Status"), [=]() {
             graphics_text_model.setIsHideText(!graphics_text_model.getIsHideText());

@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>res/qss/Default.qss</file>
-        <file>res/qss/title.qss</file>
         <file>res/background-image/add_row.png</file>
         <file>res/background-image/angle.png</file>
         <file>res/background-image/arrow_cursor.png</file>
@@ -70,5 +68,9 @@
         <file>res/background-image/setting_btn.png</file>
         <file>res/background-image/uncheckbox.png</file>
         <file>res/background-image/zoom_in.png</file>
+        <file>res/qss/Dark/Default.qss</file>
+        <file>res/qss/Dark/MenuStyle.qss</file>
+        <file>res/qss/Light/Default.qss</file>
+        <file>res/qss/Light/MenuStyle.qss</file>
     </qresource>
 </RCC>

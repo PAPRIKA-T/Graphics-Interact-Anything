@@ -48,8 +48,6 @@ public:
     Widget(QWidget *parent = nullptr); //构造函数
     ~Widget() override; //析构函数
     QVBoxLayout* getMainLayout(); //获取主界面布局器
-/**************************************************一些相关函数********************************************************/
-    void setStyle(QString fileName); //设置样式表
 
 /**************************************************场景、视图指针的获取与设置********************************************************/
     ViewListContainer* getViewListContainer(); //获取视图容器

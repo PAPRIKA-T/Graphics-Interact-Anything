@@ -1,0 +1,388 @@
+/*******************QComboBox*********************/
+QComboBox
+{   
+    color:#fe5820;
+    background-color:transparent;
+    border: none;
+    font-size:14px;
+}
+
+QComboBox QAbstractItemView 
+{
+    /*outline: 0px solid gray;*/   /* 选定项的虚框 */
+    color: white;
+    background-color: rgb(65, 65, 65);   /* 整个下拉窗体的背景色 */
+    selection-background-color: transparent;   /* 整个下拉窗体被选中项的背景色 */
+}
+
+QComboBox::drop-down {
+      subcontrol-origin: padding;
+      width: 15px;
+      border:none;
+  }
+
+/* 下拉箭头样式 */
+QComboBox::down-arrow 
+{
+    width: 15px; /* 下拉箭头的宽度（建议与下拉框drop-down的宽度一致） */
+    background: transparent; /* 下拉箭头的的背景色 */
+    padding: 0px 0px 0px 0px; /* 上内边距、右内边距、下内边距、左内边距 */
+ 
+    image: url(:/res/background-image/left_arrow.png);
+}
+
+/* 点击下拉箭头 */
+QComboBox::down-arrow:on 
+{ 
+    image: url(:/res/background-image/bottom_arrow.png); /* 显示上拉箭头 */
+}
+
+/*******************QLabel*********************/
+QLabel
+{
+    color:rgb(240, 240, 240);
+    font-family:MicrosoftYaHei;
+    font-size:14px;
+}
+
+/*******************QLineEdit*********************/
+QLineEdit
+{
+    color: white;
+    font-family:MicrosoftYaHei;
+    background-color:transparent;
+    border:none;
+    border-bottom: 1px solid rgb(150, 150, 150);
+    font-size:12px;
+
+}
+
+/*******************QCheckBox*********************/
+QCheckBox::indicator
+{/*选择框尺寸*/
+    border: 0px;
+	width: 13px;
+	height: 13px;
+}
+
+QCheckBox::indicator:checked
+{
+	image: url(:/res/background-image/checkbox.png);
+}
+
+QCheckBox::indicator:unchecked
+{
+	image: url(:/res/background-image/uncheckbox.png);
+}
+
+/*******************Title widget*********************/
+QWidget#title_widget
+{
+    background-color:rgb(37, 37, 37);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+QLabel#title_name
+{
+    color:white;
+}
+
+/*******************Main Window*********************/
+Widget
+{
+    background-color:transparent;
+}
+
+QScrollArea
+{
+    background-color:transparent;
+    border:none;
+}
+
+QWidget#main_under_widget
+{
+    background-color:rgb(37, 37, 37);
+    border-radius: 8px;
+}
+
+QWidget#scroll_area_widget
+{
+    background-color:transparent;
+}
+
+SceneToolWidget
+{
+    background-color:rgb(56, 56, 56);
+    border-radius: 4px;
+}
+
+LabelBoardToolWidget
+{
+    background-color:rgb(48, 48, 48);
+}
+
+QGraphicsView 
+{
+    border: 1px solid rgb(102, 0, 204);
+    background-color:rgb(65, 65, 65);
+}
+
+QWidget#label_board_under_widget
+{
+    background-color:rgb(63, 63, 63);
+    border-radius: 4px;
+}
+
+QWidget#center_scene_verti_widget
+{
+    background-color:rgb(40, 40, 40);
+}
+
+StatusWidget
+{
+    background-color:rgb(37, 37, 37);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+QWidget#rb_stack_widget
+{
+    background-color:rgb(58, 58, 58);
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+/*******************Paint_button widget*********************/
+GraphicsItemWidget#graphicsitem_widget
+{
+    background-color:rgb(56, 56, 56);
+    border-radius: 4px;
+}
+
+/*******************QSplitter*********************/
+
+QSplitter::handle
+{
+    background-color:rgb(35, 35, 35);
+}
+
+/*******************MagGlass widget*********************/
+QWidget#mag_glass_widget
+{
+    background-color:rgb(76, 76, 76);
+    border: none;
+}
+
+/*******************QTableView*********************/
+QHeaderView
+{
+    background-color:transparent;
+}
+
+QHeaderView::section
+{
+    color:rgb(240, 240, 240);
+    font-size: 11px;  /* 设置字体大小 */
+    font-weight: bold;
+    background-color:transparent;
+}
+
+QTableView
+{
+    background-color:rgb(58, 58, 58);
+    alternate-background-color:rgb(53,53,53);
+    border: none;
+    font-size:11px;
+    gridline-color: transparent;
+    selection-color: #fe5820;
+    selection-background-color: rgb(55, 55, 55); /*选中区域的背景色*/
+}
+
+QTableView#item_index_widget
+{
+    background-color:rgb(58, 58, 58);
+    alternate-background-color:rgb(53,53,53);
+    border: none;
+    font-size:11px;
+    gridline-color: transparent;
+    selection-color: #fe5820;
+    selection-background-color: rgb(55, 55, 55); /*选中区域的背景色*/
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+QTableView#label_board_widget
+{
+    background-color:rgb(53, 53, 53);
+    alternate-background-color:rgb(48,48,48);
+    border: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    gridline-color: transparent;
+    selection-color: #fe5820;
+    selection-background-color: rgb(57, 80, 124); /*选中区域的背景色*/
+}
+
+QTableView::indicator:enabled
+{ 
+    width:13px;
+    height:13px;
+}
+
+QTableView::indicator:enabled:unchecked 
+{ 
+    image: url(:/res/background-image/uncheckbox.png);
+}
+
+QTableView::indicator:enabled:checked 
+{ 
+    image: url(:/res/background-image/checkbox.png);
+}
+
+QTableView::item
+{
+    font-family:"MicrosoftYaHei";
+	font-size:8px;
+    height:10px;
+}
+
+QTableView::item:hover
+{
+    background-color:rgb(80, 80, 80);
+}
+
+/*******************Filepath widget*********************/
+QTreeView::branch:closed:has-children
+{
+	image: url(:/res/background-image/branch_fold.png);
+}
+
+QTreeView::branch:open:has-children{
+	image: url(:/res/background-image/branch_unfold.png);
+}
+
+FileView
+{
+    background-color:rgb(58, 58, 58);
+    alternate-background-color:rgb(53,53,53);
+    color:#ced4da;
+    show-decoration-selected: 1;
+    border: none;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+FileView::item 
+{
+    color: rgb(200, 200, 200);
+    font-family:"MicrosoftYaHei";
+	font-size:18px;
+    height:20px;
+}
+
+FileView#file_view::item:selected
+{
+    background-color:rgb(160, 30, 30);
+    color:white;
+}
+
+FileView#file_view::item:hover
+{
+    background-color:rgba(150, 51, 51, 100);
+}
+
+
+/*******************QScrollBar******************/
+/*************vertical*************/
+QScrollBar:vertical 
+{
+    background-color: rgb(30, 30, 30);
+    width: 12px;
+}
+
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
+{
+    background-color:rgb(60, 60, 60);
+}
+
+QScrollBar::handle:vertical
+{
+    background-color:rgb(70, 70, 70);
+}
+
+/*************horizontal*************/
+
+/*******************SamWidget*********************/
+SamWidget#sam_widget
+{
+    background-color:transparent;
+}
+
+/*******************SamWidget*********************/
+ForePlayWidget#foreplay_widget
+{
+    background-color:transparent;
+}
+
+/*******************button style*********************/
+GenericToolButton
+{
+    color:rgb(200, 200, 200);
+    font-family:MicrosoftYaHei;
+    font-size:13px;
+    background-color:transparent;
+    border-radius: 4px; 
+}
+
+GenericToolButton:hover
+{
+    color:rgb(240, 240, 240);
+    background-color:rgba(88, 88, 88, 150);
+}
+
+GenericToolButton:pressed
+{
+    color:rgb(240, 240, 240);
+    background-color:rgb(65,65,65);
+}
+
+GenericToolButton:checked
+{
+    background-color:rgb(57, 80, 124);
+}
+
+GenericToolButton::menu-indicator
+{
+    /* 该代码用于设计隐藏三角形箭头 */
+    width:0px;
+}
+
+/*******stack_btn*******/
+GenericToolButton#stack_btn
+{
+    color:#FFFFFFFF;
+    font-family:MicrosoftYaHei;
+    font-size:13px;
+    background-color:transparent;
+
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+GenericToolButton#stack_btn:checked
+{
+    color:#FFFFFFFF;
+    background-color:rgb(58, 58, 58);
+}
+
+GenericToolButton#stack_btn:hover
+{
+    background-color:rgba(60, 60, 60, 100);
+}
+
+/*******title_right_btn*******/
+GenericToolButton#title_right_btn:hover
+{
+    background-color:rgba(88, 88, 88, 150);
+}
