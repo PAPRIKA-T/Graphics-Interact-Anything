@@ -72,7 +72,7 @@
     <ClCompile Include="widgets\ViewToolBar.cpp" />
     <ClCompile Include="widgets\VTKWidget.cpp" />
     <ClCompile Include="widgets\widget.cpp" />
-    <ClCompile Include="UndoCommandModel.cpp" />
+    <ClCompile Include="model\UndoCommandModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphs\GraphicsItemIoParameter.h" />
@@ -96,7 +96,7 @@
     <ClInclude Include="itkTool\ITKImageIoModel.h" />
     <ClInclude Include="utils\FilePathOperation.h" />
     <ClInclude Include="widgets\SAM\sam.h" />
-    <ClInclude Include="UndoCommandModel.h" />
+    <ClInclude Include="model\UndoCommandModel.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt" />

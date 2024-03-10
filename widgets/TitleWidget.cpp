@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QDesktopServices>
 #include <QMenu>
+#include <qfile.h>
 
 /********************************************TitleWidget Class******************************************/
 ToolButton::ToolButton(QWidget* parent)
@@ -141,6 +142,18 @@ TitleWidget::TitleWidget(QWidget* parent)
     main_layout->addWidget(view_menu_btn);
     main_layout->addWidget(help_menu_btn);
     main_layout->addStretch();
+
+    QFile file(":/res/qss/Default.qss");
+    if (file.open(QFile::ReadOnly)) {
+        QString stylesheet = QLatin1String(file.readAll());
+        file_menu->setStyleSheet(stylesheet);
+        edit_menu->setStyleSheet(stylesheet);
+        segment_menu->setStyleSheet(stylesheet);
+        view_menu->setStyleSheet(stylesheet);
+        help_menu->setStyleSheet(stylesheet);
+
+        file.close();
+    }
 
     main_layout->addWidget(min_btn);
     main_layout->addWidget(max_btn);

@@ -341,11 +341,11 @@ GenericToolButton:hover
     background-color:rgba(88, 88, 88, 150);
 }
 
-GenericToolButton:pressed
+/*GenericToolButton:pressed
 {
     color:rgb(240, 240, 240);
     background-color:rgb(65,65,65);
-}
+}*/
 
 GenericToolButton:checked
 {
@@ -388,7 +388,7 @@ GenericToolButton#title_right_btn:hover
 }
 
 /*******************QMenu*********************/
-QMenu 
+/*QMenu 
 {
     background-color: #030406;  
     border-width:0px;
@@ -443,4 +443,27 @@ QMenu::indicator
 {    
     width: 13px;
     height: 13px;
+}*/
+
+QMenu 
+{
+    background-color: rgb(58, 58, 58); /* 菜单背景色 */
+}
+
+QMenu::item 
+{
+    background-color: transparent; /* QAction默认背景色 */
+    color: rgb(200, 200, 200); /* QAction文字颜色 */
+}
+
+QMenu::item:selected 
+{
+    background-color:rgb(88, 88, 88); /* QAction鼠标悬停或选中的背景色 */
+    color: white; /* QAction鼠标悬停或选中时的文字颜色 */
+}
+
+QMenu::item:pressed 
+{
+    background-color:rgb(65,65,65); /* QAction鼠标按下的背景色 */
+    color: white; /* QAction鼠标按下时的文字颜色 */
 }

@@ -9,7 +9,8 @@
 #include "Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 
-#include "UndoCommandModel.h"
+#include "model/UndoCommandModel.h"
+
 
 
 class LabelBoardWidget;

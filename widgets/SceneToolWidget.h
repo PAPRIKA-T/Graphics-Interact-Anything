@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <QWidget>
-#include "UndoCommandModel.h"
+#include "model/UndoCommandModel.h"
 
 class FileView;
 class ViewListContainer;

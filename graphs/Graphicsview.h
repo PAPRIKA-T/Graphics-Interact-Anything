@@ -9,7 +9,7 @@
 #include "Model/ViewTransFormModel.h"
 #include "Model/GraphicsCalculateModel.h"
 
-#include "UndoCommandModel.h"
+#include "model/UndoCommandModel.h"
 
 
 class MagnifyingGlassWidget;

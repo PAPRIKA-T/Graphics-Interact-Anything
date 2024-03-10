@@ -56,8 +56,8 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
     <Import Project="$(QtMsBuild)\Qt.props" />
     <Import Project="props\Release_x64_itk.props" />
-    <Import Project="props\Release_x64_opencv.props" />
     <Import Project="props\Release_x64_vtk.props" />
+    <Import Project="props\Release_x64_opencv.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
@@ -218,8 +218,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="graphs\GraphicsItemIoParameter.cpp" />
+    <ClCompile Include="model\UndoCommandModel.cpp" />
     <ClCompile Include="model\XmlIOstreamModel.cpp" />
-    <ClCompile Include="UndoCommandModel.cpp" />
     <ClCompile Include="utils\ColorOperation.cpp" />
     <ClCompile Include="utils\GiantTxtIOstream.cpp" />
     <ClCompile Include="graphs\GraphicsEllipse.cpp" />
@@ -307,8 +307,8 @@
     <ClInclude Include="graphs\GraphicsItemIoParameter.h" />
     <QtMoc Include="graphs\Graphicsscene.h" />
     <QtMoc Include="graphs\Graphicsview.h" />
+    <ClInclude Include="model\UndoCommandModel.h" />
     <ClInclude Include="model\XmlIOstreamModel.h" />
-    <ClInclude Include="UndoCommandModel.h" />
     <ClInclude Include="utils\ColorOperation.h" />
     <ClInclude Include="utils\GiantTxtIOstream.h" />
     <ClInclude Include="graphs\GraphicsEllipse.h" />

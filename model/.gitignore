@@ -13,11 +13,8 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 ai_models/
-Graphs-Interact-Anything.sln
-Graphs-Interact-Anything.filters
-Graphs-Interact-Anything.user
-Graphs-Interact-Anything.vcxproj.user
-Graphs-Interact-Anything.vcxproj
+images/
+PropertySheet.props
 
 # Mono auto generated files
 mono_crash.*
