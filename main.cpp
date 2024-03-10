@@ -1,6 +1,5 @@
 ﻿#include <QApplication>
 #include <iostream>
-
 #include "widgets/widget.h"
 #include "graphs/Graphicsitem.h"
 

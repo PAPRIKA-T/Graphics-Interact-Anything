@@ -454,6 +454,7 @@ void GraphicsItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     if (is_generate_context_menu)
     {
         setSelected(true);
+
         QAction* textEditAction = menu.addAction(QStringLiteral("Edit Text"), &graphics_text_model, &GraphicsTextModel::onActionEditText);
         QAction* text_status = menu.addAction(QStringLiteral("Text Status"), [=]() {
             graphics_text_model.setIsHideText(!graphics_text_model.getIsHideText());
