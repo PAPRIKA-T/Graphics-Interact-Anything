@@ -26,6 +26,7 @@ public:
     void setTitleName(const QString& s);
     void setTitleIcon(const QPixmap& icon);
     void setParentWidget(Widget*);
+    void setMenuStyle();
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;

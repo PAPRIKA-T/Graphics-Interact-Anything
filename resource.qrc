@@ -70,5 +70,7 @@
         <file>res/background-image/zoom_in.png</file>
         <file>res/qss/Dark/Default.qss</file>
         <file>res/qss/Dark/MenuStyle.qss</file>
+        <file>res/qss/Light/Default.qss</file>
+        <file>res/qss/Light/MenuStyle.qss</file>
     </qresource>
 </RCC>

@@ -29,13 +29,18 @@ void StyleSheetConfigModel::setMenuStyle(QMenu* menu)
     }
 }
 
+StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::getStyleType()
+{
+    return sheet_type;
+}
+
 QString StyleSheetConfigModel::getStyleSheetParentPath()
 {
     QString p{};
     if(sheet_type == StyleSheetType::Dark)
 		p = ":/res/qss/Dark/";
-	else if(sheet_type == StyleSheetType::White)
-		p = ":/res/qss/White/";
+	else if(sheet_type == StyleSheetType::Light)
+		p = ":/res/qss/Light/";
 	else
 		qDebug() << "StyleSheetConfig::getStyleSheetParentPath: invalid type";
     return p;

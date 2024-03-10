@@ -5,18 +5,18 @@ class QString;
 
 class StyleSheetConfigModel
 {
-private:
+public:
 	enum class StyleSheetType
     {
 		Dark,
-		White,
+		Light,
 	};
-	static StyleSheetType sheet_type;
-	QString getStyleSheetParentPath();
-
-public:
 	void setStyleType(StyleSheetType);
 	void setGlobalStyleSheet(QWidget*);
 	void setMenuStyle(QMenu*);
+	StyleSheetType getStyleType();
+private:
+	static StyleSheetType sheet_type;
+	QString getStyleSheetParentPath();
 };
 

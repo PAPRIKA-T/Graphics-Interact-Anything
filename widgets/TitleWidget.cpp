@@ -106,6 +106,8 @@ TitleWidget::TitleWidget(QWidget* parent)
     QAction* help_contact = new QAction("Contact");
     QAction* help_version = new QAction("Version");
     QAction* help_about = new QAction("About");
+    QAction* theme_divert = new QAction("Theme Divert");
+
     connect(help_doc, &QAction::triggered, this, &TitleWidget::on_help_doc_clicked);
     connect(help_contact, &QAction::triggered, [=]() {
         HelpDialog* dialog = new HelpDialog();
@@ -125,10 +127,12 @@ TitleWidget::TitleWidget(QWidget* parent)
         dialog->getLabel()->setText("医学影像半自动式图形交互系统由深圳大学医学部生物医学工程学院开发。本软件可用于交互式图形生成，主要提供给相关工作人员或研究人员使用。");
         dialog->show();
         });
+
     help_menu->addAction(help_doc);
     help_menu->addAction(help_contact);
     help_menu->addAction(help_version);
     help_menu->addAction(help_about);
+    help_menu->addAction(theme_divert);
     help_menu_btn->setMenu(help_menu);
 
     main_layout->addSpacing(5);
@@ -149,13 +153,7 @@ TitleWidget::TitleWidget(QWidget* parent)
     main_layout->setContentsMargins(0, 0, 2, 0);
     main_layout->setSpacing(0);
     setLayout(main_layout);
-
-    StyleSheetConfigModel style_model;
-    style_model.setMenuStyle(file_menu);
-    style_model.setMenuStyle(edit_menu);
-    style_model.setMenuStyle(segment_menu);
-    style_model.setMenuStyle(view_menu);
-    style_model.setMenuStyle(help_menu);
+    setMenuStyle();
 }
 
 TitleWidget::~TitleWidget()
@@ -231,6 +229,29 @@ void TitleWidget::setParentWidget(Widget* w)
     connect(file_menu->actions()[3], &QAction::triggered, par_widget->getFileView(), &FileView::readITKImageDir);
     //视图菜单信号绑定
     connect(view_menu->actions()[0], &QAction::triggered, par_widget, &Widget::DimensionTrans);
+
+    //主题风格设置信号绑定
+    connect(help_menu->actions()[4], &QAction::triggered, [=]() {
+        StyleSheetConfigModel style_model;
+        if (style_model.getStyleType() == StyleSheetConfigModel::StyleSheetType::Dark) {
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::Light);
+        }
+        else {
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::Dark);
+        }
+        style_model.setGlobalStyleSheet(par_widget);
+        setMenuStyle();
+        });
+}
+
+void TitleWidget::setMenuStyle()
+{
+    StyleSheetConfigModel style_model;
+    style_model.setMenuStyle(file_menu);
+    style_model.setMenuStyle(edit_menu);
+    style_model.setMenuStyle(segment_menu);
+    style_model.setMenuStyle(view_menu);
+    style_model.setMenuStyle(help_menu);
 }
 
 void TitleWidget::paintEvent(QPaintEvent* event)
