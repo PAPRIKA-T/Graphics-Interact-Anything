@@ -29,7 +29,7 @@ void StyleSheetConfigModel::setMenuStyle(QMenu* menu)
     }
 }
 
-StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::getStyleType()
+StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::getStyleType() const
 {
     return sheet_type;
 }

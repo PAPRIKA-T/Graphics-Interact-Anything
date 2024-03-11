@@ -98,7 +98,7 @@ void GraphicsItem::generateOtherItems(const QPointF& pos)
     Q_UNUSED(pos);
 }
 
-ItemPointF GraphicsItem::getCenter()
+ItemPointF GraphicsItem::getCenter() const
 {
     return m_center;
 }
@@ -114,7 +114,7 @@ void GraphicsItem::setCenter(const QPointF& p)
     emit updatePointMessage();
 }
 
-ItemPointF GraphicsItem::getStart()
+ItemPointF GraphicsItem::getStart() const
 {
     return  m_start;
 }
@@ -130,7 +130,7 @@ void GraphicsItem::setStart(const QPointF& p)
     emit updatePointMessage();
 }
 
-ItemPointF GraphicsItem::getEdge()
+ItemPointF GraphicsItem::getEdge() const
 {
     return m_edge;
 }

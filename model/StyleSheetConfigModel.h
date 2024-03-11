@@ -14,7 +14,7 @@ public:
 	void setStyleType(StyleSheetType);
 	void setGlobalStyleSheet(QWidget*);
 	void setMenuStyle(QMenu*);
-	StyleSheetType getStyleType();
+	StyleSheetType getStyleType() const;
 private:
 	static StyleSheetType sheet_type;
 	QString getStyleSheetParentPath();

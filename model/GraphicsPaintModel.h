@@ -20,34 +20,34 @@ public:
     QColor& getRItemColor(); //获取item颜色引用
 
     void setPenIsSelected(QPen pen); //设置选中pen
-    QPen getPenIsSelected();//获取选中pen
+    QPen getPenIsSelected() const;//获取选中pen
     QPen& getRPenIsSelected();//获取选中pen引用
-    QPen getPenNoSelected();//获取未选中pen
+    QPen getPenNoSelected() const;//获取未选中pen
     QPen& getRPenNoSelected();//获取未选中pen引用
     void setPenIsNoSelected(QPen pen); //设置非选中pen
 
     void setCenterColor(const QColor& c); //设置中心点颜色
-    QColor getCenterColor(); //获取中心点颜色
+    QColor getCenterColor() const; //获取中心点颜色
     void setFillColorUnselected(const QColor& c); //设置填充颜色
-    QColor getFillColorUnselected(); //获取填充颜色
+    QColor getFillColorUnselected() const; //获取填充颜色
     QColor& getRFillColorUnselected(); //获取填充颜色引用
     void setFillColorHover(const QColor& c); //设置悬浮颜色
-    QColor getFillColorHover(); //获取悬浮颜色
+    QColor getFillColorHover() const; //获取悬浮颜色
     QColor& getRFillColorHover(); //获取悬浮颜色引用
 
-    bool getIsCloseItem(); //获取是否是封闭图形
+    bool getIsCloseItem() const; //获取是否是封闭图形
     void setIsCloseItem(bool ok); //设置是否是封闭图形
 
     bool getIsPaintCenter() const;
     void setIsPaintCenter(bool ok);
 
-    bool getIsFillItem(); //是否处于填充状态
+    bool getIsFillItem() const; //是否处于填充状态
     void setIsFillItem(bool ok); //设置填充状态
 
     const qreal getAdjustSize() const;//获取边缘矩形调整大小
     void setAdjustSize(const qreal& size); //设置边缘矩形调整大小
 
-    bool getIsPaintStrokeShape(); //获取是否绘制描边shape
+    bool getIsPaintStrokeShape() const; //获取是否绘制描边shape
     void setIsPaintStrokeShape(bool ok);
 
     const qreal getScaleFactor() const;

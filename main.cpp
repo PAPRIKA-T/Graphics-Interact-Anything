@@ -4,7 +4,7 @@
 #include "graphs/Graphicsitem.h"
 #include "model/StyleSheetConfigModel.h"
 
-int GraphicsItem::count = 0;
+int GraphicsItem::count = 0; 
 StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::sheet_type = StyleSheetConfigModel::StyleSheetType::Dark;
 
 int main(int argc, char *argv[])

@@ -33,7 +33,7 @@ void GraphicsPaintModel::setPenIsSelected(QPen pen)
     m_pen_is_selected = pen;
 }
 
-QPen GraphicsPaintModel::getPenIsSelected()
+QPen GraphicsPaintModel::getPenIsSelected() const
 {
     return m_pen_is_selected;
 }
@@ -43,7 +43,7 @@ QPen& GraphicsPaintModel::getRPenIsSelected()
     return m_pen_is_selected;
 }
 
-QPen GraphicsPaintModel::getPenNoSelected()
+QPen GraphicsPaintModel::getPenNoSelected() const
 {
     return m_pen_no_selected;
 }
@@ -63,7 +63,7 @@ void GraphicsPaintModel::setCenterColor(const QColor& c)
     m_color_item = c;
 }
 
-QColor GraphicsPaintModel::getCenterColor()
+QColor GraphicsPaintModel::getCenterColor() const
 {
     return m_color_item;
 }
@@ -73,7 +73,7 @@ void GraphicsPaintModel::setFillColorUnselected(const QColor& c)
     fill_color_unselected = c;
 }
 
-QColor GraphicsPaintModel::getFillColorUnselected()
+QColor GraphicsPaintModel::getFillColorUnselected() const
 {
     return fill_color_unselected;
 }
@@ -88,7 +88,7 @@ void GraphicsPaintModel::setFillColorHover(const QColor& c)
     fill_color_hover = c;
 }
 
-QColor GraphicsPaintModel::getFillColorHover()
+QColor GraphicsPaintModel::getFillColorHover() const
 {
     return fill_color_hover;
 }
@@ -98,7 +98,7 @@ QColor& GraphicsPaintModel::getRFillColorHover()
     return fill_color_hover;
 }
 
-bool GraphicsPaintModel::getIsCloseItem()
+bool GraphicsPaintModel::getIsCloseItem() const
 {
     return is_close_item;
 }
@@ -118,7 +118,7 @@ void GraphicsPaintModel::setIsPaintCenter(bool ok)
     is_paint_center = ok;
 }
 
-bool GraphicsPaintModel::getIsFillItem()
+bool GraphicsPaintModel::getIsFillItem() const
 {
 	return is_fill;
 }
@@ -133,7 +133,7 @@ const qreal GraphicsPaintModel::getAdjustSize() const
     return adjust_size;
 }
 
-bool GraphicsPaintModel::getIsPaintStrokeShape()
+bool GraphicsPaintModel::getIsPaintStrokeShape() const
 {
     return is_paint_stroke_shape;
 }
