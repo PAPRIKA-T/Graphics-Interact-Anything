@@ -162,8 +162,8 @@ void SamWidget::initSamModel()
     }
 
     Sam::Parameter param(pre_model_path, model_path, std::thread::hardware_concurrency());
-    param.providers[0].deviceType = 0; // cpu for preprocess
-    param.providers[1].deviceType = 0; // CUDA for sam
+    param.providers[0].deviceType = 1; // cpu for preprocess
+    param.providers[1].deviceType = 1; // CUDA for sam
     sam = new Sam(param);
     if (!sam) {
         qDebug() << "load model fail!";

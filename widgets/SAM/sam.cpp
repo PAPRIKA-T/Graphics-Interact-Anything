@@ -45,7 +45,8 @@ struct SamModel {
         if (provider.gpuMemoryLimit > 0) {
           options.gpu_mem_limit = provider.gpuMemoryLimit;
         }
-        option.AppendExecutionProvider_CUDA(options);
+        //option.AppendExecutionProvider_CUDA(options);
+        OrtSessionOptionsAppendExecutionProvider_CUDA(option, provider.gpuDeviceId);
       }
     }
 
