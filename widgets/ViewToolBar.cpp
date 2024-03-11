@@ -10,6 +10,7 @@ ViewToolBar::ViewToolBar(QWidget* parent)
 	main_layout->setContentsMargins(0, 0, 0, 0);
 	main_layout->setSpacing(0);
 	setFixedHeight(32);
+	setMinimumWidth(600);
 	setObjectName("view_tool_bar");
 
 	scene_tool_widget = new SceneToolWidget(this);

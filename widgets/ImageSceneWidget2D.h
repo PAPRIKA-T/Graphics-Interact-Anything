@@ -3,6 +3,8 @@
 #include <QWidget>
 class GraphicsView;
 class GraphicsScene;
+class ViewToolBar;
+
 class ImageSceneWidget2D  : public QWidget
 {
 	Q_OBJECT
@@ -10,6 +12,7 @@ class ImageSceneWidget2D  : public QWidget
 public:
 	ImageSceneWidget2D(QWidget *parent);
 	~ImageSceneWidget2D();
+	ViewToolBar* getViewToolBar() const;
 	GraphicsView* getGraphicsView() const;
 	GraphicsScene* getGraphicsScene() const;
 	void updateViewGeometry();

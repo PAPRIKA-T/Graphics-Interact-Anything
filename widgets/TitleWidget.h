@@ -30,23 +30,14 @@ public:
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
-    virtual void mousePressEvent(QMouseEvent* event) override;
-    virtual void mouseMoveEvent(QMouseEvent* event) override;
-    virtual void mouseReleaseEvent(QMouseEvent* event) override;
-    virtual void mouseDoubleClickEvent(QMouseEvent* event) override;
+
 public slots:
-    void min_btn_clicked();
-    void max_btn_clicked();
-    void close_btn_clicked();
     void on_help_doc_clicked();
 private:
     Widget* par_widget = nullptr;
     QHBoxLayout* main_layout = nullptr;
     QLabel* title_icon = nullptr;
     QLabel* title_name = nullptr;
-    GenericToolButton* max_btn = nullptr;
-    GenericToolButton* min_btn = nullptr;
-    GenericToolButton* close_btn = nullptr;
     bool is_left_mouse_pressed = false;
     QPoint m_mouse_press;
 

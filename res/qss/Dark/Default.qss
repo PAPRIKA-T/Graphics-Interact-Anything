@@ -75,7 +75,7 @@ QCheckBox::indicator:unchecked
 	image: url(:/res/background-image/uncheckbox.png);
 }
 
-/*******************Title widget*********************/
+/************************************************Color Widget************************************************/
 QWidget#title_widget
 {
     background-color:rgb(37, 37, 37);
@@ -88,27 +88,10 @@ QLabel#title_name
     color:white;
 }
 
-/*******************Main Window*********************/
-Widget
-{
-    background-color:transparent;
-}
-
-QScrollArea
-{
-    background-color:transparent;
-    border:none;
-}
-
 QWidget#main_under_widget
 {
     background-color:rgb(37, 37, 37);
     border-radius: 8px;
-}
-
-QWidget#scroll_area_widget
-{
-    background-color:transparent;
 }
 
 SceneToolWidget
@@ -153,11 +136,26 @@ QWidget#rb_stack_widget
     border-top-right-radius: 4px;
 }
 
-/*******************Paint_button widget*********************/
+/*******************Transparent*********************/
+Widget
+{
+    background-color:transparent;
+}
+
+QScrollArea
+{
+    background-color:transparent;
+    border:none;
+}
+
+QWidget#scroll_area_widget
+{
+    background-color:transparent;
+}
+
 GraphicsItemWidget#graphicsitem_widget
 {
-    background-color:rgb(56, 56, 56);
-    border-radius: 4px;
+    background-color:transparent;
 }
 
 /*******************QSplitter*********************/
@@ -325,7 +323,7 @@ ForePlayWidget#foreplay_widget
     background-color:transparent;
 }
 
-/*******************button style*********************/
+/*************************************************button style************************************************/
 GenericToolButton
 {
     color:rgb(200, 200, 200);
@@ -385,4 +383,28 @@ GenericToolButton#stack_btn:hover
 GenericToolButton#title_right_btn:hover
 {
     background-color:rgba(88, 88, 88, 150);
+}
+
+/*******graphicsitem_btn*******/
+GenericToolButton#graphicsitem_btn
+{
+    background-color:rgb(48, 48, 48);
+    border-radius: 4px;
+}
+
+GenericToolButton#graphicsitem_btn:hover
+{
+    color:rgb(240, 240, 240);
+    background-color:rgba(88, 88, 88, 150);
+}
+
+GenericToolButton#graphicsitem_btn:pressed
+{
+    color:rgb(240, 240, 240);
+    background-color:rgb(65,65,65);
+}
+
+GenericToolButton#graphicsitem_btn:checked
+{
+    background-color:rgb(57, 80, 124);
 }
