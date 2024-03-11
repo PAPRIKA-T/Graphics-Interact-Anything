@@ -79,25 +79,15 @@ QCheckBox::indicator:unchecked
 QWidget#title_widget
 {
     background-color:rgb(37, 37, 37);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
 }
 
 QLabel#title_name
 {
     color:white;
 }
-
-QWidget#main_under_widget
-{
-    background-color:rgb(37, 37, 37);
-    border-radius: 8px;
-}
-
-SceneToolWidget
+ViewToolBar
 {
     background-color:rgb(56, 56, 56);
-    border-radius: 4px;
 }
 
 LabelBoardToolWidget
@@ -107,26 +97,18 @@ LabelBoardToolWidget
 
 QGraphicsView 
 {
-    border: 1px solid rgb(102, 0, 204);
     background-color:rgb(65, 65, 65);
 }
 
 QWidget#label_board_under_widget
 {
     background-color:rgb(63, 63, 63);
-    border-radius: 4px;
 }
 
-QWidget#center_scene_verti_widget
-{
-    background-color:rgb(40, 40, 40);
-}
 
 StatusWidget
 {
     background-color:rgb(37, 37, 37);
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
 }
 
 QWidget#rb_stack_widget
@@ -138,6 +120,11 @@ QWidget#rb_stack_widget
 
 /*******************Transparent*********************/
 Widget
+{
+    background-color:transparent;
+}
+
+SceneToolWidget
 {
     background-color:transparent;
 }
@@ -406,5 +393,29 @@ GenericToolButton#graphicsitem_btn:pressed
 
 GenericToolButton#graphicsitem_btn:checked
 {
-    background-color:rgb(57, 80, 124);
+    background-color:rgb(67, 90, 134);
+}
+
+/*******interaction_mode_btn*******/
+GenericToolButton#interaction_mode_btn
+{
+    background-color:rgb(48, 48, 48);
+    border-radius: 4px;
+}
+
+GenericToolButton#interaction_mode_btn:hover
+{
+    color:rgb(240, 240, 240);
+    background-color:rgba(88, 88, 88, 150);
+}
+
+GenericToolButton#interaction_mode_btn:pressed
+{
+    color:rgb(240, 240, 240);
+    background-color:rgb(65,65,65);
+}
+
+GenericToolButton#interaction_mode_btn:checked
+{
+    background-color:rgb(67, 90, 134);
 }

@@ -21,6 +21,8 @@ class QPushButton;
 class GraphicsItemWidget;
 class QButtonGroup;
 class ViewToolBar;
+class QHBoxLayout;
+class GiantInteractionModeWidget;
 
 class GraphicsView : public QGraphicsView
 {
@@ -30,6 +32,7 @@ public:
     ~GraphicsView();
     GraphicsScene* getGraphicsScene() const;
     ViewToolBar* getViewToolBar() const;
+    GiantInteractionModeWidget* getGiantInteractionModeWidget() const;
 
     QPointF getPresentPosOnOriginImage();
 
@@ -94,6 +97,8 @@ private:
 
     /*************Layout Setting*******************/
     QVBoxLayout* main_layout = nullptr;
+    QHBoxLayout* horizontal_layout = nullptr;
+    GiantInteractionModeWidget* interaction_mode_widget = nullptr;
     GraphicsItemWidget* graphicsitem_widget = nullptr; //图形绘制按钮控件
     QList<QPushButton*> draw_button_list; //绘图按钮链表
     QButtonGroup* exclusive_graphics_btn_box = nullptr; //图形按钮互斥组

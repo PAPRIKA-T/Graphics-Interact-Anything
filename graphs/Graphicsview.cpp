@@ -16,7 +16,10 @@
 #include <QPushButton>
 #include "widgets/GraphicsItemWidget.h"
 #include "widgets/ViewToolBar.h";
+#include <QHBoxLayout>
 #include <QButtonGroup>
+#include "widgets/GiantInteractionModeWidget.h"
+#include <model/ViewListContainer.h>
 
 #define EPS (1e-5) //除数最小量
 
@@ -41,15 +44,25 @@ GraphicsView::GraphicsView(QWidget *parent) :
     initGraphicsScene();
     initLayout();
     connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
+
+    ViewListContainer view_list_container;
+    view_list_container.setActivatdView(this);
+    view_list_container.pushBackView(this);
+
+    view_tool_bar->setViewListContainer(&view_list_container);
+    interaction_mode_widget->setViewListContainer(&view_list_container);
+    graphicsitem_widget->setViewListContainer(&view_list_container);
 }
 
 GraphicsView::~GraphicsView()
 {
     delete m_scene;
+    delete horizontal_layout;
     delete main_layout;
     delete graphicsitem_widget;
     delete exclusive_graphics_btn_box;
     delete view_tool_bar;
+    delete interaction_mode_widget;
 }
 
 GraphicsScene* GraphicsView::getGraphicsScene() const
@@ -60,6 +73,11 @@ GraphicsScene* GraphicsView::getGraphicsScene() const
 ViewToolBar* GraphicsView::getViewToolBar() const
 {
     return view_tool_bar;
+}
+
+GiantInteractionModeWidget* GraphicsView::getGiantInteractionModeWidget() const
+{
+    return interaction_mode_widget;
 }
 
 void GraphicsView::initGraphicsScene()
@@ -77,6 +95,7 @@ void GraphicsView::initGraphicsScene()
 void GraphicsView::initLayout()
 {
     main_layout = new QVBoxLayout(this);
+    horizontal_layout = new QHBoxLayout();
     graphicsitem_widget = new GraphicsItemWidget(this);
     graphicsitem_widget->setObjectName("graphicsitem_widget");
     graphicsitem_widget->connectSceneSignal(m_scene);
@@ -97,8 +116,15 @@ void GraphicsView::initLayout()
     view_tool_bar = new ViewToolBar(this);
     view_tool_bar->setObjectName("view_tool_bar");
 
+    //设置交互模式控件
+    interaction_mode_widget = new GiantInteractionModeWidget(this);
+    horizontal_layout->addWidget(graphicsitem_widget);
+    horizontal_layout->addWidget(interaction_mode_widget);
+    horizontal_layout->addStretch();
+    horizontal_layout->setSpacing(0);
+
     main_layout->addWidget(view_tool_bar);
-    main_layout->addWidget(graphicsitem_widget);
+    main_layout->addLayout(horizontal_layout);
     main_layout->setContentsMargins(0, 0, 0, 0);
     setLayout(main_layout);
 }

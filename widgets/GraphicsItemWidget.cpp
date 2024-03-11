@@ -9,9 +9,9 @@
 GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    int btn_width = 32;int btn_height = 28;
-    setFixedWidth(52);
-    setMinimumHeight(450);
+    int btn_width = 28;int btn_height = 28;
+    setFixedWidth(38);
+    setMinimumHeight(400);
     //图形按钮垂直布局器
     shape_btn_layout = new QVBoxLayout(this);
 
@@ -83,8 +83,7 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
         btn->setCheckable(true);
         btn->setIconSize(QSize(20, 20));
     }
-    shape_btn_layout->addStretch();
-    shape_btn_layout->setContentsMargins(5, 0, 5, 40);
+    shape_btn_layout->setContentsMargins(5, 0, 5, 25);
     shape_btn_layout->setSpacing(3);
     setLayout(shape_btn_layout);
 
@@ -128,9 +127,11 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     exclusive_button_group->addButton(cal_angle_btn);
     exclusive_button_group->setExclusive(true);
 
+    shape_btn_layout->addSpacing(14);
     shape_btn_layout->addWidget(cal_center_btn);
     shape_btn_layout->addWidget(cal_vertical_btn);
     shape_btn_layout->addWidget(cal_angle_btn);
+    shape_btn_layout->addStretch();
     cal_center_btn->setChecked(true);
     connect(cal_center_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalCenterBtnClicked);
     connect(cal_vertical_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalVerticalBtnClicked);

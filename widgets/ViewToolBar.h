@@ -3,7 +3,6 @@
 #include <QWidget>
 class ViewListContainer;
 class QHBoxLayout;
-class GiantInteractionModeWidget;
 class SceneToolWidget;
 
 class ViewToolBar  : public QWidget
@@ -15,10 +14,9 @@ public:
 	~ViewToolBar();
 	void setViewListContainer(ViewListContainer*);
 	SceneToolWidget* getSceneToolWidget();
-	GiantInteractionModeWidget* getInteractionModeWidget();
+	virtual void paintEvent(QPaintEvent* event) override;
 private:
 	QHBoxLayout* main_layout = nullptr;
 	ViewListContainer* view_list_container = nullptr;
-	GiantInteractionModeWidget* interaction_mode_widget = nullptr;
 	SceneToolWidget* scene_tool_widget = nullptr;
 };

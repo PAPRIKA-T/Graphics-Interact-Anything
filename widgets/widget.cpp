@@ -53,6 +53,9 @@ Widget::Widget(QWidget *parent)
         view_list_container.setActivatdView(image_widget_2d->getGraphicsView());
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
+        image_widget_2d->getViewToolBar()->setViewListContainer(&view_list_container);
+        image_widget_2d->getGiantInteractionModeWidget()->setViewListContainer(&view_list_container);
+
         //设置TreeView
         file_view = new FileView();
         file_view->setObjectName("file_view");
@@ -221,7 +224,7 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
     if (image_widget_2d) {
         GraphicsScene* scene = image_widget_2d->getGraphicsScene();
         image_widget_2d->getGraphicsView()->setActived(false);
-        image_widget_2d->setStyleSheet(QString::fromUtf8("border: 1px solid rgb(102, 0, 204);"));
+        image_widget_2d->setStyleSheet(QString::fromUtf8(""));
         disConnectToolButton(image_widget_2d);
         foreach(QGraphicsItem * item, scene->items()) {
             item->setSelected(false);
@@ -268,6 +271,7 @@ void Widget::DimensionTrans()
         image_widget_3d = new ImageSceneWidget3D(this);
         image_widget_3d->setObjectName("image_widget_3d");
         center_widget_splitter->insertWidget(0, image_widget_3d);
+        image_widget_3d->resize(650, 600);
         view_list_container.clearViewList();
 
         file_view->setVTKWidget(image_widget_3d->getVTKWidget());
@@ -289,12 +293,13 @@ void Widget::DimensionTrans()
         connect(image_widget_3d->getSceneWidgetCoronal()->getGraphicsView(), &GraphicsView::sliceChangeOneByOne,
             file_view, &FileView::onSliceChangeOneByOne);
 
-        mousePressChangeImageWidget(image_widget_3d->getSceneWidgetSagittal());
+        //mousePressChangeImageWidget(image_widget_3d->getSceneWidgetSagittal());
     }
     else if (image_widget_3d) {
         image_widget_3d->deleteLater();
         image_widget_3d = nullptr;
         image_widget_2d = new ImageSceneWidget2D(this);
+        image_widget_2d->resize(650, 600);
         image_widget_2d->setObjectName("image_widget_2d");
         center_widget_splitter->insertWidget(0, image_widget_2d);
         view_list_container.clearViewList();
