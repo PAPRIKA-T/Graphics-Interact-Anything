@@ -24,6 +24,8 @@ void ToolButton::paintEvent(QPaintEvent* event)
     QToolButton::paintEvent(event);
 }
 
+
+
 /********************************************TitleWidget Class******************************************/
 TitleWidget::TitleWidget(QWidget* parent)
     :QWidget(parent)
@@ -100,8 +102,8 @@ TitleWidget::TitleWidget(QWidget* parent)
     //help菜单栏创建
     help_menu_btn = new GenericToolButton("帮助(H)");
     help_menu_btn->setFixedSize(60, 22);
-
     help_menu = new QMenu;
+
     QAction* help_doc = new QAction("ReadMe");
     QAction* help_contact = new QAction("Contact");
     QAction* help_version = new QAction("Version");
@@ -141,6 +143,7 @@ TitleWidget::TitleWidget(QWidget* parent)
     main_layout->addWidget(edit_menu_btn);
     main_layout->addWidget(view_menu_btn);
     main_layout->addWidget(help_menu_btn);
+
     main_layout->addStretch();
 
     QFile file(":/res/qss/Default.qss");
@@ -151,7 +154,6 @@ TitleWidget::TitleWidget(QWidget* parent)
         segment_menu->setStyleSheet(stylesheet);
         view_menu->setStyleSheet(stylesheet);
         help_menu->setStyleSheet(stylesheet);
-
         file.close();
     }
 

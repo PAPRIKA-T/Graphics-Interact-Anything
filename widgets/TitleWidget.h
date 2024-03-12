@@ -2,6 +2,9 @@
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QWidget>
+#include <qtoolbar.h>
+#include <qpushbutton.h>
+#include <qdockwidget.h>
 
 class GenericToolButton;
 class QLabel;
@@ -16,6 +19,7 @@ public:
     ~ToolButton() { ; }
     virtual void paintEvent(QPaintEvent* event) override;
 };
+
 /*****************************************TitleWidget***************************************/
 class TitleWidget : public QWidget
 {
@@ -26,6 +30,9 @@ public:
     void setTitleName(const QString& s);
     void setTitleIcon(const QPixmap& icon);
     void setParentWidget(Widget*);
+
+    void toggleTools();
+    
 
 protected:
     virtual void paintEvent(QPaintEvent* event) override;
@@ -39,6 +46,13 @@ public slots:
     void close_btn_clicked();
     void on_help_doc_clicked();
 private:
+
+    QDockWidget* dockWidget;
+    GenericToolButton* toolButton1;
+    GenericToolButton* toolButton2;
+    GenericToolButton* toolButton3;
+
+
     Widget* par_widget = nullptr;
     QHBoxLayout* main_layout = nullptr;
     QLabel* title_icon = nullptr;
@@ -61,3 +75,4 @@ private:
     QMenu* view_menu = nullptr;
     QMenu* edit_menu = nullptr;
 };
+
