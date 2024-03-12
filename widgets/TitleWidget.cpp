@@ -33,25 +33,6 @@ TitleWidget::TitleWidget(QWidget* parent)
     title_icon = new QLabel();
     title_name = new QLabel();
     title_name->setObjectName("title_name");
-    max_btn = new GenericToolButton();
-    max_btn->setObjectName("title_right_btn");
-    max_btn->setFixedSize(43, 26);
-    min_btn = new GenericToolButton();
-    min_btn->setObjectName("title_right_btn");
-    min_btn->setFixedSize(43, 26);
-    close_btn = new GenericToolButton();
-    close_btn->setObjectName("title_right_btn");
-    close_btn->setFixedSize(43, 26);
-    close_btn->setStyleSheet("border-top-right-radius: 6px;");
-    max_btn->setIcon(QIcon(":/res/background-image/max.png"));
-    min_btn->setIcon(QIcon(":/res/background-image/min.png"));
-    close_btn->setIcon(QIcon(":/res/background-image/close.png"));
-    min_btn->setIconSize(QSize(12, 12));
-    max_btn->setIconSize(QSize(12, 12));
-    close_btn->setIconSize(QSize(12, 12));
-    connect(min_btn, &QToolButton::clicked, this, &TitleWidget::min_btn_clicked);
-    connect(max_btn, &QToolButton::clicked, this, &TitleWidget::max_btn_clicked);
-    connect(close_btn, &QToolButton::clicked, this, &TitleWidget::close_btn_clicked);
 
     //file菜单栏创建
     file_menu_btn = new GenericToolButton("文件(F)");
@@ -147,9 +128,6 @@ TitleWidget::TitleWidget(QWidget* parent)
     main_layout->addWidget(help_menu_btn);
     main_layout->addStretch();
 
-    main_layout->addWidget(min_btn);
-    main_layout->addWidget(max_btn);
-    main_layout->addWidget(close_btn);
     main_layout->setContentsMargins(0, 0, 2, 0);
     main_layout->setSpacing(0);
     setLayout(main_layout);
@@ -167,46 +145,6 @@ TitleWidget::~TitleWidget()
 void TitleWidget::setTitleName(const QString& s)
 {
     title_name->setText(s);
-}
-
-void TitleWidget::min_btn_clicked()
-{
-    if (par_widget) {
-        par_widget->showMinimized();
-    }
-    else TitleWidget::showMinimized();
-}
-
-void TitleWidget::max_btn_clicked()
-{
-    if (par_widget) {
-        if (par_widget->isMaximized()) {
-            par_widget->showNormal();//还原
-            max_btn->setIcon(QIcon(":/res/background-image/max.png"));
-        }
-        else {
-            par_widget->showMaximized();//最大化
-            max_btn->setIcon(QIcon(":/res/background-image/restore.png"));
-        }
-    }
-    else {
-        if (isMaximized()) {
-            showNormal();//还原
-            max_btn->setIcon(QIcon(":/res/background-image/max.png"));
-        }
-        else {
-            showMaximized();//最大化
-            max_btn->setIcon(QIcon(":/res/background-image/restore.png"));
-        }
-    }
-}
-
-void TitleWidget::close_btn_clicked()
-{
-    if (par_widget) {
-        par_widget->close();
-    }
-    else TitleWidget::close();
 }
 
 void TitleWidget::on_help_doc_clicked()
@@ -261,52 +199,4 @@ void TitleWidget::paintEvent(QPaintEvent* event)
     styleOpt.initFrom(this);
     style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
     QWidget::paintEvent(event);
-}
-
-void TitleWidget::mousePressEvent(QMouseEvent* event)
-{
-    if (event->button() == Qt::LeftButton) {
-        is_left_mouse_pressed = true;
-        m_mouse_press = event->globalPos();
-        event->accept();
-    }
-}
-
-void TitleWidget::mouseMoveEvent(QMouseEvent* event)
-{
-    if (is_left_mouse_pressed) {
-        if (!par_widget) return;
-        //当窗口最大化或最小化时也不进行触发
-        if (par_widget->isMinimized())
-            return;
-        else if (par_widget->isMaximized()) {
-            max_btn_clicked();
-        }
-        else {
-            //当在按钮之类需要鼠标操作的地方不进行触发(防误触)
-            if (close_btn->underMouse() || max_btn->underMouse() || min_btn->underMouse())
-                return;
-            else {
-                QPoint cur_mouse_pos = event->globalPos();
-                par_widget->move(par_widget->pos() + cur_mouse_pos - m_mouse_press);//移动
-                m_mouse_press = cur_mouse_pos;
-                return;
-            }
-        }
-    }
-    else {
-        QWidget::mouseMoveEvent(event);
-    }
-}
-
-void TitleWidget::mouseReleaseEvent(QMouseEvent* event)
-{
-    is_left_mouse_pressed = false;
-    QWidget::mouseReleaseEvent(event);
-}
-
-void TitleWidget::mouseDoubleClickEvent(QMouseEvent* event)
-{
-    max_btn_clicked();
-    Q_UNUSED(event);
 }

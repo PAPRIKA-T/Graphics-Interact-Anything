@@ -9,43 +9,47 @@
 GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    setFixedWidth(32);
+    int btn_width = 28;int btn_height = 28;
+    setFixedWidth(38);
+    setMinimumHeight(400);
     //图形按钮垂直布局器
     shape_btn_layout = new QVBoxLayout(this);
 
     destory_btn = new GenericToolButton();
+    destory_btn->setObjectName("graphicsitem_btn");
     destory_btn->setIcon(QIcon(":/res/background-image/destory.png"));
+    destory_btn->setFixedSize(btn_width, btn_height);
     connect(destory_btn, &QPushButton::clicked, this, &GraphicsItemWidget::onDestoryBtn);
     //设置图形按钮
     point_btn = new GenericToolButton();
-    point_btn->setObjectName("point_btn");
+    point_btn->setObjectName("graphicsitem_btn");
 
     rect_btn = new GenericToolButton();
-    rect_btn->setObjectName("rect_btn");
+    rect_btn->setObjectName("graphicsitem_btn");
 
     line_btn = new GenericToolButton();
-    line_btn->setObjectName("line_btn");
+    line_btn->setObjectName("graphicsitem_btn");
 
     round_btn = new GenericToolButton();
-    round_btn->setObjectName("round_btn");
+    round_btn->setObjectName("graphicsitem_btn");
 
     pie_btn = new GenericToolButton();
-    pie_btn->setObjectName("pie_btn");
+    pie_btn->setObjectName("graphicsitem_btn");
 
     ellipse_btn = new GenericToolButton();
-    ellipse_btn->setObjectName("ellipse_btn");
+    ellipse_btn->setObjectName("graphicsitem_btn");
 
     line_segment_btn = new GenericToolButton();
-    line_segment_btn->setObjectName("line_segment_btn");
+    line_segment_btn->setObjectName("graphicsitem_btn");
 
     polygon_btn = new GenericToolButton();
-    polygon_btn->setObjectName("polygon_btn");
+    polygon_btn->setObjectName("graphicsitem_btn");
 
     angle_btn = new GenericToolButton();
-    angle_btn->setObjectName("angle_btn");
+    angle_btn->setObjectName("graphicsitem_btn");
 
     parallel_line_btn = new GenericToolButton();
-    parallel_line_btn->setObjectName("parallel_line_btn");
+    parallel_line_btn->setObjectName("graphicsitem_btn");
 
     draw_button_list.append(point_btn);
     draw_button_list.append(line_btn);
@@ -75,12 +79,12 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     foreach(QPushButton* btn, draw_button_list)
     {
         shape_btn_layout->addWidget(btn);
+        btn->setFixedSize(btn_width, btn_height);
         btn->setCheckable(true);
         btn->setIconSize(QSize(20, 20));
     }
-    shape_btn_layout->addStretch();
-    shape_btn_layout->setContentsMargins(2, 6, 2, 2);
-    shape_btn_layout->setSpacing(6);
+    shape_btn_layout->setContentsMargins(5, 0, 5, 25);
+    shape_btn_layout->setSpacing(3);
     setLayout(shape_btn_layout);
 
     point_btn->setIcon(QIcon(":/res/background-image/point.png"));
@@ -94,27 +98,19 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     parallel_line_btn->setIcon(QIcon(":/res/background-image/Parallel_line.png"));
     line_segment_btn->setIcon(QIcon(":/res/background-image/line_segment.png"));
 
-    QFrame* line_first = new QFrame();
-    line_first->setFrameShape(QFrame::HLine);
-    line_first->setFrameShadow(QFrame::Plain);
-    line_first->setLineWidth(1);
-    line_first->setContentsMargins(0, 5, 7, 5);
-    QPalette palette = line_first->palette();
-    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
-    line_first->setPalette(palette);
-
-    shape_btn_layout->addWidget(line_first);
-
     cal_center_btn = new GenericToolButton();
-    cal_center_btn->setObjectName("cal_center_btn");
+    cal_center_btn->setObjectName("graphicsitem_btn");
+    cal_center_btn->setFixedSize(btn_width, btn_height);
     cal_center_btn->setCheckable(true);
 
     cal_vertical_btn = new GenericToolButton();
-    cal_vertical_btn->setObjectName("cal_vertical_btn");
+    cal_vertical_btn->setObjectName("graphicsitem_btn");
+    cal_vertical_btn->setFixedSize(btn_width, btn_height);
     cal_vertical_btn->setCheckable(true);
 
     cal_angle_btn = new GenericToolButton();
-    cal_angle_btn->setObjectName("cal_angle_btn");
+    cal_angle_btn->setObjectName("graphicsitem_btn");
+    cal_angle_btn->setFixedSize(btn_width, btn_height);
     cal_angle_btn->setCheckable(true);
 
     cal_center_btn->setIcon(QIcon(":/res/background-image/cal_center.png"));
@@ -131,9 +127,11 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     exclusive_button_group->addButton(cal_angle_btn);
     exclusive_button_group->setExclusive(true);
 
+    shape_btn_layout->addSpacing(14);
     shape_btn_layout->addWidget(cal_center_btn);
     shape_btn_layout->addWidget(cal_vertical_btn);
     shape_btn_layout->addWidget(cal_angle_btn);
+    shape_btn_layout->addStretch();
     cal_center_btn->setChecked(true);
     connect(cal_center_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalCenterBtnClicked);
     connect(cal_vertical_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalVerticalBtnClicked);

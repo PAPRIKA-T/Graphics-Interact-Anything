@@ -34,34 +34,17 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-    setWindowFlags(Qt::FramelessWindowHint);//隐藏边框 
-    setAttribute(Qt::WA_TranslucentBackground);
     setObjectName("this_window");
     setWindowIcon(QIcon(":/res/background-image/DRAW_ICON.png"));
     setMouseTracking(true);
-    initTimerSetting();
-
-    main_under_widget = new QWidget(this);
-    main_under_widget->setObjectName("main_under_widget");
 
     title_widget = new TitleWidget(this);
     title_widget->setObjectName("title_widget");
-    title_widget->setTitleName("GIANT");
+    title_widget->setTitleName("");
     title_widget->setTitleIcon(QPixmap(":/res/background-image/DRAW_ICON.png").scaled(20, 20));
 
     /*****************设置界面控件*****************/
     {
-        //界面中央scene部分的底层控件
-        center_scene_hori_widget = new QWidget(this);
-        center_scene_hori_widget->setObjectName("center_scene__hori_widget");
-        center_scene_widget_hori_layout = new QHBoxLayout();
-        center_scene_hori_widget->setLayout(center_scene_widget_hori_layout);
-
-        center_scene_verti_widget = new QWidget(this);
-        center_scene_verti_widget->setObjectName("center_scene_verti_widget");
-        center_scene_widget_verti_layout = new QVBoxLayout(center_scene_verti_widget);
-        center_scene_verti_widget->setLayout(center_scene_widget_verti_layout);
-
         //设置图像窗口控件2d
         image_widget_2d = new ImageSceneWidget2D(this);
         image_widget_2d->setObjectName("image_widget_2d");
@@ -70,33 +53,14 @@ Widget::Widget(QWidget *parent)
         view_list_container.setActivatdView(image_widget_2d->getGraphicsView());
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
-        //设置图像窗口工具控件
-        view_tool_bar = new ViewToolBar(this);
-        view_tool_bar->setObjectName("view_tool_bar");
-        view_tool_bar->setViewListContainer(&view_list_container);
-
-        //设置图形栏底层控件
-        graphicsitem_widget = new GraphicsItemWidget(this);
-        graphicsitem_widget->setObjectName("graphicsitem_widget");
-        graphicsitem_widget->setViewListContainer(&view_list_container);
-        graphicsitem_widget->connectSceneSignal(view_list_container.getActivedView()->getGraphicsScene());
-        draw_button_list = graphicsitem_widget->getDrawButtonList();
-
-        center_scene_widget_hori_layout->addWidget(graphicsitem_widget);
-        center_scene_widget_hori_layout->addWidget(image_widget_2d);
-        center_scene_widget_hori_layout->setSpacing(2);
-        center_scene_widget_hori_layout->setContentsMargins(0, 0, 0, 0);
-
-        center_scene_widget_verti_layout->addWidget(view_tool_bar);
-        center_scene_widget_verti_layout->addWidget(center_scene_hori_widget);
-        center_scene_widget_verti_layout->setSpacing(2);
-        center_scene_widget_verti_layout->setContentsMargins(2, 2, 0, 2);
+        image_widget_2d->getViewToolBar()->setViewListContainer(&view_list_container);
+        image_widget_2d->getGiantInteractionModeWidget()->setViewListContainer(&view_list_container);
 
         //设置TreeView
         file_view = new FileView();
         file_view->setObjectName("file_view");
         file_view->setViewListContainer(&view_list_container);
-        view_tool_bar->getSceneToolWidget()->setFileView(file_view);
+        image_widget_2d->getViewToolBar()->getSceneToolWidget()->setFileView(file_view);
         
         //LabelBoardWidget
         label_board_widget = new LabelBoardWidget(label_board_under_widget);
@@ -163,8 +127,6 @@ Widget::Widget(QWidget *parent)
 
     /*****************连接信号*****************/
     {
-        connect(view_list_container.getActivedView()->getGraphicsScene(), 
-            SIGNAL(paintContinue()), this, SLOT(paintContinue()));
         connect(view_list_container.getActivedView()->getGraphicsScene(),
             &GraphicsScene::createItemIndex,item_index_view,&ItemIndexView::addItemInitAfterPaint);
         connect(file_view, &FileView::sceneClear, view_list_container.getActivedView()->getGraphicsScene(), &GraphicsScene::resetScene);
@@ -188,7 +150,7 @@ Widget::Widget(QWidget *parent)
 
         center_widget_splitter = new QSplitter(this);
         center_widget_splitter->setObjectName("right_widget_splitter");
-        center_widget_splitter->addWidget(center_scene_verti_widget);
+        center_widget_splitter->addWidget(image_widget_2d);
         center_widget_splitter->addWidget(right_widget_splitter);
         center_widget_splitter->setStretchFactor(0, 6);
         center_widget_splitter->setStretchFactor(1, 4);
@@ -197,24 +159,13 @@ Widget::Widget(QWidget *parent)
         center_widget_splitter->setContentsMargins(0, 0, 0, 0);
 
         //窗口总体布局器
-        main_layout = new QVBoxLayout(main_under_widget);
+        main_layout = new QVBoxLayout(this);
         main_layout->addWidget(title_widget);
         main_layout->addWidget(center_widget_splitter);
         main_layout->addWidget(status_widget);
         main_layout->setContentsMargins(0, 0, 0, 0);
         main_layout->setSpacing(0);
     }
-    exclusive_graphics_btn_box = new QButtonGroup(this);
-    exclusive_graphics_btn_box->setExclusive(true);
-    draw_button_list.append(sam_widget->getPositivePointWidget()->getButton());
-    draw_button_list.append(sam_widget->getNegativePointWidget()->getButton());
-    draw_button_list.append(sam_widget->getBoxPromptWidget()->getButton());
-    draw_button_list.append(sam_widget->getPPListPromptWidget()->getButton());
-    draw_button_list.append(sam_widget->getNPListPromptWidget()->getButton());
-    foreach(QPushButton* btn, draw_button_list) {
-        exclusive_graphics_btn_box->addButton(btn);
-    }
-    draw_button_list[0]->setChecked(true);
     setWidgetSize();
 }
 
@@ -228,68 +179,6 @@ QVBoxLayout* Widget::getMainLayout()
 }
 
 /*****************其他函数*********************/
-void Widget::region(const QPoint& cursorGlobalPoint)
-{
-    // 获取窗体在屏幕上的位置区域，tl为topleft点，rb为rightbottom点
-    QRect rect = this->rect();
-    QPoint tl = mapToGlobal(rect.topLeft());
-    QPoint rb = mapToGlobal(rect.bottomRight());
-    int x = cursorGlobalPoint.x();
-    int y = cursorGlobalPoint.y();
-
-    if (tl.x() + PADDING >= x && tl.x() <= x && tl.y() + PADDING >= y && tl.y() <= y) {
-        // 左上角
-        dir = Direction::LEFTTOP;
-        this->setCursor(QCursor(Qt::SizeFDiagCursor));  // 设置鼠标形状
-    }
-    else if (x >= rb.x() - PADDING && x <= rb.x() && y >= rb.y() - PADDING && y <= rb.y()) {
-        // 右下角
-        dir = Direction::RIGHTBOTTOM;
-        this->setCursor(QCursor(Qt::SizeFDiagCursor));
-    }
-    else if (x <= tl.x() + PADDING && x >= tl.x() && y >= rb.y() - PADDING && y <= rb.y()) {
-        //左下角
-        dir = Direction::LEFTBOTTOM;
-        this->setCursor(QCursor(Qt::SizeBDiagCursor));
-    }
-    else if (x <= rb.x() && x >= rb.x() - PADDING && y >= tl.y() && y <= tl.y() + PADDING) {
-        // 右上角
-        dir = Direction::RIGHTTOP;
-        this->setCursor(QCursor(Qt::SizeBDiagCursor));
-    }
-    else if (x <= tl.x() + PADDING && x >= tl.x()) {
-        // 左边
-        dir = Direction::LEFT;
-        this->setCursor(QCursor(Qt::SizeHorCursor));
-    }
-    else if (x <= rb.x() && x >= rb.x() - PADDING) {
-        // 右边
-        dir = Direction::RIGHT;
-        this->setCursor(QCursor(Qt::SizeHorCursor));
-    }
-    else if (y >= tl.y() && y <= tl.y() + PADDING) {
-        // 上边
-        dir = Direction::UP;
-        this->setCursor(QCursor(Qt::SizeVerCursor));
-    }
-    else if (y <= rb.y() && y >= rb.y() - PADDING) {
-        // 下边
-        dir = Direction::DOWN;
-        this->setCursor(QCursor(Qt::SizeVerCursor));
-    }
-    else {
-        // 默认
-        dir = Direction::NONE;
-        this->setCursor(QCursor(Qt::ArrowCursor));
-    }
-}
-
-void Widget::initTimerSetting()
-{
-    update_geometry_timer = new QTimer(this);
-    connect(update_geometry_timer, &QTimer::timeout, this, &Widget::updateGeometry);
-}
-
 ViewListContainer* Widget::getViewListContainer()
 {
     return &view_list_container;
@@ -305,22 +194,15 @@ SamWidget* Widget::getSamWidget()
     return sam_widget;
 }
 
-ViewToolBar* Widget::getViewToolBar()
-{
-    return view_tool_bar;
-}
-
 //设置各个控件部分的大小
 void Widget::setWidgetSize()
 {
     resize(1000, 700);
     setMinimumSize(520, 220);
+    image_widget_2d->resize(650, 600);
     label_board_under_widget->setMinimumWidth(200);
     right_widget_splitter->setMinimumWidth(200);
     center_widget_splitter->setMinimumSize(750, 570);
-    main_under_widget->move(10, 10);
-    main_under_widget->resize(980, 680);
-    main_under_widget->setMinimumSize(500, 200);
     sam_widget->setMinimumHeight(100);
     //DimensionTrans();
 }
@@ -342,10 +224,7 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
     if (image_widget_2d) {
         GraphicsScene* scene = image_widget_2d->getGraphicsScene();
         image_widget_2d->getGraphicsView()->setActived(false);
-        image_widget_2d->setStyleSheet(QString::fromUtf8("border: 1px solid rgb(102, 0, 204);"));
-        disconnect(scene, &GraphicsScene::paintContinue,
-            this, &Widget::paintContinue);
-        graphicsitem_widget->disconnectSceneSignal(scene);
+        image_widget_2d->setStyleSheet(QString::fromUtf8(""));
         disConnectToolButton(image_widget_2d);
         foreach(QGraphicsItem * item, scene->items()) {
             item->setSelected(false);
@@ -356,8 +235,6 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
     image_widget->getGraphicsView()->setActived(true);
     image_widget->setStyleSheet(QString::fromUtf8("border:1px solid #fe5820;"));
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
-    connect(m_scene, &GraphicsScene::paintContinue, this, &Widget::paintContinue);
-    graphicsitem_widget->connectSceneSignal(m_scene);
     connectToolButton(image_widget_2d);
     QString pix_path = m_scene->getPixmapItem()->getPixmapPath();
     file_view->setFilePath(pix_path);
@@ -379,17 +256,6 @@ void Widget::disConnectToolButton(ImageSceneWidget2D* image_widget)
         scene, &GraphicsScene::resetScene);
 }
 
-void Widget::paintContinue()
-{
-    foreach(QPushButton * btn, draw_button_list){
-        if (btn->isChecked()) {
-            if (!btn->isEnabled())return;
-            emit btn->toggled(true);
-            break;
-        }
-    }
-}
-
 void Widget::DimensionTrans()
 {
     foreach(GraphicsView * view, view_list_container.getViewList()) {
@@ -399,13 +265,13 @@ void Widget::DimensionTrans()
     if (foreplay_widget->getAutoSave())
         foreplay_widget->saveItemToPathAllFormAllScene();
 
-    if (center_scene_widget_hori_layout->itemAt(1)->
-        widget()->objectName() == "image_widget_2d") {
-        center_scene_widget_hori_layout->removeWidget(image_widget_2d);
+    if (image_widget_2d) {
         image_widget_2d->deleteLater();
         image_widget_2d = nullptr;
         image_widget_3d = new ImageSceneWidget3D(this);
         image_widget_3d->setObjectName("image_widget_3d");
+        center_widget_splitter->insertWidget(0, image_widget_3d);
+        image_widget_3d->resize(650, 600);
         view_list_container.clearViewList();
 
         file_view->setVTKWidget(image_widget_3d->getVTKWidget());
@@ -427,26 +293,21 @@ void Widget::DimensionTrans()
         connect(image_widget_3d->getSceneWidgetCoronal()->getGraphicsView(), &GraphicsView::sliceChangeOneByOne,
             file_view, &FileView::onSliceChangeOneByOne);
 
-        mousePressChangeImageWidget(image_widget_3d->getSceneWidgetSagittal());
-        center_scene_widget_hori_layout->addWidget(image_widget_3d);
+        //mousePressChangeImageWidget(image_widget_3d->getSceneWidgetSagittal());
     }
-    else if (center_scene_widget_hori_layout->itemAt(1)->
-        widget()->objectName() == "image_widget_3d") {
-        center_scene_widget_hori_layout->removeWidget(image_widget_3d);
+    else if (image_widget_3d) {
         image_widget_3d->deleteLater();
         image_widget_3d = nullptr;
         image_widget_2d = new ImageSceneWidget2D(this);
+        image_widget_2d->resize(650, 600);
         image_widget_2d->setObjectName("image_widget_2d");
-
+        center_widget_splitter->insertWidget(0, image_widget_2d);
         view_list_container.clearViewList();
         file_view->setVTKWidget(nullptr);
         imageWidgetAdd(image_widget_2d);
-        center_scene_widget_hori_layout->addWidget(image_widget_2d);
         connectToolButton(image_widget_2d);
-        connect(image_widget_2d->getGraphicsScene(), &GraphicsScene::paintContinue, 
-            this, &Widget::paintContinue);
     }
-    view_tool_bar->getInteractionModeWidget()->returnToDefaultMode();
+    //view_tool_bar->getInteractionModeWidget()->returnToDefaultMode();
 }
 
 /*******************override virtual function********************/
@@ -491,8 +352,6 @@ void Widget::changeEvent(QEvent* event)
             // 窗口被最大化时的处理
             status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;}");
             title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 0px;border-top-right-radius: 0px;}");
-            main_under_widget->move(0, 0);
-            main_under_widget->resize(width(), height());
         }
         else if(isMinimized()){
 			// 窗口被最小化时的处理
@@ -501,8 +360,6 @@ void Widget::changeEvent(QEvent* event)
             // 窗口被还原时的处理
             status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;}");
             title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 8px;border-top-right-radius: 8px;}");
-            main_under_widget->move(10, 10);
-            main_under_widget->resize(width() - 20, height() - 20);
         }
     }
     QWidget::changeEvent(event);
@@ -511,108 +368,4 @@ void Widget::changeEvent(QEvent* event)
 void Widget::leaveEvent(QEvent* event)
 {
     this->unsetCursor();
-}
-
-void Widget::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button()==Qt::LeftButton) {
-        is_left_mouse_pressed = true;
-        if (cursor() != Qt::ArrowCursor) {
-            this->mouseGrabber();
-            update_geometry_timer->start(16);
-        }
-        event->accept();
-    }
-}
-
-void Widget::mouseMoveEvent(QMouseEvent *event)
-{
-    if (geometry() != QGuiApplication::screens().at(0)->availableVirtualGeometry()) {
-        global_point = event->globalPos();
-        if (!is_left_mouse_pressed) {
-            this->region(global_point);
-        }
-    }
-    QWidget::mouseMoveEvent(event);
-}
-
-void Widget::mouseReleaseEvent(QMouseEvent *event)
-{
-    is_left_mouse_pressed = false;
-    if (event->button() == Qt::LeftButton) {
-        if (dir != Direction::NONE) {
-            this->releaseMouse();
-            this->unsetCursor();
-            update_geometry_timer->stop();
-            main_under_widget->resize(width() - 20, height() - 20);
-            update_main_window_geomtry_flag = 0;
-        }
-    }
-    QWidget::mouseReleaseEvent(event);
-}
-
-void Widget::updateGeometry()
-{
-    QRect rect = this->rect();
-    QPoint tl = mapToGlobal(rect.topLeft());
-    QPoint rb = mapToGlobal(rect.bottomRight());
-    if (dir != Direction::NONE) {
-        QRect rMove(tl, rb);
-        switch (dir) {
-        case Direction::LEFT:
-            if (rb.x() - global_point.x() <= this->minimumWidth())
-                rMove.setX(tl.x());
-            else
-                rMove.setX(global_point.x());
-            break;
-        case Direction::RIGHT:
-            rMove.setWidth(global_point.x() - tl.x());
-            break;
-        case Direction::UP:
-            if (rb.y() - global_point.y() <= this->minimumHeight())
-                rMove.setY(tl.y());
-            else
-                rMove.setY(global_point.y());
-            break;
-        case Direction::DOWN:
-            rMove.setHeight(global_point.y() - tl.y());
-            break;
-        case Direction::LEFTTOP:
-            if (rb.x() - global_point.x() <= this->minimumWidth())
-                rMove.setX(tl.x());
-            else
-                rMove.setX(global_point.x());
-            if (rb.y() - global_point.y() <= this->minimumHeight())
-                rMove.setY(tl.y());
-            else
-                rMove.setY(global_point.y());
-            break;
-        case Direction::RIGHTTOP:
-            rMove.setWidth(global_point.x() - tl.x());
-            if (rb.y() - global_point.y() <= this->minimumHeight())
-                rMove.setY(tl.y());
-            else
-                rMove.setY(global_point.y());
-            break;
-        case Direction::LEFTBOTTOM:
-            if (rb.x() - global_point.x() <= minimumWidth())
-                rMove.setX(tl.x());
-            else
-                rMove.setX(global_point.x());
-            rMove.setHeight(global_point.y() - tl.y());
-            break;
-        case Direction::RIGHTBOTTOM:
-            rMove.setWidth(global_point.x() - tl.x());
-            rMove.setHeight(global_point.y() - tl.y());
-            break;
-        default:
-            break;
-        }
-        this->setGeometry(rMove);
-        ++update_main_window_geomtry_flag;
-        if (update_main_window_geomtry_flag == 5) {
-            main_under_widget->resize(rMove.width() - 20, rMove.height() - 20);
-            update_main_window_geomtry_flag = 0;
-        }
-    }
 }

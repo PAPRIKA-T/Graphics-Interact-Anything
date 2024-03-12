@@ -141,6 +141,7 @@ void GraphicsScene::initTextItem()
     QString str1 = "X:" + QString::number(0, 'f', 0) + "px ";
     QString str2 = "Y:" + QString::number(0, 'f', 0) + "px";
     text_left_up->setPlainText(str1 + str2);
+    text_left_up->setVisible(false);
 
     //初始化左下文本item
     text_left_bottom = new GraphicsTextItem(QPointF(0,0));
@@ -148,7 +149,7 @@ void GraphicsScene::initTextItem()
     text_left_bottom->setDefaultTextColor(Qt::green);
     text_left_bottom->setTextWidth(-1);
     addItem(text_left_bottom);
-    text_left_bottom->setPlainText(QString(""));
+    text_left_bottom->setPlainText(str1 + str2);
 
     //初始化右下文本item
     text_right_bottom = new GraphicsTextItem(QPointF(0, 0));
@@ -180,7 +181,7 @@ void GraphicsScene::updateTextPos()
     text_left_bottom->setPos(m_view->mapToScene(0, m_view->height() - text_left_bottom->boundingRect().height()));
     text_right_bottom->setPos(m_view->mapToScene(m_view->width() - text_right_bottom->boundingRect().width(),
         m_view->height() - text_right_bottom->boundingRect().height()));
-    text_right_up->setPos(m_view->mapToScene(m_view->width() - text_right_up->boundingRect().width(), 0));
+    text_right_up->setPos(m_view->mapToScene(m_view->width() - text_right_up->boundingRect().width(), 34));
 
     thumbnail_item->setPos(m_view->mapToScene(3, m_view->height() - thumbnail_item->boundingRect().height() - 5));
 }

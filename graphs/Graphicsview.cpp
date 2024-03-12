@@ -12,6 +12,14 @@
 #include "model/StyleSheetConfigModel.h"
 #include "GraphicsPolygon.h"
 #include <QTimer>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include "widgets/GraphicsItemWidget.h"
+#include "widgets/ViewToolBar.h";
+#include <QHBoxLayout>
+#include <QButtonGroup>
+#include "widgets/GiantInteractionModeWidget.h"
+#include <model/ViewListContainer.h>
 
 #define EPS (1e-5) //除数最小量
 
@@ -34,16 +42,42 @@ GraphicsView::GraphicsView(QWidget *parent) :
     setOptimizationFlag(DontAdjustForAntialiasing, true);
     /************************************************************************/
     initGraphicsScene();
+    initLayout();
+    connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
+
+    ViewListContainer view_list_container;
+    view_list_container.setActivatdView(this);
+    view_list_container.pushBackView(this);
+
+    view_tool_bar->setViewListContainer(&view_list_container);
+    interaction_mode_widget->setViewListContainer(&view_list_container);
+    graphicsitem_widget->setViewListContainer(&view_list_container);
 }
 
 GraphicsView::~GraphicsView()
 {
     delete m_scene;
+    delete horizontal_layout;
+    delete main_layout;
+    delete graphicsitem_widget;
+    delete exclusive_graphics_btn_box;
+    delete view_tool_bar;
+    delete interaction_mode_widget;
 }
 
-GraphicsScene* GraphicsView::getGraphicsScene()
+GraphicsScene* GraphicsView::getGraphicsScene() const
 {
     return m_scene;
+}
+
+ViewToolBar* GraphicsView::getViewToolBar() const
+{
+    return view_tool_bar;
+}
+
+GiantInteractionModeWidget* GraphicsView::getGiantInteractionModeWidget() const
+{
+    return interaction_mode_widget;
 }
 
 void GraphicsView::initGraphicsScene()
@@ -55,7 +89,55 @@ void GraphicsView::initGraphicsScene()
     generic_interaction_model.setGraphicsView(this);
     m_transform_model.setGraphicsView(this);
     m_graphics_calculate_model.setGraphicsScene(m_scene);
-    updateLtText();
+    updateLbText();
+}
+
+void GraphicsView::initLayout()
+{
+    main_layout = new QVBoxLayout(this);
+    horizontal_layout = new QHBoxLayout();
+    graphicsitem_widget = new GraphicsItemWidget(this);
+    graphicsitem_widget->setObjectName("graphicsitem_widget");
+    graphicsitem_widget->connectSceneSignal(m_scene);
+    draw_button_list = graphicsitem_widget->getDrawButtonList();
+    exclusive_graphics_btn_box = new QButtonGroup(this);
+    exclusive_graphics_btn_box->setExclusive(true);
+    //draw_button_list.append(sam_widget->getPositivePointWidget()->getButton());
+    //draw_button_list.append(sam_widget->getNegativePointWidget()->getButton());
+    //draw_button_list.append(sam_widget->getBoxPromptWidget()->getButton());
+    //draw_button_list.append(sam_widget->getPPListPromptWidget()->getButton());
+    //draw_button_list.append(sam_widget->getNPListPromptWidget()->getButton());
+    foreach(QPushButton* btn, draw_button_list) {
+        exclusive_graphics_btn_box->addButton(btn);
+    }
+    draw_button_list[0]->setChecked(true);
+
+    //设置图像窗口工具控件
+    view_tool_bar = new ViewToolBar(this);
+    view_tool_bar->setObjectName("view_tool_bar");
+
+    //设置交互模式控件
+    interaction_mode_widget = new GiantInteractionModeWidget(this);
+    horizontal_layout->addWidget(graphicsitem_widget);
+    horizontal_layout->addWidget(interaction_mode_widget);
+    horizontal_layout->addStretch();
+    horizontal_layout->setSpacing(0);
+
+    main_layout->addWidget(view_tool_bar);
+    main_layout->addLayout(horizontal_layout);
+    main_layout->setContentsMargins(0, 0, 0, 0);
+    setLayout(main_layout);
+}
+
+void GraphicsView::paintContinue()
+{
+    foreach(QPushButton * btn, draw_button_list) {
+        if (btn->isChecked()) {
+            if (!btn->isEnabled())return;
+            emit btn->toggled(true);
+            break;
+        }
+    }
 }
 
 GenericInteractionModel* GraphicsView::getGenericInteractionModel()
@@ -78,7 +160,7 @@ QPointF GraphicsView::getPresentPosOnOriginImage()
     return m_present_pos_on_origin_image;
 }
 
-void GraphicsView::updateLtText()
+void GraphicsView::updateLbText()
 {
     if (pixmap_item->getPixmap().isNull()) {
         m_present_pos_on_origin_image = mapToScene(m_present_pos).toPoint();
@@ -91,7 +173,7 @@ void GraphicsView::updateLtText()
     QString str1 = "X:" + QString::number(m_present_pos_on_origin_image.rx(), 'f', 0) + "px ";
     QString str2 = "Y:" + QString::number(m_present_pos_on_origin_image.ry(), 'f', 0) + "px";
     QString mouse_pos_to_img_pos = str1 + str2;
-    m_scene->getLeftUpTextItem()->setPlainText(mouse_pos_to_img_pos);
+    m_scene->getLeftBottomTextItem()->setPlainText(mouse_pos_to_img_pos);
 }
 
 void GraphicsView::setMagImage(const QPointF& p)
@@ -268,7 +350,7 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         }
         else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     }
-    updateLtText();
+    updateLbText();
 }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *event)

@@ -11,7 +11,7 @@ QComboBox QAbstractItemView
 {
     /*outline: 0px solid gray;*/   /* 选定项的虚框 */
     color: white;
-    background-color: rgb(200, 200, 200);   /* 整个下拉窗体的背景色 */
+    background-color: rgb(65, 65, 65);   /* 整个下拉窗体的背景色 */
     selection-background-color: transparent;   /* 整个下拉窗体被选中项的背景色 */
 }
 
@@ -75,21 +75,56 @@ QCheckBox::indicator:unchecked
 	image: url(:/res/background-image/uncheckbox.png);
 }
 
-/*******************Title widget*********************/
+/************************************************Color Widget************************************************/
 QWidget#title_widget
 {
-    background-color:rgb(255, 255, 255);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    background-color:rgb(37, 37, 37);
 }
 
 QLabel#title_name
 {
     color:white;
 }
+ViewToolBar
+{
+    background-color:rgb(56, 56, 56);
+}
 
-/*******************Main Window*********************/
+LabelBoardToolWidget
+{
+    background-color:rgb(48, 48, 48);
+}
+
+QGraphicsView 
+{
+    background-color:rgb(65, 65, 65);
+}
+
+QWidget#label_board_under_widget
+{
+    background-color:rgb(63, 63, 63);
+}
+
+
+StatusWidget
+{
+    background-color:rgb(37, 37, 37);
+}
+
+QWidget#rb_stack_widget
+{
+    background-color:rgb(58, 58, 58);
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+/*******************Transparent*********************/
 Widget
+{
+    background-color:transparent;
+}
+
+SceneToolWidget
 {
     background-color:transparent;
 }
@@ -100,64 +135,14 @@ QScrollArea
     border:none;
 }
 
-QWidget#main_under_widget
-{
-    background-color:rgb(255, 255, 255);
-    border-radius: 8px;
-}
-
 QWidget#scroll_area_widget
 {
     background-color:transparent;
 }
 
-SceneToolWidget
-{
-    background-color:rgb(255, 255, 255);
-    border-radius: 4px;
-}
-
-LabelBoardToolWidget
-{
-    background-color:rgb(255, 255, 255);
-}
-
-QGraphicsView 
-{
-    border: 1px solid rgb(102, 0, 204);
-    background-color:rgb(200, 200, 200);
-}
-
-QWidget#label_board_under_widget
-{
-    background-color:rgb(255, 255, 255);
-    border-radius: 4px;
-}
-
-QWidget#center_scene_verti_widget
-{
-    background-color:rgb(255, 255, 255);
-}
-
-StatusWidget
-{
-    background-color:rgb(255, 255, 255);
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-
-QWidget#rb_stack_widget
-{
-    background-color:rgb(255, 255, 255);
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-/*******************Paint_button widget*********************/
 GraphicsItemWidget#graphicsitem_widget
 {
-    background-color:rgb(255, 255, 255);
-    border-radius: 4px;
+    background-color:transparent;
 }
 
 /*******************QSplitter*********************/
@@ -191,7 +176,7 @@ QHeaderView::section
 QTableView
 {
     background-color:rgb(58, 58, 58);
-    alternate-background-color: rgb(220, 220, 220);
+    alternate-background-color:rgb(53,53,53);
     border: none;
     font-size:11px;
     gridline-color: transparent;
@@ -201,7 +186,7 @@ QTableView
 
 QTableView#item_index_widget
 {
-    background-color: rgb(220, 220, 220);
+    background-color:rgb(58, 58, 58);
     alternate-background-color:rgb(53,53,53);
     border: none;
     font-size:11px;
@@ -214,7 +199,7 @@ QTableView#item_index_widget
 
 QTableView#label_board_widget
 {
-    background-color:rgb(220, 220, 220);
+    background-color:rgb(53, 53, 53);
     alternate-background-color:rgb(48,48,48);
     border: none;
     border-bottom-left-radius: 4px;
@@ -264,7 +249,7 @@ QTreeView::branch:open:has-children{
 
 FileView
 {
-    background-color:rgb(220, 220, 220);
+    background-color:rgb(58, 58, 58);
     alternate-background-color:rgb(53,53,53);
     color:#ced4da;
     show-decoration-selected: 1;
@@ -325,7 +310,7 @@ ForePlayWidget#foreplay_widget
     background-color:transparent;
 }
 
-/*******************button style*********************/
+/*************************************************button style************************************************/
 GenericToolButton
 {
     color:rgb(200, 200, 200);
@@ -385,4 +370,28 @@ GenericToolButton#stack_btn:hover
 GenericToolButton#title_right_btn:hover
 {
     background-color:rgba(88, 88, 88, 150);
+}
+
+/*******graphicsitem_btn*******/
+GenericToolButton#graphicsitem_btn
+{
+    background-color:rgb(48, 48, 48);
+    border-radius: 4px;
+}
+
+GenericToolButton#graphicsitem_btn:hover
+{
+    color:rgb(240, 240, 240);
+    background-color:rgba(88, 88, 88, 150);
+}
+
+GenericToolButton#graphicsitem_btn:pressed
+{
+    color:rgb(240, 240, 240);
+    background-color:rgb(65,65,65);
+}
+
+GenericToolButton#graphicsitem_btn:checked
+{
+    background-color:rgb(67, 90, 134);
 }
