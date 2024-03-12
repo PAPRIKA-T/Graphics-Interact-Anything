@@ -13,6 +13,16 @@ ImageSceneWidget2D::~ImageSceneWidget2D()
 	delete m_view;
 }
 
+ViewToolBar* ImageSceneWidget2D::getViewToolBar() const
+{
+	return m_view->getViewToolBar();
+}
+
+GiantInteractionModeWidget* ImageSceneWidget2D::getGiantInteractionModeWidget() const
+{
+	return m_view->getGiantInteractionModeWidget();
+}
+
 GraphicsView* ImageSceneWidget2D::getGraphicsView() const
 {
 	return m_view;

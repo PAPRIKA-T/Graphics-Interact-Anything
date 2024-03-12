@@ -13,6 +13,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     :QWidget(parent)
 {
     setFixedHeight(32);
+    setMinimumWidth(200);
     main_layout = new QHBoxLayout(this);
     zoom_btn = new GenericToolButton(this);
     zoom_btn->setCheckable(true);
@@ -64,7 +65,6 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     connect(turn_left_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnLeftBtn);
     connect(turn_right_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnRightBtn);
 
-    main_layout->addStretch();
     main_layout->addWidget(clear_scene_btn);
     main_layout->addWidget(turn_left_btn);
     main_layout->addWidget(turn_right_btn);

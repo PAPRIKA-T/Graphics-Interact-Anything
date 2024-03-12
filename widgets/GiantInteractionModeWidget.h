@@ -3,7 +3,7 @@
 #include <QWidget>
 class QButtonGroup;
 class ViewListContainer;
-class QHBoxLayout;
+class QVBoxLayout;
 class GenericToolButton;
 class GiantInteractionModeWidget  : public QWidget
 {
@@ -25,7 +25,7 @@ private slots:
 private:
     ViewListContainer* view_list_container = nullptr;
     QButtonGroup* exclusive_button_group = nullptr;
-    QHBoxLayout* main_layout = nullptr;
+    QVBoxLayout* main_layout = nullptr;
 
     GenericToolButton* rubber_btn = nullptr;
     GenericToolButton* observe_btn = nullptr;

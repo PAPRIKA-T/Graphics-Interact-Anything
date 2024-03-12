@@ -6,6 +6,7 @@
 #include "graphs/Graphicspixmapitem.h"
 #include "StatusWidget.h"
 #include "utils/FilePathOperation.h"
+#include "model/StyleSheetConfigModel.h"
 
 /****************************************************导入文件索引的树状控件*********************************************************/
 
@@ -417,6 +418,8 @@ void FileView::slotCustomContextMenuRequested(QPoint pos)
     if (current_index.isValid())
     {
         QMenu menu;
+        StyleSheetConfigModel style_sheet;
+        style_sheet.setMenuStyle(&menu);
         menu.addAction(remove_img);
         menu.exec(QCursor::pos());  //QCursor::pos()让menu的位置在鼠标点击的的位置
     }

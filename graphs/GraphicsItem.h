@@ -69,13 +69,13 @@ public:
     void setDeleteDirectly(bool ok);
 
 /********************坐标信息相关********************/
-    ItemPointF getCenter();
+    ItemPointF getCenter() const;
     ItemPointF& getRCenter();
     virtual void setCenter(const QPointF& p);
-    ItemPointF getStart();
+    ItemPointF getStart() const;
     ItemPointF& getRStart();
     virtual void setStart(const QPointF& p);
-    ItemPointF getEdge();
+    ItemPointF getEdge() const;
     ItemPointF& getREdge();
     virtual void setEdge(const QPointF& p);
     virtual void setSE(const QPointF& s, const QPointF& e);

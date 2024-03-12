@@ -7,6 +7,7 @@ class QPushButton;
 class QButtonGroup;
 class GraphicsScene;
 class GenericToolButton;
+class GiantInteractionModeWidget;
 
 class GraphicsItemWidget  : public QWidget
 {

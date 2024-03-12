@@ -55,9 +55,9 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
     <Import Project="$(QtMsBuild)\Qt.props" />
-    <Import Project="props\Release_x64_itk.props" />
-    <Import Project="props\Release_x64_opencv.props" />
-    <Import Project="props\Release_x64_vtk.props" />
+    <Import Project="..\props\Release_x64_itk.props" />
+    <Import Project="..\props\Release_x64_opencv.props" />
+    <Import Project="..\props\Release_x64_vtk.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
@@ -218,6 +218,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="graphs\GraphicsItemIoParameter.cpp" />
+    <ClCompile Include="model\StyleSheetConfigModel.cpp" />
     <ClCompile Include="model\XmlIOstreamModel.cpp" />
     <ClCompile Include="utils\ColorOperation.cpp" />
     <ClCompile Include="utils\GiantTxtIOstream.cpp" />
@@ -304,6 +305,7 @@
     <QtMoc Include="graphs\GraphicsRound.h" />
     <QtMoc Include="graphs\GraphicsRect.h" />
     <ClInclude Include="graphs\GraphicsItemIoParameter.h" />
+    <ClInclude Include="model\StyleSheetConfigModel.h" />
     <ClInclude Include="model\XmlIOstreamModel.h" />
     <ClInclude Include="utils\ColorOperation.h" />
     <ClInclude Include="utils\GiantTxtIOstream.h" />

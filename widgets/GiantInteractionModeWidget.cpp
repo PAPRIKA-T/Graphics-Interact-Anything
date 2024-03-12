@@ -3,31 +3,42 @@
 #include "Model/ViewListContainer.h"
 #include "GenericToolButton.h"
 #include <QButtonGroup>
-#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    setFixedHeight(32);
-    main_layout = new QHBoxLayout(this);
+    setFixedWidth(32);
+    main_layout = new QVBoxLayout(this);
     rubber_btn = new GenericToolButton(this);
     rubber_btn->setIcon(QIcon(":/res/background-image/rubber.png"));
     rubber_btn->setCheckable(true);
+    rubber_btn->setObjectName("interaction_mode_btn");
+
     observe_btn = new GenericToolButton(this);
     observe_btn->setIcon(QIcon(":/res/background-image/observe.png"));
     observe_btn->setCheckable(true);
+    observe_btn->setObjectName("interaction_mode_btn");
+
     select_btn = new GenericToolButton(this);
     select_btn->setIcon(QIcon(":/res/background-image/arrow_cursor.png"));
     select_btn->setCheckable(true);
+    select_btn->setObjectName("interaction_mode_btn");
+
     edit_polygon_btn = new GenericToolButton(this);
     edit_polygon_btn->setIcon(QIcon(":/res/background-image/edit_polygon.png"));
     edit_polygon_btn->setCheckable(true);
+    edit_polygon_btn->setObjectName("interaction_mode_btn");
+
     draw_btn = new GenericToolButton(this);
     draw_btn->setIcon(QIcon(":/res/background-image/draw_pen.png"));
     draw_btn->setCheckable(true);
+    draw_btn->setObjectName("interaction_mode_btn");
+
     calculate_btn = new GenericToolButton(this);
     calculate_btn->setIcon(QIcon(":/res/background-image/calculate_mode.png"));
     calculate_btn->setCheckable(true);
+    calculate_btn->setObjectName("interaction_mode_btn");
 
     rubber_btn->setCustomTooltip("Rubber Mode");
     observe_btn->setCustomTooltip("Observe Mode");
@@ -55,26 +66,14 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 
     main_layout->addWidget(draw_btn);
     main_layout->addWidget(calculate_btn);
-
-    QFrame* line_for = new QFrame(this);
-    line_for->setFrameShape(QFrame::VLine);
-    line_for->setFrameShadow(QFrame::Plain);
-    line_for->setLineWidth(1);
-    line_for->setContentsMargins(2, 5, 2, 5);
-    QPalette palette = line_for->palette();
-    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
-    line_for->setPalette(palette);
-
-    main_layout->addWidget(line_for);
-
     main_layout->addWidget(observe_btn);
     main_layout->addWidget(select_btn);
     main_layout->addWidget(edit_polygon_btn);
     main_layout->addWidget(rubber_btn);
 
     main_layout->addStretch();
-    main_layout->setContentsMargins(2, 2, 2, 2);
-    main_layout->setSpacing(6);
+    main_layout->setContentsMargins(0, 14, 0, 2);
+    main_layout->setSpacing(3);
 }
 
 GiantInteractionModeWidget::~GiantInteractionModeWidget()
