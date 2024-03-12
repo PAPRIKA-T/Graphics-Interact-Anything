@@ -676,3 +676,4 @@ void GraphicsView::resizeEvent(QResizeEvent* event)
         (m_scene->height() - m_scene->getPixmapItem()->getFscaleH()) / 2));
     m_transform_model.originPositonReturn();
 }
+

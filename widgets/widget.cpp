@@ -35,9 +35,8 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     setObjectName("this_window");
-    setWindowIcon(QIcon(":/res/background-image/DRAW_ICON.png"));
-    setMouseTracking(true);
-
+    setWindowIcon(QPixmap(":/res/background-image/DRAW_ICON.png").scaled(15, 15));
+    setWindowTitle("Graphics-Interact-Anything");
     title_widget = new TitleWidget(this);
     title_widget->setObjectName("title_widget");
     title_widget->setTitleName("");

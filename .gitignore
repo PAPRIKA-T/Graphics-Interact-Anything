@@ -15,12 +15,12 @@
 ai_models/
 images/
 PropertySheet.props
-Graphs-Interact-Anything.sln
-Graphs-Interact-Anything.filters
-Graphs-Interact-Anything.user
-Graphs-Interact-Anything.vcxproj.user
-Graphs-Interact-Anything.vcxproj
-Graphs-Interact-Anything.vcxproj.filters
+Graphics-Interact-Anything.sln
+Graphics-Interact-Anything.filters
+Graphics-Interact-Anything.user
+Graphics-Interact-Anything.vcxproj.user
+Graphics-Interact-Anything.vcxproj
+Graphics-Interact-Anything.vcxproj.filters
                
 # Mono auto generated files
 mono_crash.*

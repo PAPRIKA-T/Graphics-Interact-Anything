@@ -116,11 +116,11 @@ TitleWidget::TitleWidget(QWidget* parent)
     help_menu->addAction(theme_divert);
     help_menu_btn->setMenu(help_menu);
 
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(8);
     main_layout->addWidget(title_icon);
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(0);
     main_layout->addWidget(title_name);
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(0);
     main_layout->addWidget(file_menu_btn);
     main_layout->addWidget(segment_menu_btn);
     main_layout->addWidget(edit_menu_btn);
