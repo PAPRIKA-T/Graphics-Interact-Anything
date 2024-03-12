@@ -1,5 +1,6 @@
 ﻿#include "ScenePromptItemModel.h"
 #include "graphs/Graphicsscene.h"
+#include "graphs/GraphicsItem.h"
 #include "graphs/Graphicspixmapitem.h"
 #include "graphs/GraphicsPolygon.h"
 #include "graphs/GraphicsLineSegment.h"
