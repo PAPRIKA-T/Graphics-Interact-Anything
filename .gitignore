@@ -13,11 +13,20 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 ai_models/
+<<<<<<< Updated upstream
+=======
+images/
+PropertySheet.props
+>>>>>>> Stashed changes
 Graphs-Interact-Anything.sln
 Graphs-Interact-Anything.filters
 Graphs-Interact-Anything.user
 Graphs-Interact-Anything.vcxproj.user
 Graphs-Interact-Anything.vcxproj
+<<<<<<< Updated upstream
+=======
+Graphs-Interact-Anything.vcxproj.filters
+>>>>>>> Stashed changes
 
 # Mono auto generated files
 mono_crash.*

@@ -3,12 +3,17 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
+<<<<<<< Updated upstream
     <IncludePath>C:\Users\86186\Desktop\intelligence\opencv\build\include\opencv2;C:\Users\86186\Desktop\intelligence\opencv\build\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\86186\Desktop\intelligence\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+=======
+    <IncludePath>C:\Users\86186\Desktop\intelligence\opencv\build\include;C:\Users\86186\Desktop\intelligence\opencv\build\include\opencv2;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\openCV_C++_V15\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+>>>>>>> Stashed changes
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>opencv_world460.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\86186\Desktop\intelligence\opencv\build\x64\vc15\lib\opencv_world460.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
