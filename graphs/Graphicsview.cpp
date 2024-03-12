@@ -14,7 +14,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include "widgets/GraphicsItemWidget.h"
+#include "widgets/GraphicsItemMenu.h"
 #include "widgets/ViewToolBar.h";
 #include <QHBoxLayout>
 #include <QButtonGroup>
@@ -44,14 +44,6 @@ GraphicsView::GraphicsView(QWidget *parent) :
     initGraphicsScene();
     initLayout();
     connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
-
-    ViewListContainer view_list_container;
-    view_list_container.setActivatdView(this);
-    view_list_container.pushBackView(this);
-
-    view_tool_bar->setViewListContainer(&view_list_container);
-    interaction_mode_widget->setViewListContainer(&view_list_container);
-    graphicsitem_widget->setViewListContainer(&view_list_container);
 }
 
 GraphicsView::~GraphicsView()
@@ -59,8 +51,6 @@ GraphicsView::~GraphicsView()
     delete m_scene;
     delete horizontal_layout;
     delete main_layout;
-    delete graphicsitem_widget;
-    delete exclusive_graphics_btn_box;
     delete view_tool_bar;
     delete interaction_mode_widget;
 }
@@ -96,21 +86,12 @@ void GraphicsView::initLayout()
 {
     main_layout = new QVBoxLayout(this);
     horizontal_layout = new QHBoxLayout();
-    graphicsitem_widget = new GraphicsItemWidget(this);
-    graphicsitem_widget->setObjectName("graphicsitem_widget");
-    graphicsitem_widget->connectSceneSignal(m_scene);
-    draw_button_list = graphicsitem_widget->getDrawButtonList();
-    exclusive_graphics_btn_box = new QButtonGroup(this);
-    exclusive_graphics_btn_box->setExclusive(true);
+
     //draw_button_list.append(sam_widget->getPositivePointWidget()->getButton());
     //draw_button_list.append(sam_widget->getNegativePointWidget()->getButton());
     //draw_button_list.append(sam_widget->getBoxPromptWidget()->getButton());
     //draw_button_list.append(sam_widget->getPPListPromptWidget()->getButton());
     //draw_button_list.append(sam_widget->getNPListPromptWidget()->getButton());
-    foreach(QPushButton* btn, draw_button_list) {
-        exclusive_graphics_btn_box->addButton(btn);
-    }
-    draw_button_list[0]->setChecked(true);
 
     //设置图像窗口工具控件
     view_tool_bar = new ViewToolBar(this);
@@ -118,7 +99,6 @@ void GraphicsView::initLayout()
 
     //设置交互模式控件
     interaction_mode_widget = new GiantInteractionModeWidget(this);
-    horizontal_layout->addWidget(graphicsitem_widget);
     horizontal_layout->addWidget(interaction_mode_widget);
     horizontal_layout->addStretch();
     horizontal_layout->setSpacing(0);
@@ -127,11 +107,14 @@ void GraphicsView::initLayout()
     main_layout->addLayout(horizontal_layout);
     main_layout->setContentsMargins(0, 0, 0, 0);
     setLayout(main_layout);
+
+    view_tool_bar->setGraphicsView(this);
+    interaction_mode_widget->setGraphicsView(this);
 }
 
 void GraphicsView::paintContinue()
 {
-    foreach(QPushButton * btn, draw_button_list) {
+    foreach(QAction * btn, interaction_mode_widget->getGraphicsItemMenu()->getDrawActionList()) {
         if (btn->isChecked()) {
             if (!btn->isEnabled())return;
             emit btn->toggled(true);

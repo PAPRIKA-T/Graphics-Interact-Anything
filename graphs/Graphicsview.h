@@ -18,7 +18,6 @@ class GraphicsPixmapItem;
 class ImageSceneWidget2D;
 class QVBoxLayout;
 class QPushButton;
-class GraphicsItemWidget;
 class QButtonGroup;
 class ViewToolBar;
 class QHBoxLayout;
@@ -99,9 +98,6 @@ private:
     QVBoxLayout* main_layout = nullptr;
     QHBoxLayout* horizontal_layout = nullptr;
     GiantInteractionModeWidget* interaction_mode_widget = nullptr;
-    GraphicsItemWidget* graphicsitem_widget = nullptr; //图形绘制按钮控件
-    QList<QPushButton*> draw_button_list; //绘图按钮链表
-    QButtonGroup* exclusive_graphics_btn_box = nullptr; //图形按钮互斥组
     ViewToolBar* view_tool_bar = nullptr; //view工具控件
 
     /********************************/

@@ -112,7 +112,7 @@ SceneToolWidget::~SceneToolWidget()
 
 void SceneToolWidget::onMaskToGraphicsItemBtn()
 {
-    view_list_container->getActivedView()->getGraphicsScene()->getScenePromptItemModel()->Mask2Item();
+    m_view->getGraphicsScene()->getScenePromptItemModel()->Mask2Item();
 }
 
 void SceneToolWidget::paintEvent(QPaintEvent* event)
@@ -124,9 +124,9 @@ void SceneToolWidget::paintEvent(QPaintEvent* event)
     style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
-void SceneToolWidget::setViewListContainer(ViewListContainer* vlc)
+void SceneToolWidget::setGraphicsView(GraphicsView* vlc)
 {
-    view_list_container = vlc;
+    m_view = vlc;
 }
 
 void SceneToolWidget::setFileView(FileView* f)
@@ -136,19 +136,19 @@ void SceneToolWidget::setFileView(FileView* f)
 
 void SceneToolWidget::onCameraBtn()
 {
-    view_list_container->getActivedView()->saveViewImage();
+    m_view->saveViewImage();
 }
 
 void SceneToolWidget::onZoomSceneBtn(int checked)
 {
-    emit view_list_container->getActivedView()->getGraphicsScene()->zoom3DLayout(checked);
-    view_list_container->getActivedView()->getViewTransFormModel()->setZoomIn(checked);
-    view_list_container->getActivedView()->getViewTransFormModel()->fitScreen();
+    emit m_view->getGraphicsScene()->zoom3DLayout(checked);
+    m_view->getViewTransFormModel()->setZoomIn(checked);
+    m_view->getViewTransFormModel()->fitScreen();
 }
 
 void SceneToolWidget::onColorReverseBtn()
 {
-    QImage org_image = view_list_container->getActivedView()->getGraphicsScene()->
+    QImage org_image = m_view->getGraphicsScene()->
         getPixmapItem()->getPixmap().toImage();
     if (org_image.isNull()) return;
     // 循环获得每个像素的rgb，循环减，进行反转
@@ -163,36 +163,35 @@ void SceneToolWidget::onColorReverseBtn()
         }
     }
 
-    view_list_container->getActivedView()->getGraphicsScene()->
+    m_view->getGraphicsScene()->
         getPixmapItem()->updatePixmap(QPixmap::fromImage(org_image));
 }
 
 void SceneToolWidget::onFixScreenBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->fitScreen();
+    m_view->getViewTransFormModel()->fitScreen();
 }
 
 void SceneToolWidget::onCenterOnBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->originPositonReturn();
+    m_view->getViewTransFormModel()->originPositonReturn();
 }
 
 void SceneToolWidget::onRotateRBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->rotateR();
-    view_list_container->getActivedView()->getGraphicsScene()->updateTextPos();
+    m_view->getViewTransFormModel()->rotateR();
+    m_view->getGraphicsScene()->updateTextPos();
 }
 
 void SceneToolWidget::onRotateLBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->rotateL();
-    view_list_container->getActivedView()->getGraphicsScene()->updateTextPos();
+    m_view->getViewTransFormModel()->rotateL();
+    m_view->getGraphicsScene()->updateTextPos();
 }
 
 void SceneToolWidget::onClearSceneBtn()
 {
-    view_list_container->getActivedView()->
-        getGraphicsScene()->clearSceneGraphicsItem();
+    m_view->getGraphicsScene()->clearSceneGraphicsItem();
 }
 
 void SceneToolWidget::onTurnLeftBtn()

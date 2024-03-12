@@ -52,9 +52,6 @@ Widget::Widget(QWidget *parent)
         view_list_container.setActivatdView(image_widget_2d->getGraphicsView());
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
-        image_widget_2d->getViewToolBar()->setViewListContainer(&view_list_container);
-        image_widget_2d->getGiantInteractionModeWidget()->setViewListContainer(&view_list_container);
-
         //设置TreeView
         file_view = new FileView();
         file_view->setObjectName("file_view");

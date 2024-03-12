@@ -25,15 +25,14 @@ ViewToolBar::~ViewToolBar()
 	delete scene_tool_widget;
 }
 
-void ViewToolBar::setViewListContainer(ViewListContainer* vlc)
-{
-	view_list_container = vlc;
-	scene_tool_widget->setViewListContainer(vlc);
-}
-
 SceneToolWidget* ViewToolBar::getSceneToolWidget()
 {
 	return scene_tool_widget;
+}
+
+void ViewToolBar::setGraphicsView(GraphicsView*v)
+{
+	scene_tool_widget->setGraphicsView(v);
 }
 
 void ViewToolBar::paintEvent(QPaintEvent* event)

@@ -3,7 +3,7 @@
 #include <QWidget>
 
 class FileView;
-class ViewListContainer;
+class GraphicsView;
 class QHBoxLayout;
 class GenericToolButton;
 class GiantInteractionModeWidget;
@@ -16,7 +16,7 @@ public:
     SceneToolWidget(QWidget* parent = nullptr);
     ~SceneToolWidget();
     virtual void paintEvent(QPaintEvent* event) override;
-    void setViewListContainer(ViewListContainer*);
+    void setGraphicsView(GraphicsView*);
     void setFileView(FileView*);
 private slots:
     void onMaskToGraphicsItemBtn();
@@ -33,7 +33,7 @@ private slots:
 private:
     QHBoxLayout* main_layout = nullptr;
     FileView* file_view = nullptr;
-    ViewListContainer* view_list_container = nullptr;
+    GraphicsView* m_view = nullptr;
     GenericToolButton* mask_to_graphicsitem = nullptr;
     GenericToolButton* camera_btn = nullptr;
     GenericToolButton* zoom_btn = nullptr;
