@@ -19,6 +19,9 @@ public:
     GraphicsItemMenu* getGraphicsItemMenu() const;
     bool eventFilter(QObject* object, QEvent* event) override;
 
+    virtual void mouseMoveEvent(QMouseEvent* event) override;
+    virtual void enterEvent(QEnterEvent* event) override;
+
 private slots:
     void onRubberBtn(int checked); //橡皮擦模式
     void onObserveBtn(int checked); //观察模式

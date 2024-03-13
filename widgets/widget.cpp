@@ -35,12 +35,12 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     setObjectName("this_window");
-    setWindowIcon(QPixmap(":/res/background-image/DRAW_ICON.png").scaled(15, 15));
+    setWindowIcon(QPixmap(":/res/qss/GenericStyle/background-image/DRAW_ICON.png").scaled(15, 15));
     setWindowTitle("Graphics-Interact-Anything");
     title_widget = new TitleWidget(this);
     title_widget->setObjectName("title_widget");
     title_widget->setTitleName("");
-    title_widget->setTitleIcon(QPixmap(":/res/background-image/DRAW_ICON.png").scaled(20, 20));
+    title_widget->setTitleIcon(QPixmap(":/res/qss/GenericStyle/background-image/DRAW_ICON.png").scaled(20, 20));
 
     /*****************设置界面控件*****************/
     {

@@ -10,16 +10,16 @@ LabelBoardToolWidget::LabelBoardToolWidget(QWidget *parent)
     setFixedHeight(32);
     main_layout = new QHBoxLayout();
     board_add_row_btn = new GenericToolButton();
-    board_add_row_btn->setIcon(QIcon(":/res/background-image/add_row.png"));
+    board_add_row_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/add_row.png"));
 
     board_remove_row_btn = new GenericToolButton();
-    board_remove_row_btn->setIcon(QIcon(":/res/background-image/remove_row.png"));
+    board_remove_row_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/remove_row.png"));
 
     read_label_btn = new GenericToolButton();
-    read_label_btn->setIcon(QIcon(":/res/background-image/read_label.png"));
+    read_label_btn->setIcon(QIcon(":/res/qss/Dark/background-image/read_label.png"));
 
     save_label_btn = new GenericToolButton();
-    save_label_btn->setIcon(QIcon(":/res/background-image/save_label.png"));
+    save_label_btn->setIcon(QIcon(":/res/qss/Dark/background-image/save_label.png"));
 
     board_add_row_btn->setCustomTooltip("Add Row");
 	board_remove_row_btn->setCustomTooltip("Remove Row");

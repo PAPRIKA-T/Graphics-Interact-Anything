@@ -67,16 +67,16 @@ GraphicsItemMenu::GraphicsItemMenu(QWidget* parent)
     draw_action_list[0]->setChecked(true);
     exclusive_action_group->setExclusive(true);
 
-    point_btn->setIcon(QIcon(":/res/background-image/point.png"));
-    line_btn->setIcon(QIcon(":/res/background-image/line.png"));
-    round_btn->setIcon(QIcon(":/res/background-image/round.png"));
-    ellipse_btn->setIcon(QIcon(":/res/background-image/ellipse.png"));
-    rect_btn->setIcon(QIcon(":/res/background-image/rect.png"));
-    pie_btn->setIcon(QIcon(":/res/background-image/pie.png"));
-    polygon_btn->setIcon(QIcon(":/res/background-image/polygon.png"));
-    angle_btn->setIcon(QIcon(":/res/background-image/angle.png"));
-    parallel_line_btn->setIcon(QIcon(":/res/background-image/Parallel_line.png"));
-    line_segment_btn->setIcon(QIcon(":/res/background-image/line_segment.png"));
+    point_btn->setIcon(QIcon(":/res/qss/Dark/background-image/point.png"));
+    line_btn->setIcon(QIcon(":/res/qss/Dark/background-image/line.png"));
+    round_btn->setIcon(QIcon(":/res/qss/Dark/background-image/round.png"));
+    ellipse_btn->setIcon(QIcon(":/res/qss/Dark/background-image/ellipse.png"));
+    rect_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rect.png"));
+    pie_btn->setIcon(QIcon(":/res/qss/Dark/background-image/pie.png"));
+    polygon_btn->setIcon(QIcon(":/res/qss/Dark/background-image/polygon.png"));
+    angle_btn->setIcon(QIcon(":/res/qss/Dark/background-image/angle.png"));
+    parallel_line_btn->setIcon(QIcon(":/res/qss/Dark/background-image/Parallel_line.png"));
+    line_segment_btn->setIcon(QIcon(":/res/qss/Dark/background-image/line_segment.png"));
 
     addActions(draw_action_list);
     StyleSheetConfigModel* style_model = new StyleSheetConfigModel();

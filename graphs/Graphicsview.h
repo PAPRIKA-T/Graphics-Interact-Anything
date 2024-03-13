@@ -38,6 +38,8 @@ public:
     GenericInteractionModel* getGenericInteractionModel();
     ViewTransFormModel* getViewTransFormModel();
     GraphicsCalculateModel* getGraphicsCalculateModel();
+
+    void setPresentPos(const QPointF& p);
     void updateLbText(); //更新左下文本
     
     void setMagImage(const QPointF& p); //设置放大镜控件的图像

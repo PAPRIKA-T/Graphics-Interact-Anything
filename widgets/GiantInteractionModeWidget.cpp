@@ -9,36 +9,37 @@
 GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    setFixedWidth(47);
+    setMouseTracking(true);
+    //setFixedSize(47, 220);
     int btn_width = 40;int btn_height = 35;
     main_layout = new QVBoxLayout(this);
     rubber_btn = new GenericToolButton(this);
-    rubber_btn->setIcon(QIcon(":/res/background-image/rubber.png"));
+    rubber_btn->setIcon(QPixmap(":/res/qss/Dark/background-image/rubber.png"));
     rubber_btn->setCheckable(true);
     rubber_btn->setObjectName("interaction_mode_btn");
 
     observe_btn = new GenericToolButton(this);
-    observe_btn->setIcon(QIcon(":/res/background-image/observe.png"));
+    observe_btn->setIcon(QIcon(":/res/qss/Dark/background-image/observe.png"));
     observe_btn->setCheckable(true);
     observe_btn->setObjectName("interaction_mode_btn");
 
     select_btn = new GenericToolButton(this);
-    select_btn->setIcon(QIcon(":/res/background-image/arrow_cursor.png"));
+    select_btn->setIcon(QIcon(":/res/qss/Dark/background-image/arrow_cursor.png"));
     select_btn->setCheckable(true);
     select_btn->setObjectName("interaction_mode_btn");
 
     edit_polygon_btn = new GenericToolButton(this);
-    edit_polygon_btn->setIcon(QIcon(":/res/background-image/edit_polygon.png"));
+    edit_polygon_btn->setIcon(QIcon(":/res/qss/Dark/background-image/edit_polygon.png"));
     edit_polygon_btn->setCheckable(true);
     edit_polygon_btn->setObjectName("interaction_mode_btn");
 
     draw_btn = new GenericToolButton(this);
-    draw_btn->setIcon(QIcon(":/res/background-image/draw_pen.png"));
+    draw_btn->setIcon(QIcon(":/res/qss/Dark/background-image/draw_pen.png"));
     draw_btn->setCheckable(true);
     draw_btn->setObjectName("interaction_mode_btn");
 
     calculate_btn = new GenericToolButton(this);
-    calculate_btn->setIcon(QIcon(":/res/background-image/calculate_mode.png"));
+    calculate_btn->setIcon(QIcon(":/res/qss/Dark/background-image/calculate_mode.png"));
     calculate_btn->setCheckable(true);
     calculate_btn->setObjectName("interaction_mode_btn");
 
@@ -128,6 +129,17 @@ bool GiantInteractionModeWidget::eventFilter(QObject* object, QEvent* event)
 		}
     }
     return QObject::eventFilter(object, event);
+}
+
+void GiantInteractionModeWidget::mouseMoveEvent(QMouseEvent* event)
+{
+    m_view->setPresentPos(m_view->mapFromGlobal(event->globalPos()));
+    QWidget::mouseMoveEvent(event);
+}
+
+void GiantInteractionModeWidget::enterEvent(QEnterEvent* event)
+{
+    setCursor(m_view->cursor());
 }
 
 void GiantInteractionModeWidget::returnToDefaultMode()

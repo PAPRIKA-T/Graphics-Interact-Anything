@@ -143,6 +143,12 @@ QPointF GraphicsView::getPresentPosOnOriginImage()
     return m_present_pos_on_origin_image;
 }
 
+void GraphicsView::setPresentPos(const QPointF& p)
+{
+    m_present_pos = p.toPoint();
+	updateLbText();
+}
+
 void GraphicsView::updateLbText()
 {
     if (pixmap_item->getPixmap().isNull()) {
