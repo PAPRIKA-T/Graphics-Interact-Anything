@@ -546,11 +546,10 @@ void GraphicsView::deCalLine()
     m_scene = dynamic_cast<GraphicsScene *>(scene());
     foreach(QGraphicsItem *item, items())
     {
-        if(m_scene->isPaintItem(item)) {
-            GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-            if(new_item->data(1)=="CalculateLine")
-                    new_item->onActionRemoveSelf();
-        }
+        if (!items().contains(item)) continue;
+        GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+        if(new_item && new_item->data(1)=="CalculateLine")
+                new_item->onActionRemoveSelf();
     }
 }
 
