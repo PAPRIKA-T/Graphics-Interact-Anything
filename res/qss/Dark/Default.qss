@@ -87,7 +87,7 @@ QLabel#title_name
 }
 ViewToolBar
 {
-    background-color:rgb(56, 56, 56);
+    background-color:rgba(56, 56, 56, 200);
 }
 
 LabelBoardToolWidget
@@ -97,7 +97,7 @@ LabelBoardToolWidget
 
 QGraphicsView 
 {
-    background-color:rgb(65, 65, 65);
+    background-color:rgb(70, 70, 70);
 }
 
 QWidget#label_board_under_widget

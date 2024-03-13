@@ -86,13 +86,6 @@ void GraphicsView::initLayout()
 {
     main_layout = new QVBoxLayout(this);
     horizontal_layout = new QHBoxLayout();
-
-    //draw_button_list.append(sam_widget->getPositivePointWidget()->getButton());
-    //draw_button_list.append(sam_widget->getNegativePointWidget()->getButton());
-    //draw_button_list.append(sam_widget->getBoxPromptWidget()->getButton());
-    //draw_button_list.append(sam_widget->getPPListPromptWidget()->getButton());
-    //draw_button_list.append(sam_widget->getNPListPromptWidget()->getButton());
-
     //设置图像窗口工具控件
     view_tool_bar = new ViewToolBar(this);
     view_tool_bar->setObjectName("view_tool_bar");
@@ -106,6 +99,8 @@ void GraphicsView::initLayout()
     main_layout->addWidget(view_tool_bar);
     main_layout->addLayout(horizontal_layout);
     main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setSpacing(0);
+    main_layout->addStretch();
     setLayout(main_layout);
 
     view_tool_bar->setGraphicsView(this);
@@ -138,9 +133,10 @@ GraphicsCalculateModel* GraphicsView::getGraphicsCalculateModel()
     return &m_graphics_calculate_model;
 }
 
-QPointF GraphicsView::getPresentPosOnOriginImage()
+void GraphicsView::setEnterView(bool ok)
 {
-    return m_present_pos_on_origin_image;
+    is_enter_view = ok;
+    viewport()->update();
 }
 
 void GraphicsView::setPresentPos(const QPointF& p)

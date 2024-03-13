@@ -5,19 +5,14 @@
         <file>res/qss/Light/Default.qss</file>
         <file>res/qss/Light/MenuStyle.qss</file>
         <file>res/qss/Dark/background-image/angle.png</file>
-        <file>res/qss/Dark/background-image/arrow_cursor.png</file>
         <file>res/qss/Dark/background-image/bottom_arrow.png</file>
         <file>res/qss/Dark/background-image/branch_fold.png</file>
         <file>res/qss/Dark/background-image/branch_unfold.png</file>
         <file>res/qss/Dark/background-image/cal_angle.png</file>
         <file>res/qss/Dark/background-image/cal_center.png</file>
         <file>res/qss/Dark/background-image/cal_verti.png</file>
-        <file>res/qss/Dark/background-image/calculate_mode.png</file>
         <file>res/qss/Dark/background-image/camera.png</file>
         <file>res/qss/Dark/background-image/center.png</file>
-        <file>res/qss/Dark/background-image/close.png</file>
-        <file>res/qss/Dark/background-image/delete.png</file>
-        <file>res/qss/Dark/background-image/edit_polygon.png</file>
         <file>res/qss/Dark/background-image/ellipse.png</file>
         <file>res/qss/Dark/background-image/ellipsis.png</file>
         <file>res/qss/Dark/background-image/eye.png</file>
@@ -30,9 +25,6 @@
         <file>res/qss/Dark/background-image/line.png</file>
         <file>res/qss/Dark/background-image/line_segment.png</file>
         <file>res/qss/Dark/background-image/mask_to_item.png</file>
-        <file>res/qss/Dark/background-image/max.png</file>
-        <file>res/qss/Dark/background-image/min.png</file>
-        <file>res/qss/Dark/background-image/observe.png</file>
         <file>res/qss/Dark/background-image/open_annotation.png</file>
         <file>res/qss/Dark/background-image/Parallel_line.png</file>
         <file>res/qss/Dark/background-image/pie.png</file>
@@ -46,7 +38,6 @@
         <file>res/qss/Dark/background-image/rotate_L.png</file>
         <file>res/qss/Dark/background-image/rotate_R.png</file>
         <file>res/qss/Dark/background-image/round.png</file>
-        <file>res/qss/Dark/background-image/rubber.png</file>
         <file>res/qss/Dark/background-image/save.png</file>
         <file>res/qss/Dark/background-image/save_label.png</file>
         <file>res/qss/Dark/background-image/zoom_in.png</file>
@@ -66,10 +57,17 @@
         <file>res/qss/GenericStyle/background-image/prompt_rect.png</file>
         <file>res/qss/GenericStyle/background-image/remove_row.png</file>
         <file>res/qss/GenericStyle/background-image/rotate_view.png</file>
-        <file>res/qss/GenericStyle/background-image/rubber_view.png</file>
         <file>res/qss/GenericStyle/background-image/sam_model_btn.png</file>
         <file>res/qss/GenericStyle/background-image/setting_btn.png</file>
         <file>res/qss/GenericStyle/background-image/uncheckbox.png</file>
-        <file>res/qss/Dark/background-image/draw_pen.png</file>
+        <file>res/qss/GenericStyle/background-image/calculate_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/draw_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/edit_polygon_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/rubber_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/select_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/observe_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/deleteall_btn.png</file>
+        <file>res/qss/GenericStyle/background-image/delete_cal_btn.png</file>
+        <file>res/qss/GenericStyle/background-image/fit_screen_btn.png</file>
     </qresource>
 </RCC>

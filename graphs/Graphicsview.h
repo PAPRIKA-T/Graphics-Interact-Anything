@@ -32,8 +32,7 @@ public:
     GraphicsScene* getGraphicsScene() const;
     ViewToolBar* getViewToolBar() const;
     GiantInteractionModeWidget* getGiantInteractionModeWidget() const;
-
-    QPointF getPresentPosOnOriginImage();
+    void setEnterView(bool);
 
     GenericInteractionModel* getGenericInteractionModel();
     ViewTransFormModel* getViewTransFormModel();

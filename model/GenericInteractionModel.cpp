@@ -35,8 +35,8 @@ void GenericInteractionModel::setRubberInteraction(bool ok)
 {
 	if (ok) {
 		interaciton_status = InteractionStatus::INTERACTION_RUBBER;
-		QPixmap rubber(":/res/background-image/rubber_view.png");
-		m_view->viewport()->setCursor(QCursor(rubber.scaled(QSize(30, 30)), 5, rubber.height() - 5));
+		QPixmap rubber(":/res/qss/GenericStyle/background-image/rubber_mode.png");
+		m_view->viewport()->setCursor(QCursor(rubber.scaled(QSize(28, 28)), 0, 18));
 		m_view->setDragMode(QGraphicsView::RubberBandDrag);
 		foreach(QGraphicsItem * item, m_view->items()) {
 			GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
@@ -94,9 +94,11 @@ void GenericInteractionModel::setCalculateInteraction(bool ok)
 	if (ok) {
 		interaciton_status = InteractionStatus::INTERACTION_CALCULATE;
 		m_view->setDragMode(QGraphicsView::NoDrag);
+		m_view->viewport()->setCursor(Qt::PointingHandCursor);
 		m_view->getGraphicsScene()->clearSelection();
 	}
 	else {
+		m_view->viewport()->unsetCursor();
 	}
 }
 
@@ -110,6 +112,7 @@ void GenericInteractionModel::setEditPolygonInteraction(bool ok)
 		m_view->setDragMode(QGraphicsView::NoDrag);
 	}
 	else {
+		m_view->viewport()->unsetCursor();
 	}
 }
 

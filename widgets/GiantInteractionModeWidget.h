@@ -19,8 +19,10 @@ public:
     GraphicsItemMenu* getGraphicsItemMenu() const;
     bool eventFilter(QObject* object, QEvent* event) override;
 
-    virtual void mouseMoveEvent(QMouseEvent* event) override;
+protected:
+    virtual void paintEvent(QPaintEvent* event) override;
     virtual void enterEvent(QEnterEvent* event) override;
+    virtual void leaveEvent(QEvent* event) override;
 
 private slots:
     void onRubberBtn(int checked); //橡皮擦模式
@@ -43,4 +45,8 @@ private:
 
     GraphicsItemMenu* item_menu = nullptr;
     CalculateModeMenu* calculate_menu = nullptr;
+
+    GenericToolButton* clear_scene_btn = nullptr;
+    GenericToolButton* clear_calculate_btn = nullptr;
+    GenericToolButton* fit_screen_btn = nullptr;
 };

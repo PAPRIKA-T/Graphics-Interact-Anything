@@ -14,8 +14,13 @@ public:
 	~ViewToolBar();
 	SceneToolWidget* getSceneToolWidget();
 	void setGraphicsView(GraphicsView*);
+
+protected:
 	virtual void paintEvent(QPaintEvent* event) override;
+	virtual void enterEvent(QEnterEvent* event) override;
+	virtual void leaveEvent(QEvent* event) override;
 private:
 	QHBoxLayout* main_layout = nullptr;
+	GraphicsView* m_view = nullptr;
 	SceneToolWidget* scene_tool_widget = nullptr;
 };
