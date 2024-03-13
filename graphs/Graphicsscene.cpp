@@ -150,6 +150,7 @@ void GraphicsScene::initTextItem()
     text_left_bottom->setTextWidth(-1);
     addItem(text_left_bottom);
     text_left_bottom->setPlainText(str1 + str2);
+    text_left_bottom->setVisible(false);
 
     //初始化右下文本item
     text_right_bottom = new GraphicsTextItem(QPointF(0, 0));
@@ -391,15 +392,21 @@ void GraphicsScene::updateItemIndexView()
 
 void GraphicsScene::updateRtText()
 {
-    QString str1 = "ImgW:" + QString::number(pixmap_item->getOriginWidth(), 'f', 0) + "px ";
-    QString str2 = "ImgH:" + QString::number(pixmap_item->getOriginHeight(), 'f', 0) + "px";
+    QString str1 = "W:" + QString::number(pixmap_item->getOriginWidth(), 'f', 0);
+    QString str2 = "H:" + QString::number(pixmap_item->getOriginHeight(), 'f', 0);
 
     qreal image_scale_total = m_view->getViewTransFormModel()->getImageScaleTotal();
     if (pixmap_item->getPixmap().isNull()) image_scale_total = 0;
     else image_scale_total = pixmap_item->getFscaleW() / pixmap_item->getOriginWidth() * 
         m_view->getViewTransFormModel()->getViewScale();
-    QString str3 = "Zoom:" + QString::number(image_scale_total, 'f', 2) + " ";
-    text_right_up->setPlainText(str1 + str2 + "\n" + str3);
+    QString str3 = "Zoom: " + QString::number(image_scale_total, 'f', 2) + " ";
+
+    QPoint m_present_pos_on_origin_image = m_view->getMouseCoordinate();
+
+    QString str4 = "X:" + QString::number(m_present_pos_on_origin_image.rx(), 'f', 0);
+    QString str5 = "Y:" + QString::number(m_present_pos_on_origin_image.ry(), 'f', 0);
+
+    text_right_up->setPlainText(str1 + " " + str2 + "\n" + str3 + "\n" + str4 + " " + str5);
     m_view->getViewTransFormModel()->setImageScaleTotal(image_scale_total);
 }
 

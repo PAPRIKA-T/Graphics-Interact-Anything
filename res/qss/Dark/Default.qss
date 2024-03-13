@@ -98,6 +98,7 @@ LabelBoardToolWidget
 QGraphicsView 
 {
     background-color:rgb(70, 70, 70);
+    border: none;
 }
 
 QWidget#label_board_under_widget
@@ -417,5 +418,5 @@ GenericToolButton#interaction_mode_btn:pressed
 
 GenericToolButton#interaction_mode_btn:checked
 {
-    background-color:rgb(67, 90, 134);
+    background-color:#0082B2;
 }

@@ -12,7 +12,8 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 	: QWidget(parent)
 {
     setMouseTracking(true);
-    int btn_width = 40;int btn_height = 34;
+    int btn_width = 36;int btn_height = 30;
+    setMinimumHeight(294);
     /*************************Mode Btn************************/
     main_layout = new QVBoxLayout(this);
     rubber_btn = new GenericToolButton(this);

@@ -32,19 +32,15 @@ public:
     GraphicsScene* getGraphicsScene() const;
     ViewToolBar* getViewToolBar() const;
     GiantInteractionModeWidget* getGiantInteractionModeWidget() const;
-    void setEnterView(bool);
-
     GenericInteractionModel* getGenericInteractionModel();
     ViewTransFormModel* getViewTransFormModel();
     GraphicsCalculateModel* getGraphicsCalculateModel();
+    const QPoint& getMouseCoordinate();
 
-    void setPresentPos(const QPointF& p);
-    void updateLbText(); //更新左下文本
-    
     void setMagImage(const QPointF& p); //设置放大镜控件的图像
-
     void setPaintCross(bool ok);
     void setActived(bool ok);
+    void setEnterView(bool);
 
     QPixmap& getMagPixmap() {return grab_map;} //返回grabMap
 

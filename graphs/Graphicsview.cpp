@@ -26,7 +26,7 @@
 GraphicsView::GraphicsView(QWidget *parent) :
     QGraphicsView(parent)
 {
-    setMinimumSize(250, 250);
+    setMinimumSize(150, 150);
     setViewport(new OpenGLWidget());
     // 隐藏水平/竖直滚动条
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -73,13 +73,12 @@ GiantInteractionModeWidget* GraphicsView::getGiantInteractionModeWidget() const
 void GraphicsView::initGraphicsScene()
 {
     m_scene = new GraphicsScene(this);
+    pixmap_item = m_scene->getPixmapItem();
     m_scene->setGraphicsView(this);
     setScene(m_scene);
-    pixmap_item = m_scene->getPixmapItem();
     generic_interaction_model.setGraphicsView(this);
     m_transform_model.setGraphicsView(this);
     m_graphics_calculate_model.setGraphicsScene(m_scene);
-    updateLbText();
 }
 
 void GraphicsView::initLayout()
@@ -139,13 +138,7 @@ void GraphicsView::setEnterView(bool ok)
     viewport()->update();
 }
 
-void GraphicsView::setPresentPos(const QPointF& p)
-{
-    m_present_pos = p.toPoint();
-	updateLbText();
-}
-
-void GraphicsView::updateLbText()
+const QPoint& GraphicsView::getMouseCoordinate()
 {
     if (pixmap_item->getPixmap().isNull()) {
         m_present_pos_on_origin_image = mapToScene(m_present_pos).toPoint();
@@ -155,10 +148,7 @@ void GraphicsView::updateLbText()
         scale = pixmap_item->getOriginWidth() / pixmap_item->getFscaleW();
         m_present_pos_on_origin_image = scale * pixmap_item->mapFromScene(mapToScene(m_present_pos)).toPoint();
     }
-    QString str1 = "X:" + QString::number(m_present_pos_on_origin_image.rx(), 'f', 0) + "px ";
-    QString str2 = "Y:" + QString::number(m_present_pos_on_origin_image.ry(), 'f', 0) + "px";
-    QString mouse_pos_to_img_pos = str1 + str2;
-    m_scene->getLeftBottomTextItem()->setPlainText(mouse_pos_to_img_pos);
+    return m_present_pos_on_origin_image;
 }
 
 void GraphicsView::setMagImage(const QPointF& p)
@@ -335,7 +325,7 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         }
         else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     }
-    updateLbText();
+    m_scene->updateRtText();
 }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *event)

@@ -141,18 +141,18 @@ Widget::Widget(QWidget *parent)
         right_widget_splitter->setCollapsible(1, false);
         right_widget_splitter->setStretchFactor(0, 6);
         right_widget_splitter->setStretchFactor(1, 4);
-        right_widget_splitter->setHandleWidth(4);
-        right_widget_splitter->setContentsMargins(0, 2, 2, 0);
+        right_widget_splitter->setHandleWidth(3);
+        right_widget_splitter->setContentsMargins(0, 2, 0, 0);
 
         center_widget_splitter = new QSplitter(this);
-        center_widget_splitter->setObjectName("right_widget_splitter");
+        center_widget_splitter->setObjectName("center_widget_splitter");
         center_widget_splitter->addWidget(image_widget_2d);
         center_widget_splitter->addWidget(right_widget_splitter);
         center_widget_splitter->setStretchFactor(0, 6);
         center_widget_splitter->setStretchFactor(1, 4);
         center_widget_splitter->setCollapsible(0, false);
-        center_widget_splitter->setHandleWidth(2);
-        center_widget_splitter->setContentsMargins(0, 0, 0, 0);
+        center_widget_splitter->setHandleWidth(4);
+        center_widget_splitter->setContentsMargins(1, 0, 1, 2);
 
         //窗口总体布局器
         main_layout = new QVBoxLayout(this);
@@ -194,11 +194,9 @@ SamWidget* Widget::getSamWidget()
 void Widget::setWidgetSize()
 {
     resize(1000, 700);
-    setMinimumSize(520, 220);
     image_widget_2d->resize(650, 600);
     label_board_under_widget->setMinimumWidth(200);
     right_widget_splitter->setMinimumWidth(200);
-    center_widget_splitter->setMinimumSize(750, 570);
     sam_widget->setMinimumHeight(100);
     //DimensionTrans();
 }
@@ -229,7 +227,7 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
     image_widget_2d = image_widget;
     view_list_container.setActivatdView(image_widget->getGraphicsView());
     image_widget->getGraphicsView()->setActived(true);
-    image_widget->setStyleSheet(QString::fromUtf8("border:1px solid #fe5820;"));
+    image_widget->setStyleSheet("border:1px solid #fe5820;");
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
     connectToolButton(image_widget_2d);
     QString pix_path = m_scene->getPixmapItem()->getPixmapPath();
@@ -339,26 +337,6 @@ void Widget::closeEvent(QCloseEvent *event)
     if (foreplay_widget->getAutoSave())
         foreplay_widget->saveItemToPathAllFormAllScene();
     QWidget::closeEvent(event);
-}
-
-void Widget::changeEvent(QEvent* event)
-{
-    if (event->type() == QEvent::WindowStateChange){
-        if (isMaximized()){
-            // 窗口被最大化时的处理
-            status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;}");
-            title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 0px;border-top-right-radius: 0px;}");
-        }
-        else if(isMinimized()){
-			// 窗口被最小化时的处理
-        }
-        else {
-            // 窗口被还原时的处理
-            status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;}");
-            title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 8px;border-top-right-radius: 8px;}");
-        }
-    }
-    QWidget::changeEvent(event);
 }
 
 void Widget::leaveEvent(QEvent* event)

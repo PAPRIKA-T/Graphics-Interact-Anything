@@ -47,7 +47,7 @@ public:
     GraphicsTextItem* getRightUpTextItem(); //获取右上文本item
 
     void initTextItem(); //初始化TextItem
-    void updateRtText(); //更新左下文本（鼠标位置）
+    void updateRtText(); //更新右上文本
     void updateRbText(int index, int total_index); //更新右上文本
     void updateTextPos(); //更新文本控件位置
     void updateThumbnailBox(); //更新缩略图

@@ -35,9 +35,9 @@ void LabelBoardWidget::initWidget()
     header->setMinimumSectionSize(30);//设置最小列宽
     header->setFixedHeight(27);
 
-    setColumnWidth(0, 40);//设置第0列宽40 需要在setModel之后设置才能生效
-    setColumnWidth(1, 35);
-    setColumnWidth(2, 80);
+    setColumnWidth(0, 50);//设置第0列宽40 需要在setModel之后设置才能生效
+    setColumnWidth(1, 50);
+    setColumnWidth(2, 65);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_ITEM, DEFAULT_LABEL);
     setSelectionMode(QAbstractItemView::SingleSelection);
