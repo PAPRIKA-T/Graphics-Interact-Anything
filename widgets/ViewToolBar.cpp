@@ -2,8 +2,6 @@
 #include "Graphs/GraphicsView.h"
 #include <QHBoxLayout>
 #include "SceneToolWidget.h"
-#include <QStyleOption>
-#include <QPainter>
 
 ViewToolBar::ViewToolBar(QWidget* parent)
 	: QWidget(parent)
@@ -35,15 +33,6 @@ void ViewToolBar::setGraphicsView(GraphicsView*v)
 {
 	m_view = v;
 	scene_tool_widget->setGraphicsView(v);
-}
-
-void ViewToolBar::paintEvent(QPaintEvent* event)
-{
-	Q_UNUSED(event);
-	QStyleOption styleOpt;
-	styleOpt.initFrom(this);
-	QPainter painter(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 void ViewToolBar::enterEvent(QEnterEvent* event)

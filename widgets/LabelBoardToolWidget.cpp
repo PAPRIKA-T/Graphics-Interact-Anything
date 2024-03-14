@@ -1,5 +1,5 @@
 #include "LabelBoardToolWidget.h"
-#include "LabelBoardWidget.h"
+#include "LabelBoard.h"
 #include "GenericToolButton.h"
 #include <QHBoxLayout>
 #include <QPainter>
@@ -41,13 +41,13 @@ LabelBoardToolWidget::~LabelBoardToolWidget()
     delete main_layout;
 }
 
-void LabelBoardToolWidget::setLabelBoardWidget(LabelBoardWidget*lbw)
+void LabelBoardToolWidget::setLabelBoardWidget(LabelBoard*lbw)
 {
     label_board = lbw;
-    connect(read_label_btn, &QPushButton::clicked, label_board, &LabelBoardWidget::readLabelFileFromTxt);
-    connect(save_label_btn, &QPushButton::clicked, label_board, &LabelBoardWidget::saveLabelFileToTxt);
-    connect(board_remove_row_btn, &QPushButton::clicked, label_board, &LabelBoardWidget::onRemoveSelectedRowClicked);
-    connect(board_add_row_btn, &QPushButton::clicked, label_board, &LabelBoardWidget::onAppendRowClicked);
+    connect(read_label_btn, &QPushButton::clicked, label_board, &LabelBoard::readLabelFileFromTxt);
+    connect(save_label_btn, &QPushButton::clicked, label_board, &LabelBoard::saveLabelFileToTxt);
+    connect(board_remove_row_btn, &QPushButton::clicked, label_board, &LabelBoard::onRemoveSelectedRowClicked);
+    connect(board_add_row_btn, &QPushButton::clicked, label_board, &LabelBoard::onAppendRowClicked);
 }
 
 void LabelBoardToolWidget::paintEvent(QPaintEvent* event)

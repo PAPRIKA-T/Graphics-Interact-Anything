@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <QMenu>
+#include "utils/GiantMacros.h"
 class GraphicsView;
 class GraphicsScene;
 class QAction;
@@ -13,7 +14,7 @@ public:
 	~GraphicsItemMenu();
 	QList<QAction*> getDrawActionList();
 	void setGraphicsView(GraphicsView*);
-
+    G_Menu_StayOpenAfterPress
 private slots:
     void onDestoryBtn(); //!!!测试使用，添加上万个item
 private:

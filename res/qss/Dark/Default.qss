@@ -67,12 +67,12 @@ QCheckBox::indicator
 
 QCheckBox::indicator:checked
 {
-	image: url(:/res/background-image/checkbox.png);
+	image: url(:/res/qss/GenericStyle/background-image/checkbox.png);
 }
 
 QCheckBox::indicator:unchecked
 {
-	image: url(:/res/background-image/uncheckbox.png);
+	image: url(:/res/qss/GenericStyle/background-image/uncheckbox.png);
 }
 
 /************************************************Color Widget************************************************/
@@ -85,6 +85,7 @@ QLabel#title_name
 {
     color:white;
 }
+
 ViewToolBar
 {
     background-color:rgba(56, 56, 56, 200);
@@ -115,11 +116,25 @@ StatusWidget
 QWidget#rb_stack_widget
 {
     background-color:rgb(58, 58, 58);
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
-/*******************Transparent*********************/
+/*******************QSplitter*********************/
+
+QSplitter::handle
+{
+    background-color:rgb(35, 35, 35);
+}
+
+/*******************MagGlass widget*********************/
+QWidget#mag_glass_widget
+{
+    background-color:rgb(76, 76, 76);
+    border: none;
+}
+
+/*********************************************Transparent*************************************************/
 Widget
 {
     background-color:transparent;
@@ -146,18 +161,16 @@ GraphicsItemWidget#graphicsitem_widget
     background-color:transparent;
 }
 
-/*******************QSplitter*********************/
-
-QSplitter::handle
+/*******************SamWidget*********************/
+SamWidget#sam_widget
 {
-    background-color:rgb(35, 35, 35);
+    background-color:transparent;
 }
 
-/*******************MagGlass widget*********************/
-QWidget#mag_glass_widget
+/*******************SamWidget*********************/
+ForePlayWidget#foreplay_widget
 {
-    background-color:rgb(76, 76, 76);
-    border: none;
+    background-color:transparent;
 }
 
 /*******************QTableView*********************/
@@ -218,12 +231,12 @@ QTableView::indicator:enabled
 
 QTableView::indicator:enabled:unchecked 
 { 
-    image: url(:/res/background-image/uncheckbox.png);
+    image: url(:/res/qss/GenericStyle/background-image/uncheckbox.png);
 }
 
 QTableView::indicator:enabled:checked 
 { 
-    image: url(:/res/background-image/checkbox.png);
+    image: url(:/res/qss/GenericStyle/background-image/checkbox.png);
 }
 
 QTableView::item
@@ -299,17 +312,6 @@ QScrollBar::handle:vertical
 
 /*************horizontal*************/
 
-/*******************SamWidget*********************/
-SamWidget#sam_widget
-{
-    background-color:transparent;
-}
-
-/*******************SamWidget*********************/
-ForePlayWidget#foreplay_widget
-{
-    background-color:transparent;
-}
 
 /*************************************************button style************************************************/
 GenericToolButton

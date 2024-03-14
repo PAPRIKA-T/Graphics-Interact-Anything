@@ -9,7 +9,7 @@
 #include "Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 
-class LabelBoardWidget;
+class LabelBoard;
 class ItemIndexView;
 class GraphicsView;
 class InteractionPolygon;
@@ -27,8 +27,8 @@ public:
     GraphicsView* getGraphicsView();
     void setItemIndexView(ItemIndexView* i);
     ItemIndexView* getItemIndexView();
-    void setLabelBoardWidget(LabelBoardWidget* w);
-    LabelBoardWidget* getLabelBoardWidget();
+    void setLabelBoardWidget(LabelBoard* w);
+    LabelBoard* getLabelBoardWidget();
 
     ScenePromptItemModel* getScenePromptItemModel();
 
@@ -121,7 +121,7 @@ private:
     void afterSetPaintItemPoint(const QPointF&);
 
     GraphicsView* m_view = nullptr;
-    LabelBoardWidget* label_board_widget = nullptr;
+    LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{};
 

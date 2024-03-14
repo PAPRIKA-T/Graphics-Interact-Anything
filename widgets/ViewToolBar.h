@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include "utils/GiantMacros.h"
 class GraphicsView;
 class QHBoxLayout;
 class SceneToolWidget;
@@ -16,7 +17,7 @@ public:
 	void setGraphicsView(GraphicsView*);
 
 protected:
-	virtual void paintEvent(QPaintEvent* event) override;
+	G_Widget_PaintEventOverride
 	virtual void enterEvent(QEnterEvent* event) override;
 	virtual void leaveEvent(QEvent* event) override;
 private:

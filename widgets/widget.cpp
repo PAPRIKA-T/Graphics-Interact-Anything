@@ -8,8 +8,7 @@
 #include <QGuiApplication>
 #include "widget.h"
 #include "GraphicsItemWidget.h"
-#include "LabelBoardWidget.h"
-#include "LabelBoardToolWidget.h"
+#include "LabelBoardWithTool.h"
 #include "ItemIndexView.h"
 #include "StatusWidget.h"
 #include "ImageSceneWidget3D.h"
@@ -30,6 +29,7 @@
 #include"ImageSceneWidget2D.h"
 #include "SceneToolWidget.h"
 #include "GiantInteractionModeWidget.h"
+#include "LabelBoard.h"
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -59,32 +59,20 @@ Widget::Widget(QWidget *parent)
         image_widget_2d->getViewToolBar()->getSceneToolWidget()->setFileView(file_view);
         
         //LabelBoardWidget
-        label_board_widget = new LabelBoardWidget(label_board_under_widget);
-        label_board_under_widget = new QWidget(this);
-        label_board_under_widget->setObjectName("label_board_under_widget");
-        label_board_widget->setObjectName("label_board_widget");
-        view_list_container.getActivedView()->getGraphicsScene()->setLabelBoardWidget(label_board_widget);
-        label_board_widget->setViewListContainer(&view_list_container);
-        label_board_widget_layout = new QVBoxLayout(label_board_under_widget);
-        label_board_tool_wodget = new LabelBoardToolWidget(label_board_under_widget);
-        label_board_tool_wodget->setObjectName("label_board_tool_wodget");
-        label_board_tool_wodget->setLabelBoardWidget(label_board_widget);
-        label_board_widget_layout->addWidget(label_board_tool_wodget);
-        label_board_widget_layout->addWidget(label_board_widget);
-        label_board_widget_layout->setSpacing(0);
-        label_board_widget_layout->setContentsMargins(0, 0, 0, 0);
-        label_board_under_widget->setLayout(label_board_widget_layout);
+        label_board_widget = new LabelBoardWithTool(this);
+        view_list_container.getActivedView()->getGraphicsScene()->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
+        label_board_widget->getLabelBoardWidget()->setViewListContainer(&view_list_container);
         
         //设置图元索引控件
         item_index_view = new ItemIndexView(this);
         item_index_view->setObjectName("item_index_widget");
-        item_index_view->setLabelBoardWidget(label_board_widget);
+        item_index_view->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
         view_list_container.getActivedView()->getGraphicsScene()->setItemIndexView(item_index_view);
 
         //设置底部状态栏
         status_widget = new StatusWidget(this);
         status_widget->setObjectName("status_widget");
-        status_widget->setLeftLabelText("Version 2.2.0");
+        status_widget->setLeftLabelText("Version 2.3.0");
         file_view->setStatusWidget(status_widget);
 
         //Init foreplayWidget
@@ -135,7 +123,7 @@ Widget::Widget(QWidget *parent)
         right_widget_splitter = new QSplitter(this);
         right_widget_splitter->setObjectName("right_tab_widget_splitter");
         right_widget_splitter->setOrientation(Qt::Vertical);
-        right_widget_splitter->addWidget(label_board_under_widget);
+        right_widget_splitter->addWidget(label_board_widget);
         right_widget_splitter->addWidget(stack_under_widget);
         right_widget_splitter->setCollapsible(0, false);
         right_widget_splitter->setCollapsible(1, false);
@@ -195,7 +183,6 @@ void Widget::setWidgetSize()
 {
     resize(1000, 700);
     image_widget_2d->resize(650, 600);
-    label_board_under_widget->setMinimumWidth(200);
     right_widget_splitter->setMinimumWidth(200);
     sam_widget->setMinimumHeight(100);
     //DimensionTrans();
@@ -207,7 +194,7 @@ void Widget::imageWidgetAdd(ImageSceneWidget2D* image_widget)
     view_list_container.pushBackView(image_widget->getGraphicsView());
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
     m_scene->getScenePromptItemModel()->setSamWidget(sam_widget);
-    m_scene->setLabelBoardWidget(label_board_widget);
+    m_scene->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
     m_scene->setItemIndexView(item_index_view);
     connect(m_scene, &GraphicsScene::createItemIndex, item_index_view, 
         &ItemIndexView::addItemInitAfterPaint);

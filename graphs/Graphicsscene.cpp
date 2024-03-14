@@ -1,7 +1,7 @@
 #include "GraphicsScene.h"
 #include "GraphicsView.h"
 #include "ThumbnailPixmapItem.h"
-#include "widgets/LabelBoardWidget.h"
+#include "widgets/LabelBoard.h"
 #include "widgets/ItemIndexView.h"
 #include "widgets/StatusWidget.h"
 #include "GraphicsTextItem.h"
@@ -55,12 +55,12 @@ ItemIndexView* GraphicsScene::getItemIndexView()
     return item_index_view;
 }
 
-void GraphicsScene::setLabelBoardWidget(LabelBoardWidget* w)
+void GraphicsScene::setLabelBoardWidget(LabelBoard* w)
 {
     label_board_widget = w;
 }
 
-LabelBoardWidget* GraphicsScene::getLabelBoardWidget()
+LabelBoard* GraphicsScene::getLabelBoardWidget()
 {
     return label_board_widget;
 }

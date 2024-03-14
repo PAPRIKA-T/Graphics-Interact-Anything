@@ -3,7 +3,7 @@
 #include "graphs/Graphicspixmapitem.h"
 #include "graphs/GraphicsPolygon.h"
 #include "graphs/GraphicsLineSegment.h"
-#include "widgets/LabelBoardWidget.h"
+#include "widgets/LabelBoard.h"
 #include "utils/CVOperation.h"
 #include "widgets/ComboBoxVWidget.h"
 #include "widgets/SAM/samwidget.h"
