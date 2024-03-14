@@ -12,7 +12,6 @@ class QHBoxLayout;
 class QSplitter;
 class FileView;
 class TitleWidget;
-class GraphicsScene;
 class ImageSceneWidget2D;
 class SamWidget;
 class ImageSceneWidget3D;
@@ -22,8 +21,7 @@ class MagnifyingGlassWidget;
 class LabelBoardWithTool;
 class ItemIndexView;
 class StatusWidget;
-class StackWidget;
-class StackIconWidget;
+class MultiFunctionStackWidget;
 
 class Widget : public QWidget
 {
@@ -69,17 +67,12 @@ private:
 
 /**************************************************界面所有布局器********************************************************/
     QVBoxLayout *main_layout = nullptr; //主界面垂直布局器
-    QHBoxLayout* stack_widget_hori_layout = nullptr; //右下堆栈控件的布局器
     QSplitter *right_widget_splitter = nullptr; // 右侧的splitter
     QSplitter* center_widget_splitter = nullptr; // 整体的splitter
 
-/**************************************************界面布局器底层控件********************************************************/
+/*************************************界面所有功能控件**********************************************/
     TitleWidget* title_widget = nullptr; //标题栏
-    QWidget* stack_under_widget = nullptr; //stack部分的底层控件
-    StackWidget* rb_stack_widget = nullptr; //右下堆栈控件
-    StackIconWidget* stack_icon_widget = nullptr; //右下堆栈的按钮控件
-
-/**************************************************界面所有功能控件(不含布局底层控件)********************************************************/
+    MultiFunctionStackWidget* rb_stack_widget = nullptr; //右下堆栈控件
     ImageSceneWidget2D* image_widget_2d = nullptr; //2d显示控件
     ImageSceneWidget3D* image_widget_3d = nullptr; //3d显示控件
     MagnifyingGlassWidget *mag_glass_widget = nullptr; //放大镜控件

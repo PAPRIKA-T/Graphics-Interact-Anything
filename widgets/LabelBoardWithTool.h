@@ -9,6 +9,7 @@ class LabelBoardWithTool : public QWidget
 	Q_OBJECT
 public:
 	LabelBoardWithTool(QWidget* parent = nullptr);
+	~LabelBoardWithTool();
 	LabelBoard* getLabelBoardWidget() const;
 	LabelBoardToolWidget* getLabelBoardToolWidget() const;
 private:

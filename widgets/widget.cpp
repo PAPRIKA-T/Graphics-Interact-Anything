@@ -24,8 +24,8 @@
 #include "graphs/Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 #include "ChosePathWidget.h"
+#include "MultiFunctionStackWidget.h"
 #include "StackWidget.h"
-#include "StackIconWidget.h"
 #include"ImageSceneWidget2D.h"
 #include "SceneToolWidget.h"
 #include "GiantInteractionModeWidget.h"
@@ -89,22 +89,12 @@ Widget::Widget(QWidget *parent)
             ->getScenePromptItemModel()->setSamWidget(sam_widget);
 
         //设置右下堆栈控件
-        stack_under_widget = new QWidget(this);
-        stack_widget_hori_layout = new QHBoxLayout(stack_under_widget);
-
-        stack_icon_widget = new StackIconWidget(stack_under_widget);
-        rb_stack_widget = new StackWidget(stack_under_widget);
+        rb_stack_widget = new MultiFunctionStackWidget();
         rb_stack_widget->setObjectName("rb_stack_widget");
-        rb_stack_widget->addWidget(file_view);
-        rb_stack_widget->addWidget(foreplay_widget);
-        rb_stack_widget->addWidget(item_index_view);
-        rb_stack_widget->addWidget(sam_widget);
-        rb_stack_widget->setContentsMargins(0, 0, 0, 0);
-        stack_widget_hori_layout->addWidget(stack_icon_widget);
-        stack_widget_hori_layout->addWidget(rb_stack_widget);
-        stack_widget_hori_layout->setContentsMargins(0, 0, 0, 0);
-        stack_widget_hori_layout->setSpacing(0);
-        stack_icon_widget->connectStackWidget(rb_stack_widget);
+        rb_stack_widget->getStackWidget()->addWidget(file_view);
+        rb_stack_widget->getStackWidget()->addWidget(foreplay_widget);
+        rb_stack_widget->getStackWidget()->addWidget(item_index_view);
+        rb_stack_widget->getStackWidget()->addWidget(sam_widget);
     }
 
     title_widget->setParentWidget(this);
@@ -124,13 +114,13 @@ Widget::Widget(QWidget *parent)
         right_widget_splitter->setObjectName("right_tab_widget_splitter");
         right_widget_splitter->setOrientation(Qt::Vertical);
         right_widget_splitter->addWidget(label_board_widget);
-        right_widget_splitter->addWidget(stack_under_widget);
+        right_widget_splitter->addWidget(rb_stack_widget);
         right_widget_splitter->setCollapsible(0, false);
         right_widget_splitter->setCollapsible(1, false);
         right_widget_splitter->setStretchFactor(0, 6);
         right_widget_splitter->setStretchFactor(1, 4);
         right_widget_splitter->setHandleWidth(3);
-        right_widget_splitter->setContentsMargins(0, 2, 0, 0);
+        right_widget_splitter->setContentsMargins(0, 0, 0, 0);
 
         center_widget_splitter = new QSplitter(this);
         center_widget_splitter->setObjectName("center_widget_splitter");
@@ -140,14 +130,14 @@ Widget::Widget(QWidget *parent)
         center_widget_splitter->setStretchFactor(1, 4);
         center_widget_splitter->setCollapsible(0, false);
         center_widget_splitter->setHandleWidth(4);
-        center_widget_splitter->setContentsMargins(1, 0, 1, 2);
+        center_widget_splitter->setContentsMargins(0, 0, 0, 2);
 
         //窗口总体布局器
         main_layout = new QVBoxLayout(this);
         main_layout->addWidget(title_widget);
         main_layout->addWidget(center_widget_splitter);
         main_layout->addWidget(status_widget);
-        main_layout->setContentsMargins(0, 0, 0, 0);
+        main_layout->setContentsMargins(1, 0, 1, 0);
         main_layout->setSpacing(0);
     }
     setWidgetSize();

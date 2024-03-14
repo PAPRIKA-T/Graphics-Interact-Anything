@@ -86,6 +86,16 @@ QLabel#title_name
     color:white;
 }
 
+Widget
+{
+    background-color:rgb(37, 37, 37);
+}
+
+StatusWidget
+{
+    background-color:rgb(37, 37, 37);
+}
+
 ViewToolBar
 {
     background-color:rgba(56, 56, 56, 200);
@@ -102,29 +112,21 @@ QGraphicsView
     border: none;
 }
 
-QWidget#label_board_under_widget
-{
-    background-color:rgb(63, 63, 63);
-}
-
-
-StatusWidget
-{
-    background-color:rgb(37, 37, 37);
-}
-
 QWidget#rb_stack_widget
 {
-    background-color:rgb(58, 58, 58);
+    background-color:rgb(255, 58, 58);
     border-bottom-right-radius: 8px;
     border-top-right-radius: 8px;
 }
 
 /*******************QSplitter*********************/
-
+QSplitter
+{
+    background-color:rgb(37, 37, 37);
+}
 QSplitter::handle
 {
-    background-color:rgb(35, 35, 35);
+    background-color:transparent;
 }
 
 /*******************MagGlass widget*********************/
@@ -135,14 +137,15 @@ QWidget#mag_glass_widget
 }
 
 /*********************************************Transparent*************************************************/
-Widget
+SceneToolWidget
 {
     background-color:transparent;
 }
 
-SceneToolWidget
+QWidget#label_board_with_tool
 {
-    background-color:transparent;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 QScrollArea
@@ -152,11 +155,6 @@ QScrollArea
 }
 
 QWidget#scroll_area_widget
-{
-    background-color:transparent;
-}
-
-GraphicsItemWidget#graphicsitem_widget
 {
     background-color:transparent;
 }
@@ -367,36 +365,6 @@ GenericToolButton#stack_btn:checked
 GenericToolButton#stack_btn:hover
 {
     background-color:rgba(60, 60, 60, 100);
-}
-
-/*******title_right_btn*******/
-GenericToolButton#title_right_btn:hover
-{
-    background-color:rgba(88, 88, 88, 150);
-}
-
-/*******graphicsitem_btn*******/
-GenericToolButton#graphicsitem_btn
-{
-    background-color:rgb(48, 48, 48);
-    border-radius: 4px;
-}
-
-GenericToolButton#graphicsitem_btn:hover
-{
-    color:rgb(240, 240, 240);
-    background-color:rgba(88, 88, 88, 150);
-}
-
-GenericToolButton#graphicsitem_btn:pressed
-{
-    color:rgb(240, 240, 240);
-    background-color:rgb(65,65,65);
-}
-
-GenericToolButton#graphicsitem_btn:checked
-{
-    background-color:rgb(67, 90, 134);
 }
 
 /*******interaction_mode_btn*******/
