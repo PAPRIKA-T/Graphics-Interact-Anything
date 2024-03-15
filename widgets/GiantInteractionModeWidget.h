@@ -5,7 +5,6 @@ class QButtonGroup;
 class GraphicsView;
 class QVBoxLayout;
 class GenericToolButton;
-class GraphicsItemWidget;
 class InteractionModeStackWidget;
 
 class GiantInteractionModeWidget  : public QWidget
@@ -30,6 +29,7 @@ private slots:
     void onDrawBtn(int checked); //绘画模式
     void onEditPolygonBtn(int checked); //编辑多边形模式
     void onCalculateBtn(int checked); //测量模式
+    void onSamModelBtn(int checked); //sam模式
 private:
     QButtonGroup* exclusive_button_group = nullptr;
     QVBoxLayout* main_layout = nullptr;

@@ -5,9 +5,11 @@
 #include "graphs/GraphicsLineSegment.h"
 #include "widgets/LabelBoard.h"
 #include "utils/CVOperation.h"
-#include "widgets/ComboBoxVWidget.h"
-#include "widgets/SAM/samwidget.h"
+#include "widgets/ComboBoxWidget.h"
+#include "widgets/AiModelInteractWidget.h"
 #include <QComboBox>
+#include "widgets/SAM/sam.h"
+
 #define EPS 1e-5
 
 ScenePromptItemModel::ScenePromptItemModel()
@@ -20,23 +22,14 @@ ScenePromptItemModel::~ScenePromptItemModel()
 
 }
 
-void ScenePromptItemModel::setSamWidget(SamWidget* s)
+void ScenePromptItemModel::setSamInteractWidget(AiModelInteractWidget* s)
 {
-    sam_widget = s;
-    connect(sam_widget->getPositivePointWidget()->getButton(), &QPushButton::toggled,
-        m_scene, &GraphicsScene::positivePointClicked);
-    connect(sam_widget->getNegativePointWidget()->getButton(), &QPushButton::toggled,
-        m_scene, &GraphicsScene::negativePointClicked);
-    connect(sam_widget->getBoxPromptWidget()->getButton(), &QPushButton::toggled,
-        m_scene, &GraphicsScene::promptRectClicked);
-    connect(sam_widget->getPPListPromptWidget()->getButton(), &QPushButton::toggled,
-        m_scene, &GraphicsScene::PPlineSegmentClicked);
-    connect(sam_widget->getNPListPromptWidget()->getButton(), &QPushButton::toggled,
-        m_scene, &GraphicsScene::NPlineSegmentClicked);
-    connect(sam_widget->getLoadModelBtn(), &QPushButton::clicked,
-        this, &ScenePromptItemModel::onLoadModelBtn);
-    connect(sam_widget->getDeleteAllPromptItemBtn(), &QPushButton::clicked,
-        this, &ScenePromptItemModel::onDeleteAllPromptItemBtn);
+    sam_interact_widget = s;
+}
+
+void ScenePromptItemModel::setSam(Sam* s)
+{
+    sam = s;
 }
 
 void ScenePromptItemModel::setGraphicsScene(GraphicsScene* s)
@@ -49,57 +42,18 @@ QList<GraphicsItem*> ScenePromptItemModel::getPromptItemList()
     return prompt_list;
 }
 
-bool ScenePromptItemModel::getIsAiSegment()
-{
-	return start_ai_segment;
-}
-
-void ScenePromptItemModel::onLoadModelBtn()
-{
-    if (sam_widget->getLoadModelBtn()->text() == "Load Model") {
-        loadSamModel();
-        sam_widget->getLoadModelBtn()->setText("UnLoad Model");
-        sam_widget->getLoadModelBtn()->setStyleSheet("QPushButton { color: red; }");
-    }
-    else {
-        unloadSamModel();
-        sam_widget->getLoadModelBtn()->setText("Load Model");
-        sam_widget->getLoadModelBtn()->setStyleSheet("QPushButton { color: white; }");
-    }
-}
-
 void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 {
     removeAllPromptsItems();
 }
 
-void ScenePromptItemModel::loadSamModel()
-{
-    sam_widget->initSamModel();
-    is_load_model = true;
-    start_ai_segment = true;
-    qDebug() << "Model init Success";
-}
-
-void ScenePromptItemModel::unloadSamModel()
-{
-    sam_widget->unLoadSamModel();
-    is_load_model = false;
-    is_load_image = false;
-    start_ai_segment = false;
-    load_image_path = "";
-    qDebug() << "Model UnLoad Success";
-    removeAllPromptsItems();
-    if(m_scene->getIsPaintPromptItem())
-        m_scene->clearPaintCache();
-}
-
 bool ScenePromptItemModel::loadImage(const QString& image_path)
 {
-    auto inputSize = sam_widget->getSam()->getInputSize();
+    if (!sam)return false;
+    auto inputSize = sam->getInputSize();
     cv::Mat load_image{};
     cv::resize(m_scene->getPixmapItem()->getOrignImageMat(false), load_image, inputSize);
-    if (sam_widget->getSam()->loadImage(load_image)) {
+    if (sam->loadImage(load_image)) {
         is_load_image = true;
         load_image_path = image_path;
         return true;
@@ -116,7 +70,7 @@ void ScenePromptItemModel::segmentAnything()
         qDebug() << "SamWidget::no scene";
         return;
     }
-    if (!sam_widget->getSam()) {
+    if (!sam) {
         qDebug() << "SamWidget::no load model";
         return;
     }
@@ -129,7 +83,7 @@ void ScenePromptItemModel::segmentAnything()
         QString path = m_scene->getPixmapItem()->getPixmapPath();
         loadImage(path);
     }
-    cv::Mat maskAuto = sam_widget->getSam()->autoSegment({ 10, 10 });
+    cv::Mat maskAuto = sam->autoSegment({ 10, 10 });
 
     cv::normalize(maskAuto, maskAuto, 0, 255, cv::NORM_MINMAX, CV_8UC1);
     maskAuto.convertTo(maskAuto, CV_8UC1);
@@ -176,6 +130,17 @@ void ScenePromptItemModel::mask2Polygon(const cv::Mat& mask)
     removeAllPromptsItems();
 }
 
+void ScenePromptItemModel::mask2img(const cv::Mat& mask)
+{
+    GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
+    QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
+    cv::Vec3b cv_color(c.blue(), c.green(), c.red()); // 注意通道的顺序
+    QPixmap mask_image = CVOperation::matToPixmap(
+        CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(false)
+            , mask, cv_color, false));
+    pixmap_item->updatePixmap(mask_image);
+}
+
 void ScenePromptItemModel::removeAllPromptsItems()
 {
     clearMask();
@@ -187,11 +152,10 @@ void ScenePromptItemModel::removeAllPromptsItems()
 
 void ScenePromptItemModel::generateAnnotation()
 {
-    positive_points.clear();
-    negative_points.clear();
+    if (!sam)return;
     QSize origin_size = m_scene->getPixmapItem()->getPixmap().size(); //返回的是原始图像的尺寸
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
-    auto inputSize = sam_widget->getSam()->getInputSize();
+    auto inputSize = sam->getInputSize();
     cv::Rect box_prompt = {};
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     foreach(GraphicsItem * prompt_item, prompt_list) {
@@ -253,35 +217,31 @@ void ScenePromptItemModel::generateAnnotation()
         loadImage(image_path);
     }
 
-    mask = sam_widget->getSam()->getMask(positive_points, negative_points, box_prompt);
+    mask = sam->getMask(positive_points, negative_points, box_prompt);
     cv::resize(mask, mask, cv_origin_size);
 
-    int interaction_mode = sam_widget->getInteractionModeWidget()->getComboBox()->currentIndex();
-    if (interaction_mode == 0) {
-        int output_shape = sam_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
-        if (output_shape == 0) {
-            MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
-            mask2Polygon(mask);
-        }
-        else if (output_shape == 1) {
-            MASK2ITEM_TYPE = MaskToItemType::MaskToRect;
-            mask2Rect(mask);
-        }
+    int output_shape = sam_interact_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
+    if (output_shape == 0) {
+        MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
+        mask2Polygon(mask);
+        clearPromptList();
     }
-    else if (interaction_mode == 1) {
-        QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
-        cv::Vec3b cv_color(c.blue(), c.green(), c.red()); // 注意通道的顺序
-        QPixmap mask_image = CVOperation::matToPixmap(
-            CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(false)
-            , mask, cv_color, false));
-        pixmap_item->updatePixmap(mask_image);
+    else if (output_shape == 1) {
+        MASK2ITEM_TYPE = MaskToItemType::MaskToRect;
+        mask2Rect(mask);
+        clearPromptList();
     }
+    else if (output_shape == 2) {
+        MASK2ITEM_TYPE = MaskToItemType::MaskToImg;
+        mask2img(mask);
+    }
+
 }
 
 void ScenePromptItemModel::Mask2Item()
 {
     if (mask.empty())return;
-    int output_shape = sam_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
+    int output_shape = sam_interact_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
     if (output_shape == 0) {
         MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
         mask2Polygon(mask);
@@ -312,6 +272,12 @@ void ScenePromptItemModel::removeItemFromPromptList()
         m_scene->getPixmapItem()->updatePixmap(p);
         clearMask();
     }
+}
+
+void ScenePromptItemModel::clearPromptList()
+{
+    positive_points.clear();
+    negative_points.clear();
 }
 
 void ScenePromptItemModel::addPromptItem(GraphicsItem* item)

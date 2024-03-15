@@ -76,10 +76,12 @@ public:
     void resetScene();//重置界面
     void clearPaintCache(); /******每次绘制完图元时，会自动补充
     下一个图元，有时我们需要清除这个图元的补充******/
- 
+
+    void initPaintFinishPromptItem(); //取消提示图元绘制操作
 signals:
     void updatePoint(const QPointF &p,bool isCenter); //传递多边形点链表进item信号
     void paintContinue(); //继续绘画
+    void promptContinue(); //继续绘制模型提示图元
     void createItemIndex(GraphicsItem* item); //在item索引控件中添加index元素
     void zoom3DLayout(bool); //true为放大，false为缩小
 
@@ -107,7 +109,6 @@ private:
     void initPaintGraphicsItem(); //初始化绘画操作
     void initPaintFinishGraphicsItem(); //取消绘画操作
     void initPaintPromptItem(); //初始化提示图元绘制操作
-    void initPaintFinishPromptItem(); //取消提示图元绘制操作
     void initItemSettingAfterPaint(GraphicsItem* item);//item初始化设置
     void startCreatePolygon(); //开始绘制多边形
     void cancelCreatePolygon(); //取消绘制多边形
@@ -119,6 +120,7 @@ private:
     void createPaintItemAtPoint(const QPointF&);
     void setPaintItemPoint(const QPointF&);
     void afterSetPaintItemPoint(const QPointF&);
+    void afterSetPromptItemPoint(const QPointF&);
 
     GraphicsView* m_view = nullptr;
     LabelBoard* label_board_widget = nullptr;

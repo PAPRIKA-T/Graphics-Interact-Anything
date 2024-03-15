@@ -7,7 +7,7 @@
 CalculateModeWidget::CalculateModeWidget(QWidget* parent)
 	: QWidget(parent)
 {
-	int btn_width = 18; int btn_height = 18;
+	int btn_width = 20; int btn_height = 20;
 	main_layout = new QHBoxLayout(this);
 
     cal_center_btn = new GenericToolButton();
@@ -43,8 +43,9 @@ CalculateModeWidget::CalculateModeWidget(QWidget* parent)
     {
         btn->setFixedSize(btn_width, btn_height);
         btn->setCheckable(true);
-        btn->setIconSize(QSize(15, 15));
+        btn->setIconSize(QSize(14, 14));
         main_layout->addWidget(btn);
+        btn->setObjectName("graphics_item_btn");
     }
     cal_center_btn->setChecked(true);
 

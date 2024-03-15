@@ -21,5 +21,4 @@ private:
 	GenericToolButton* file_setting_btn = nullptr;
 	GenericToolButton* item_list_btn = nullptr;
 	GenericToolButton* color_adjust_btn = nullptr;
-	GenericToolButton* sam_model_btn = nullptr;
 };

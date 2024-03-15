@@ -49,10 +49,8 @@
         <file>res/qss/GenericStyle/background-image/folder_icon.png</file>
         <file>res/qss/GenericStyle/background-image/folder_stack_icon.png</file>
         <file>res/qss/GenericStyle/background-image/item_list_btn.png</file>
-        <file>res/qss/GenericStyle/background-image/neg_point_list.png</file>
         <file>res/qss/GenericStyle/background-image/negative_point.png</file>
         <file>res/qss/GenericStyle/background-image/picture_item.png</file>
-        <file>res/qss/GenericStyle/background-image/pos_point_list.png</file>
         <file>res/qss/GenericStyle/background-image/positive_point.png</file>
         <file>res/qss/GenericStyle/background-image/prompt_rect.png</file>
         <file>res/qss/GenericStyle/background-image/remove_row.png</file>

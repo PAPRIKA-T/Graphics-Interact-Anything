@@ -20,6 +20,7 @@
 #include <QButtonGroup>
 #include "widgets/GiantInteractionModeWidget.h"
 #include "widgets/InteractionModeStackWidget.h"
+#include "widgets/AiModelInteractWidget.h"
 #include <model/ViewListContainer.h>
 
 #define EPS (1e-5) //除数最小量
@@ -45,6 +46,7 @@ GraphicsView::GraphicsView(QWidget *parent) :
     initGraphicsScene();
     initLayout();
     connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
+    connect(m_scene, &GraphicsScene::promptContinue, this, &GraphicsView::promptContinue);
 }
 
 GraphicsView::~GraphicsView()
@@ -116,6 +118,18 @@ void GraphicsView::initLayout()
 void GraphicsView::paintContinue()
 {
     foreach(QPushButton * btn, mode_stack_widget->getGraphicsItemWidget()->getDrawButtonList()) {
+        if (btn->isChecked()) {
+            if (!btn->isEnabled())return;
+            emit btn->toggled(true);
+            break;
+        }
+    }
+}
+
+void GraphicsView::promptContinue()
+{
+    foreach(QAbstractButton* btn, mode_stack_widget->getAiModelInteractWidget()->
+        getExclusiveButtonGroup()->buttons()) {
         if (btn->isChecked()) {
             if (!btn->isEnabled())return;
             emit btn->toggled(true);
@@ -233,6 +247,25 @@ void GraphicsView::startPaintMode(QMouseEvent* event)
             m_scene->finishCreatePolygon();
             emit m_scene->paintContinue();
         }
+        else {
+            emit m_scene->paintContinue();
+        }
+    }
+}
+
+void GraphicsView::startSamMode(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton) {
+        m_scene->createPaintItemAtPoint(mapToScene(event->pos()));
+    }
+    else if (event->button() == Qt::RightButton) {
+        if (m_scene->getIsCreatePolygon()) {
+            m_scene->finishCreatePolygon();
+            emit m_scene->promptContinue();
+        }
+        else {
+            emit m_scene->promptContinue();
+        }
     }
 }
 
@@ -284,6 +317,10 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         startPaintMode(event);
     }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
+		startSamMode(event);
+	}
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
         if (event->button() == Qt::LeftButton) {
@@ -337,6 +374,16 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         }
         else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
+        if (m_scene->getIsCreatePolygon()) {
+            if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
+                m_scene->pushBackPolygonPointConsitantly(mapToScene(m_present_pos));
+            }
+        }
+        else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
+
+    }
     m_scene->updateRtText();
 }
 
@@ -359,6 +406,12 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         if (event->button() == Qt::LeftButton) {
             m_scene->afterSetPaintItemPoint(mapToScene(event->pos()));
+        }
+    }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
+        if (event->button() == Qt::LeftButton) {
+            m_scene->afterSetPromptItemPoint(mapToScene(event->pos()));
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 

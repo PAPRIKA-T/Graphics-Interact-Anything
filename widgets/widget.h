@@ -13,7 +13,6 @@ class QSplitter;
 class FileView;
 class TitleWidget;
 class ImageSceneWidget2D;
-class SamWidget;
 class ImageSceneWidget3D;
 class ForePlayWidget;
 class ViewToolBar;
@@ -22,6 +21,7 @@ class LabelBoardWithTool;
 class ItemIndexView;
 class StatusWidget;
 class MultiFunctionStackWidget;
+class Sam;
 
 class Widget : public QWidget
 {
@@ -41,12 +41,11 @@ public:
     }; //枚举变量用于判断是否更改窗体大小
     Widget(QWidget *parent = nullptr); //构造函数
     ~Widget() override; //析构函数
-    QVBoxLayout* getMainLayout(); //获取主界面布局器
 
 /**************************************************场景、视图指针的获取与设置********************************************************/
     ViewListContainer* getViewListContainer(); //获取视图容器
     FileView* getFileView(); //获取文件索引控件
-    SamWidget* getSamWidget(); //获取sam控件
+    Sam* getSam() const; //获取sam
 
     void imageWidgetAdd(ImageSceneWidget2D*image_widget); //切换图像显示控件
     void DimensionTrans();//2D\3D布局转换
@@ -64,6 +63,7 @@ private:
     void disConnectToolButton(ImageSceneWidget2D*);
 
     void setWidgetSize(); //设置各个控件部分的大小
+    void initSamModel();//初始化sam模型
 
 /**************************************************界面所有布局器********************************************************/
     QVBoxLayout *main_layout = nullptr; //主界面垂直布局器
@@ -80,11 +80,13 @@ private:
     StatusWidget* status_widget = nullptr; //底部状态栏
     LabelBoardWithTool* label_board_widget = nullptr; //标签面板
     ItemIndexView* item_index_view = nullptr; //item索引控件
-    SamWidget* sam_widget = nullptr;
     ForePlayWidget* foreplay_widget = nullptr;
 
 /**************************************************场景、视图指针********************************************************/
     ViewListContainer view_list_container; //视图容器
+
+    /**********************内置模型***************************/
+    Sam* sam = nullptr;
 };
 
 #endif // WIDGET_H

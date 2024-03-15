@@ -116,6 +116,19 @@ void GenericInteractionModel::setEditPolygonInteraction(bool ok)
 	}
 }
 
+void GenericInteractionModel::setSamModelInteraction(bool ok)
+{
+	if (ok) {
+		interaciton_status = InteractionStatus::INTERACTION_SAM;
+		m_view->setDragMode(QGraphicsView::NoDrag);
+		m_view->viewport()->setCursor(QCursor(Qt::ArrowCursor));
+	}
+	else {
+		m_view->viewport()->unsetCursor();
+		m_view->getGraphicsScene()->initPaintFinishPromptItem();
+	}
+}
+
 void GenericInteractionModel::setPolygonItemEdit(bool ok)
 {
 	GraphicsItem* new_item = nullptr;

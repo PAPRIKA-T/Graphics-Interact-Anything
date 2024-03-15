@@ -17,7 +17,6 @@
 #include "ForePlayWidget.h"
 #include "TitleWidget.h"
 #include "MagnifyingGlassWidget.h"
-#include "SAM/samwidget.h"
 #include "graphs/Graphicsscene.h"
 #include "graphs/Graphicsview.h"
 #include "graphs/Graphicsitem.h"
@@ -30,6 +29,7 @@
 #include "SceneToolWidget.h"
 #include "GiantInteractionModeWidget.h"
 #include "LabelBoard.h"
+#include "SAM/sam.h"
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -82,19 +82,12 @@ Widget::Widget(QWidget *parent)
         foreplay_widget->setViewListContainer(&view_list_container);
         file_view->setForeplayWidget(foreplay_widget);
 
-        //设置SamWidget
-        sam_widget = new SamWidget(this);
-        sam_widget->setObjectName("sam_widget");
-        view_list_container.getActivedView()->getGraphicsScene()
-            ->getScenePromptItemModel()->setSamWidget(sam_widget);
-
         //设置右下堆栈控件
         rb_stack_widget = new MultiFunctionStackWidget();
         rb_stack_widget->setObjectName("rb_stack_widget");
         rb_stack_widget->getStackWidget()->addWidget(file_view);
         rb_stack_widget->getStackWidget()->addWidget(foreplay_widget);
         rb_stack_widget->getStackWidget()->addWidget(item_index_view);
-        rb_stack_widget->getStackWidget()->addWidget(sam_widget);
     }
 
     title_widget->setParentWidget(this);
@@ -141,15 +134,18 @@ Widget::Widget(QWidget *parent)
         main_layout->setSpacing(0);
     }
     setWidgetSize();
+    initSamModel();
 }
 
 Widget::~Widget()
 {
-}
-
-QVBoxLayout* Widget::getMainLayout()
-{
-	return main_layout;
+	delete main_layout;
+	delete title_widget;
+	delete rb_stack_widget;
+	delete image_widget_2d;
+	delete image_widget_3d;
+	delete mag_glass_widget;
+    delete sam;
 }
 
 /*****************其他函数*********************/
@@ -163,9 +159,9 @@ FileView* Widget::getFileView()
     return file_view;
 }
 
-SamWidget* Widget::getSamWidget()
+Sam* Widget::getSam() const 
 {
-    return sam_widget;
+    return sam;
 }
 
 //设置各个控件部分的大小
@@ -174,8 +170,35 @@ void Widget::setWidgetSize()
     resize(1000, 700);
     image_widget_2d->resize(650, 600);
     right_widget_splitter->setMinimumWidth(200);
-    sam_widget->setMinimumHeight(100);
     //DimensionTrans();
+}
+
+//初始化sam模型
+void Widget::initSamModel()
+{
+    if (sam) return;
+    std::string pre_model_path{};
+    std::string model_path{};
+
+    pre_model_path = "ai_models/sam/mobile_sam_preprocess.onnx";
+    model_path = "ai_models/sam/mobile_sam.onnx";
+    if (!QFile::exists(QString::fromStdString(pre_model_path)) || 
+        !QFile::exists(QString::fromStdString(model_path))) {
+        status_widget->setRightLabelText("model file not exist!");
+        qDebug() << "Sam model file not exist!";
+		return;
+    }
+    Sam::Parameter param(pre_model_path, model_path, std::thread::hardware_concurrency());
+    param.providers[0].deviceType = 1; // cpu for preprocess
+    param.providers[1].deviceType = 1; // CUDA for sam
+    sam = new Sam(param);
+    if (!sam) {
+        status_widget->setRightLabelText("load Sam model fail!");
+        qDebug() << "load model fail!";
+        return;
+    }
+    status_widget->setRightLabelText("Sam Model Load Success!");
+    image_widget_2d->getGraphicsScene()->getScenePromptItemModel()->setSam(sam);
 }
 
 //切换图像显示控件
@@ -183,11 +206,11 @@ void Widget::imageWidgetAdd(ImageSceneWidget2D* image_widget)
 {
     view_list_container.pushBackView(image_widget->getGraphicsView());
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
-    m_scene->getScenePromptItemModel()->setSamWidget(sam_widget);
     m_scene->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
     m_scene->setItemIndexView(item_index_view);
     connect(m_scene, &GraphicsScene::createItemIndex, item_index_view, 
         &ItemIndexView::addItemInitAfterPaint);
+    image_widget->getGraphicsScene()->getScenePromptItemModel()->setSam(sam);
 }
 
 void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)

@@ -78,9 +78,11 @@ private:
     void initGraphicsScene(); //初始化scene
     void initLayout(); //初始化布局
     void paintContinue();
+    void promptContinue();
     void grabItemForCalculate(const QPoint&); //抓取坐标处图元传递给测量模型
     void keyDelete(); //删除函数
     void startPaintMode(QMouseEvent* event); //绘画模式启动！
+    void startSamMode(QMouseEvent* event); //sam模式启动！
     enum class MOUSE_PRESS_STATUS {
         LEFT_BUTTON_PRESSED,
         RIGHT_BUTTON_PRESSED,

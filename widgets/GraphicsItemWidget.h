@@ -17,7 +17,7 @@ public:
 	~GraphicsItemWidget();
 	void setGraphicsView(GraphicsView*);
     QList<QPushButton*> getDrawButtonList();
-    virtual void paintEvent(QPaintEvent* event) override;
+    void paintItemLoad();
 
 private slots:
     void onDestoryBtn(); //!!!测试使用，添加上万个item

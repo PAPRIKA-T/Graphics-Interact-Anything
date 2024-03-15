@@ -67,14 +67,15 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
 
     exclusive_action_group = new QButtonGroup(this);
 
-    foreach(QPushButton* btn, draw_button_list)
-    {
-        shape_btn_layout->addWidget(btn);
-        btn->setFixedSize(btn_width, btn_height);
-        btn->setCheckable(true);
-        btn->setIconSize(QSize(15, 15));
-        exclusive_action_group->addButton(btn);
-    }
+        foreach(QPushButton* btn, draw_button_list)
+        {
+            shape_btn_layout->addWidget(btn);
+            btn->setFixedSize(btn_width, btn_height);
+            btn->setCheckable(true);
+            btn->setIconSize(QSize(15, 15));
+            btn->setObjectName("graphics_item_btn");
+            exclusive_action_group->addButton(btn);
+        }
     draw_button_list[0]->setChecked(true);
     shape_btn_layout->setContentsMargins(0, 0, 0, 0);
     shape_btn_layout->setSpacing(1);
@@ -112,13 +113,15 @@ QList<QPushButton*> GraphicsItemWidget::getDrawButtonList()
     return draw_button_list;
 }
 
-void GraphicsItemWidget::paintEvent(QPaintEvent* event)
+void GraphicsItemWidget::paintItemLoad()
 {
-    Q_UNUSED(event);
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
+    foreach(QPushButton * btn, draw_button_list) {
+        if (btn->isChecked()) {
+            if (!btn->isEnabled())return;
+            emit btn->toggled(true);
+            break;
+        }
+    }
 }
 
 void GraphicsItemWidget::connectSceneSignal(GraphicsScene* s)

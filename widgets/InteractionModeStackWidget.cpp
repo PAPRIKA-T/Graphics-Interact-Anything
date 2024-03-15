@@ -1,6 +1,7 @@
 #include "InteractionModeStackWidget.h"
 #include "GraphicsItemWidget.h"
 #include "CalculateModeWidget.h"
+#include "AiModelInteractWidget.h"
 
 InteractionModeStackWidget::InteractionModeStackWidget(QWidget* parent)
 {
@@ -12,10 +13,12 @@ InteractionModeStackWidget::InteractionModeStackWidget(QWidget* parent)
 
     draw_mode_widget = new GraphicsItemWidget();
     calculate_mode_widget = new CalculateModeWidget();
+    ai_model_interact_widget = new AiModelInteractWidget();
 
     addWidget(none_widget);
     addWidget(draw_mode_widget);
     addWidget(calculate_mode_widget);
+    addWidget(ai_model_interact_widget);
     setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);
 }
 
@@ -24,6 +27,7 @@ InteractionModeStackWidget::~InteractionModeStackWidget()
     delete none_widget;
     delete draw_mode_widget;
     delete calculate_mode_widget;
+    delete ai_model_interact_widget;
 }
 
 void InteractionModeStackWidget::setGraphicsView(GraphicsView* view)
@@ -31,11 +35,17 @@ void InteractionModeStackWidget::setGraphicsView(GraphicsView* view)
     m_view = view;
 	draw_mode_widget->setGraphicsView(m_view);
     calculate_mode_widget->setGraphicsView(m_view);
+    ai_model_interact_widget->setGraphicsView(m_view);
 }
 
 GraphicsItemWidget* InteractionModeStackWidget::getGraphicsItemWidget() const
 {
     return draw_mode_widget;
+}
+
+AiModelInteractWidget* InteractionModeStackWidget::getAiModelInteractWidget() const
+{
+	return ai_model_interact_widget;
 }
 
 void InteractionModeStackWidget::setCurrentIndex(StackWidgetType index)

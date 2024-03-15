@@ -4,6 +4,7 @@
 #include "GenericToolButton.h"
 #include "CalculateModeMenu.h"
 #include "GraphicsItemWidget.h"
+#include "AiModelInteractWidget.h"
 #include "InteractionModeStackWidget.h"
 #include <QButtonGroup>
 #include <QVBoxLayout>
@@ -19,14 +20,10 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 
     sam_model_btn = new GenericToolButton(this);
     sam_model_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/sam_mode.png"));
-    sam_model_btn->setCheckable(true);
-    sam_model_btn->setObjectName("interaction_mode_btn");
     sam_model_btn->setIconSize(QSize(32, 27));
 
     rubber_btn = new GenericToolButton(this);
     rubber_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/rubber_mode.png"));
-    rubber_btn->setCheckable(true);
-    rubber_btn->setObjectName("interaction_mode_btn");
     rubber_btn->setIconSize(QSize(30, 25));
 
     observe_btn = new GenericToolButton(this);
@@ -82,6 +79,7 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     connect(edit_polygon_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onEditPolygonBtn);
     connect(draw_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onDrawBtn);
     connect(calculate_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onCalculateBtn);
+    connect(sam_model_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onSamModelBtn);
 
     main_layout->addWidget(observe_btn);
     main_layout->addWidget(select_btn);
@@ -177,6 +175,7 @@ void GiantInteractionModeWidget::onDrawBtn(int checked)
 {
     m_view->getGenericInteractionModel()->setPaintInteraction(checked);
     if (checked) {
+        mode_stack_widget->getGraphicsItemWidget()->paintItemLoad();
         mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::DrawModeStackWidget);
     }
     else {
@@ -194,6 +193,18 @@ void GiantInteractionModeWidget::onCalculateBtn(int checked)
     m_view->getGenericInteractionModel()->setCalculateInteraction(checked);
     if (checked) {
         mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::CalculateModeStackWidget);
+    }
+    else {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);
+    }
+}
+
+void GiantInteractionModeWidget::onSamModelBtn(int checked)
+{
+    m_view->getGenericInteractionModel()->setSamModelInteraction(checked);
+    if (checked) {
+        mode_stack_widget->getAiModelInteractWidget()->promptItemLoad();
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::SamModeStackWidget);
     }
     else {
         mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);

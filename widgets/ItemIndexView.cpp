@@ -3,6 +3,7 @@
 #include "LabelBoard.h"
 #include "graphs/GraphicsItem.h"
 #include "utils/ColorOperation.h"
+#include "model/StyleSheetConfigModel.h"
 
 /****************************************************图元索引控件*********************************************************/
 
@@ -189,6 +190,8 @@ void ItemIndexView::slotCustomContextMenuRequested(QPoint pos)
     if (index.isValid() && index.column() == 2) {
         QMenu menu;
         menu.addAction(remove_img);
+        StyleSheetConfigModel style_sheet;
+        style_sheet.setMenuStyle(&menu);
         menu.exec(QCursor::pos());  //QCursor::pos()让menu的位置在鼠标点击的的位置
     }
 }

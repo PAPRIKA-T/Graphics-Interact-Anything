@@ -419,8 +419,8 @@ void FileView::slotCustomContextMenuRequested(QPoint pos)
     {
         QMenu menu;
         StyleSheetConfigModel style_sheet;
-        style_sheet.setMenuStyle(&menu);
         menu.addAction(remove_img);
+        style_sheet.setMenuStyle(&menu);
         menu.exec(QCursor::pos());  //QCursor::pos()让menu的位置在鼠标点击的的位置
     }
 }
