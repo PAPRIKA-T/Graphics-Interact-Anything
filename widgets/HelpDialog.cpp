@@ -1,4 +1,4 @@
-#include "HelpDialog.h"
+ï»¿#include "HelpDialog.h"
 #include <QVBoxLayout>
 #include <QLabel>
 
@@ -9,7 +9,7 @@ HelpDialog::HelpDialog(QWidget* parent)
     //setFixedSize(400, 200);
     main_layout = new QVBoxLayout();
     message = new QLabel();
-    QFont font = QFont("ËÎÌå"); //ÉèÖÃ³õÊ¼×ÖÌå
+    QFont font = QFont("å®‹ä½“"); //è®¾ç½®åˆå§‹å­—ä½“
     font.setBold(false);
     font.setPointSize(18);
     message->setFont(font);

@@ -1,7 +1,8 @@
 #pragma once
 
 #include <QWidget>
-class ViewListContainer;
+#include "utils/GiantMacros.h"
+class GraphicsView;
 class QHBoxLayout;
 class SceneToolWidget;
 
@@ -12,11 +13,15 @@ class ViewToolBar  : public QWidget
 public:
 	ViewToolBar(QWidget* parent = nullptr);
 	~ViewToolBar();
-	void setViewListContainer(ViewListContainer*);
 	SceneToolWidget* getSceneToolWidget();
-	virtual void paintEvent(QPaintEvent* event) override;
+	void setGraphicsView(GraphicsView*);
+
+protected:
+	G_Widget_PaintEventOverride
+	virtual void enterEvent(QEnterEvent* event) override;
+	virtual void leaveEvent(QEvent* event) override;
 private:
 	QHBoxLayout* main_layout = nullptr;
-	ViewListContainer* view_list_container = nullptr;
+	GraphicsView* m_view = nullptr;
 	SceneToolWidget* scene_tool_widget = nullptr;
 };

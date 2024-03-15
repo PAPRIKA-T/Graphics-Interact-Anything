@@ -2,7 +2,7 @@
 #include <QWidget>
 
 class QVBoxLayout;
-class ViewListContainer;
+class GraphicsView;
 class QPushButton;
 class QButtonGroup;
 class GraphicsScene;
@@ -15,20 +15,17 @@ class GraphicsItemWidget  : public QWidget
 public:
 	GraphicsItemWidget(QWidget *parent = nullptr);
 	~GraphicsItemWidget();
-	void setViewListContainer(ViewListContainer*);
+	void setGraphicsView(GraphicsView*);
     QList<QPushButton*> getDrawButtonList();
     virtual void paintEvent(QPaintEvent* event) override;
-    void connectSceneSignal(GraphicsScene*);
-    void disconnectSceneSignal(GraphicsScene*);
 
 private slots:
-    void onCalCenterBtnClicked(int checked);
-    void onCalVerticalBtnClicked(int checked);
-    void onCalAngleBtnClicked(int checked);
     void onDestoryBtn(); //!!!测试使用，添加上万个item
 
 private:
-    ViewListContainer* view_list_container = nullptr; //视图容器指针
+    void connectSceneSignal(GraphicsScene*);
+    void disconnectSceneSignal(GraphicsScene*);
+    GraphicsView* m_view = nullptr; //视图容器指针
 	QVBoxLayout* shape_btn_layout = nullptr; //绘图按钮垂直布局器
 	QList<QPushButton*> draw_button_list; //绘图按钮链表
     GenericToolButton* destory_btn = nullptr; //!!!用于测试
@@ -43,9 +40,4 @@ private:
     GenericToolButton* angle_btn = nullptr;
     GenericToolButton* parallel_line_btn = nullptr;
 
-    //测量功能模块
-    QButtonGroup* exclusive_button_group = nullptr;
-    GenericToolButton* cal_center_btn;
-    GenericToolButton* cal_vertical_btn;
-    GenericToolButton* cal_angle_btn;
 };

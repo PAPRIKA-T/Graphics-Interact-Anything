@@ -21,3 +21,9 @@ QMenu::item:pressed
     background-color:rgb(65,65,65); /* QAction鼠标按下的背景色 */
     color: white; /* QAction鼠标按下时的文字颜色 */
 }
+
+QMenu::item:checked 
+{
+    background-color:rgb(57, 80, 124); /* QAction鼠标悬停或选中的背景色 */
+    color: white; /* QAction鼠标悬停或选中时的文字颜色 */
+}

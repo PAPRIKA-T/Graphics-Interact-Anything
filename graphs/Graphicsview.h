@@ -18,7 +18,6 @@ class GraphicsPixmapItem;
 class ImageSceneWidget2D;
 class QVBoxLayout;
 class QPushButton;
-class GraphicsItemWidget;
 class QButtonGroup;
 class ViewToolBar;
 class QHBoxLayout;
@@ -33,18 +32,15 @@ public:
     GraphicsScene* getGraphicsScene() const;
     ViewToolBar* getViewToolBar() const;
     GiantInteractionModeWidget* getGiantInteractionModeWidget() const;
-
-    QPointF getPresentPosOnOriginImage();
-
     GenericInteractionModel* getGenericInteractionModel();
     ViewTransFormModel* getViewTransFormModel();
     GraphicsCalculateModel* getGraphicsCalculateModel();
-    void updateLbText(); //更新左下文本
-    
-    void setMagImage(const QPointF& p); //设置放大镜控件的图像
+    const QPoint& getMouseCoordinate();
 
+    void setMagImage(const QPointF& p); //设置放大镜控件的图像
     void setPaintCross(bool ok);
     void setActived(bool ok);
+    void setEnterView(bool);
 
     QPixmap& getMagPixmap() {return grab_map;} //返回grabMap
 
@@ -99,9 +95,6 @@ private:
     QVBoxLayout* main_layout = nullptr;
     QHBoxLayout* horizontal_layout = nullptr;
     GiantInteractionModeWidget* interaction_mode_widget = nullptr;
-    GraphicsItemWidget* graphicsitem_widget = nullptr; //图形绘制按钮控件
-    QList<QPushButton*> draw_button_list; //绘图按钮链表
-    QButtonGroup* exclusive_graphics_btn_box = nullptr; //图形按钮互斥组
     ViewToolBar* view_tool_bar = nullptr; //view工具控件
 
     /********************************/

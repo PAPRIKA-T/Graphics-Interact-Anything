@@ -1,6 +1,6 @@
 ﻿#include <QMouseEvent>
 #include "ItemIndexView.h"
-#include "LabelBoardWidget.h"
+#include "LabelBoard.h"
 #include "graphs/GraphicsItem.h"
 #include "utils/ColorOperation.h"
 

@@ -88,6 +88,8 @@ TitleWidget::TitleWidget(QWidget* parent)
     QAction* help_version = new QAction("Version");
     QAction* help_about = new QAction("About");
     QAction* theme_divert = new QAction("Theme Divert");
+    theme_divert->setCheckable(true);
+    theme_divert->setChecked(true);
 
     connect(help_doc, &QAction::triggered, this, &TitleWidget::on_help_doc_clicked);
     connect(help_contact, &QAction::triggered, [=]() {

@@ -12,21 +12,16 @@ class QHBoxLayout;
 class QSplitter;
 class FileView;
 class TitleWidget;
-class GraphicsScene;
 class ImageSceneWidget2D;
 class SamWidget;
 class ImageSceneWidget3D;
 class ForePlayWidget;
 class ViewToolBar;
 class MagnifyingGlassWidget;
-class LabelBoardWidget;
-class LabelBoardToolWidget;
+class LabelBoardWithTool;
 class ItemIndexView;
 class StatusWidget;
-class HeaderButtonWidget;
-class QButtonGroup;
-class StackWidget;
-class StackIconWidget;
+class MultiFunctionStackWidget;
 
 class Widget : public QWidget
 {
@@ -61,7 +56,6 @@ protected:
     virtual void paintEvent(QPaintEvent *event) override;
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void closeEvent (QCloseEvent * event) override;
-    virtual void changeEvent(QEvent* event) override;
     virtual void leaveEvent(QEvent* event) override;
 
 private:
@@ -71,31 +65,20 @@ private:
 
     void setWidgetSize(); //设置各个控件部分的大小
 
-/**************************************************类具有的一些成数据********************************************************/
-    QList<QPushButton*> tool_button_list; //上方工具按钮链表
-
 /**************************************************界面所有布局器********************************************************/
     QVBoxLayout *main_layout = nullptr; //主界面垂直布局器
-    QVBoxLayout* label_board_widget_layout = nullptr; //labelBoard部分的布局器
-    QHBoxLayout* stack_widget_hori_layout = nullptr; //右下堆栈控件的布局器
     QSplitter *right_widget_splitter = nullptr; // 右侧的splitter
     QSplitter* center_widget_splitter = nullptr; // 整体的splitter
 
-/**************************************************界面布局器底层控件********************************************************/
+/*************************************界面所有功能控件**********************************************/
     TitleWidget* title_widget = nullptr; //标题栏
-    QWidget* label_board_under_widget = nullptr; //labelboard部分的底层控件
-    QWidget* stack_under_widget = nullptr; //stack部分的底层控件
-    StackWidget* rb_stack_widget = nullptr; //右下堆栈控件
-    StackIconWidget* stack_icon_widget = nullptr; //右下堆栈的按钮控件
-
-/**************************************************界面所有功能控件(不含布局底层控件)********************************************************/
+    MultiFunctionStackWidget* rb_stack_widget = nullptr; //右下堆栈控件
     ImageSceneWidget2D* image_widget_2d = nullptr; //2d显示控件
     ImageSceneWidget3D* image_widget_3d = nullptr; //3d显示控件
     MagnifyingGlassWidget *mag_glass_widget = nullptr; //放大镜控件
     FileView *file_view = nullptr; //窗口右下角文件列表索引交互控件
     StatusWidget* status_widget = nullptr; //底部状态栏
-    LabelBoardWidget* label_board_widget = nullptr; //标签面板
-    LabelBoardToolWidget* label_board_tool_wodget = nullptr; //标签面板上方按钮
+    LabelBoardWithTool* label_board_widget = nullptr; //标签面板
     ItemIndexView* item_index_view = nullptr; //item索引控件
     SamWidget* sam_widget = nullptr;
     ForePlayWidget* foreplay_widget = nullptr;

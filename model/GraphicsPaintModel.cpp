@@ -173,11 +173,6 @@ void GraphicsPaintModel::setLineLength(const qreal& l)
     line_lengh = l;
 }
 
-const qreal GraphicsPaintModel::getPenWidth() const
-{
-    return pen_width;
-}
-
 void GraphicsPaintModel::setPenWidth(const qreal& p)
 {
     pen_width = p;

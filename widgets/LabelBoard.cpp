@@ -1,26 +1,27 @@
-﻿#include "LabelBoardWidget.h"
+﻿#include "LabelBoard.h"
 #include "Model/ViewListContainer.h"
+#include "LabelBoardToolWidget.h"
 #include "ColorButton.h"
 #include <QHBoxLayout>
 /*************************LabelBoard************************/
-LabelBoardWidget::LabelBoardWidget(QWidget* parent)
+LabelBoard::LabelBoard(QWidget* parent)
     :QTableWidget(parent)
 {
     initWidget();
 }
 
-LabelBoardWidget::LabelBoardWidget(int rows, int columns, QWidget* parent)
+LabelBoard::LabelBoard(int rows, int columns, QWidget* parent)
     :QTableWidget(rows, columns, parent)
 {
     initWidget();
 }
 
-void LabelBoardWidget::setViewListContainer(ViewListContainer* vlc)
+void LabelBoard::setViewListContainer(ViewListContainer* vlc)
 {
     view_list_container = vlc;
 }
 
-void LabelBoardWidget::initWidget()
+void LabelBoard::initWidget()
 {
     setObjectName("LabelBoardWidget");
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -35,18 +36,18 @@ void LabelBoardWidget::initWidget()
     header->setMinimumSectionSize(30);//设置最小列宽
     header->setFixedHeight(27);
 
-    setColumnWidth(0, 40);//设置第0列宽40 需要在setModel之后设置才能生效
-    setColumnWidth(1, 35);
-    setColumnWidth(2, 80);
+    setColumnWidth(0, 50);//设置第0列宽40 需要在setModel之后设置才能生效
+    setColumnWidth(1, 50);
+    setColumnWidth(2, 65);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_ITEM, DEFAULT_LABEL);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::DoubleClicked);
-    connect(this, &QTableWidget::cellChanged, this, &LabelBoardWidget::onCellChanged);
+    connect(this, &QTableWidget::cellChanged, this, &LabelBoard::onCellChanged);
     setAlternatingRowColors(true);
 }
 
-void LabelBoardWidget::appendBoardRow(const QString& ID, const QColor& c, const QString& label)
+void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QString& label)
 {
     int last_row = this->rowCount();
     QTableWidgetItem* id_item{};
@@ -83,10 +84,10 @@ void LabelBoardWidget::appendBoardRow(const QString& ID, const QColor& c, const 
     clr_btn_list.push_back(color_btn);
     setCurrentItem(item_0);
     scrollToItem(item_0);
-    connect(color_btn, &ColorButton::sentSelf, this, &LabelBoardWidget::onColorChanged);
+    connect(color_btn, &ColorButton::sentSelf, this, &LabelBoard::onColorChanged);
 }
 
-bool LabelBoardWidget::isRowHasAdded(const QString& id, const QString& label)
+bool LabelBoard::isRowHasAdded(const QString& id, const QString& label)
 {
     for (int row = 0; row < rowCount(); ++row) {
         QTableWidgetItem* label_item = item(row, 2);
@@ -99,7 +100,7 @@ bool LabelBoardWidget::isRowHasAdded(const QString& id, const QString& label)
     return false;
 }
 
-void LabelBoardWidget::setItemParameters(GraphicsItem* item)
+void LabelBoard::setItemParameters(GraphicsItem* item)
 {
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
@@ -108,21 +109,21 @@ void LabelBoardWidget::setItemParameters(GraphicsItem* item)
     item->setGraphicsColor(clr_btn_list.at(selected_row)->getBackgroundColor());
 }
 
-QColor LabelBoardWidget::getSelectedColor()
+QColor LabelBoard::getSelectedColor()
 {
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
     return clr_btn_list.at(selected_row)->getBackgroundColor();
 }
 
-void LabelBoardWidget::removeLabelRow(int row)
+void LabelBoard::removeLabelRow(int row)
 {
     if (row >= rowCount() || row < 0)return;
     removeRow(row);
     clr_btn_list.removeAt(row);
 }
 
-void LabelBoardWidget::onRemoveSelectedRowClicked()
+void LabelBoard::onRemoveSelectedRowClicked()
 {
     if (rowCount() == 1)return; //保证至少有一行用于item默认设置
     QList<QTableWidgetItem*> items = selectedItems();
@@ -130,7 +131,7 @@ void LabelBoardWidget::onRemoveSelectedRowClicked()
     removeLabelRow(selected_row);
 }
 
-void LabelBoardWidget::onAppendRowClicked()
+void LabelBoard::onAppendRowClicked()
 {
     // 生成随机的RGB值
     int red = QRandomGenerator::global()->bounded(256); // 0-255
@@ -147,7 +148,7 @@ void LabelBoardWidget::onAppendRowClicked()
     }
 }
 
-void LabelBoardWidget::saveLabelFileToTxt()
+void LabelBoard::saveLabelFileToTxt()
 {
     QString textData;
     int rows = rowCount();
@@ -177,7 +178,7 @@ void LabelBoardWidget::saveLabelFileToTxt()
     }
 }
 
-void LabelBoardWidget::readLabelFileFromTxt()
+void LabelBoard::readLabelFileFromTxt()
 {
     blockSignals(true);
     QString filepath = QFileDialog::getOpenFileName(this, "Load Label_desc", "./", "Txt files(*.txt)");
@@ -205,7 +206,7 @@ void LabelBoardWidget::readLabelFileFromTxt()
     blockSignals(false);
 }
 
-void LabelBoardWidget::onCellChanged(int row, int column)
+void LabelBoard::onCellChanged(int row, int column)
 {
     QTableWidgetItem* item = this->item(row, column);
     QString text = item->text();
@@ -248,7 +249,7 @@ void LabelBoardWidget::onCellChanged(int row, int column)
     }
 }
 
-void LabelBoardWidget::onColorChanged(ColorButton* clr)
+void LabelBoard::onColorChanged(ColorButton* clr)
 {
     QColor c = clr->getBackgroundColor();
     int row_index = indexAt(clr->parentWidget()->pos()).row();

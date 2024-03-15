@@ -9,7 +9,7 @@
 #include "Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 
-class LabelBoardWidget;
+class LabelBoard;
 class ItemIndexView;
 class GraphicsView;
 class InteractionPolygon;
@@ -27,8 +27,8 @@ public:
     GraphicsView* getGraphicsView();
     void setItemIndexView(ItemIndexView* i);
     ItemIndexView* getItemIndexView();
-    void setLabelBoardWidget(LabelBoardWidget* w);
-    LabelBoardWidget* getLabelBoardWidget();
+    void setLabelBoardWidget(LabelBoard* w);
+    LabelBoard* getLabelBoardWidget();
 
     ScenePromptItemModel* getScenePromptItemModel();
 
@@ -47,7 +47,7 @@ public:
     GraphicsTextItem* getRightUpTextItem(); //获取右上文本item
 
     void initTextItem(); //初始化TextItem
-    void updateRtText(); //更新左下文本（鼠标位置）
+    void updateRtText(); //更新右上文本
     void updateRbText(int index, int total_index); //更新右上文本
     void updateTextPos(); //更新文本控件位置
     void updateThumbnailBox(); //更新缩略图
@@ -121,7 +121,7 @@ private:
     void afterSetPaintItemPoint(const QPointF&);
 
     GraphicsView* m_view = nullptr;
-    LabelBoardWidget* label_board_widget = nullptr;
+    LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{};
 
