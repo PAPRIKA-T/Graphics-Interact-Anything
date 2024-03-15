@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <QWidget>
 
-class QVBoxLayout;
+class QHBoxLayout;
 class GraphicsView;
 class QPushButton;
 class QButtonGroup;
@@ -26,8 +26,10 @@ private:
     void connectSceneSignal(GraphicsScene*);
     void disconnectSceneSignal(GraphicsScene*);
     GraphicsView* m_view = nullptr; //视图容器指针
-	QVBoxLayout* shape_btn_layout = nullptr; //绘图按钮垂直布局器
+	QHBoxLayout* shape_btn_layout = nullptr; //绘图按钮垂直布局器
 	QList<QPushButton*> draw_button_list; //绘图按钮链表
+
+    QButtonGroup* exclusive_action_group = nullptr;
     GenericToolButton* destory_btn = nullptr; //!!!用于测试
     GenericToolButton* point_btn = nullptr;
     GenericToolButton* rect_btn = nullptr;

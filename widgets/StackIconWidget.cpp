@@ -29,12 +29,13 @@ StackIconWidget::StackIconWidget(QWidget *parent)
     color_adjust_btn = new GenericToolButton(this);
     color_adjust_btn->setObjectName("stack_btn");
     color_adjust_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/color_adjust_btn.png"));
+    color_adjust_btn->setVisible(false);
 
     stack_btn_layout->addWidget(file_view_btn);
     stack_btn_layout->addWidget(file_setting_btn);
     stack_btn_layout->addWidget(item_list_btn);
     stack_btn_layout->addWidget(sam_model_btn);
-    stack_btn_layout->addWidget(color_adjust_btn);
+    //stack_btn_layout->addWidget(color_adjust_btn);
     stack_btn_layout->addStretch();
     stack_btn_layout->setContentsMargins(2, 0, 0, 2);
     stack_btn_layout->setSpacing(6);

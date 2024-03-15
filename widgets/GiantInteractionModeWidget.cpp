@@ -1,21 +1,28 @@
 ﻿#include "GiantInteractionModeWidget.h"
-#include "Graphs/Graphicsview.h"
 #include "graphs/GraphicsScene.h"
 #include "GraphicsItemMenu.h"
 #include "GenericToolButton.h"
 #include "CalculateModeMenu.h"
+#include "GraphicsItemWidget.h"
+#include "InteractionModeStackWidget.h"
 #include <QButtonGroup>
 #include <QVBoxLayout>
-#include <QStyleOption>
 
 GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 	: QWidget(parent)
 {
     setMouseTracking(true);
-    int btn_width = 36;int btn_height = 30;
+    int btn_width = 38;int btn_height = 32;
     setMinimumHeight(294);
     /*************************Mode Btn************************/
     main_layout = new QVBoxLayout(this);
+
+    sam_model_btn = new GenericToolButton(this);
+    sam_model_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/sam_mode.png"));
+    sam_model_btn->setCheckable(true);
+    sam_model_btn->setObjectName("interaction_mode_btn");
+    sam_model_btn->setIconSize(QSize(32, 27));
+
     rubber_btn = new GenericToolButton(this);
     rubber_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/rubber_mode.png"));
     rubber_btn->setCheckable(true);
@@ -45,9 +52,11 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     rubber_btn->setCustomTooltip("Rubber Mode");
     observe_btn->setCustomTooltip("Observe Mode");
     select_btn->setCustomTooltip("Select Mode");
-    edit_polygon_btn->setCustomTooltip("Edit Polygon Mode");
+
+    sam_model_btn->setCustomTooltip("Sam Mode");
     draw_btn->setCustomTooltip("Draw Mode");
     calculate_btn->setCustomTooltip("Calculate Mode");
+    edit_polygon_btn->setCustomTooltip("Edit Polygon Mode");
 
     exclusive_button_group = new QButtonGroup(this);
     exclusive_button_group->addButton(rubber_btn);
@@ -55,6 +64,7 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     exclusive_button_group->addButton(select_btn);
     exclusive_button_group->addButton(edit_polygon_btn);
     exclusive_button_group->addButton(draw_btn);
+    exclusive_button_group->addButton(sam_model_btn);
     exclusive_button_group->addButton(calculate_btn);
     exclusive_button_group->setExclusive(true);
 
@@ -75,10 +85,10 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 
     main_layout->addWidget(observe_btn);
     main_layout->addWidget(select_btn);
-    main_layout->addSpacing(5);
-
-    main_layout->addWidget(draw_btn);
     main_layout->addWidget(rubber_btn);
+    main_layout->addSpacing(5);
+    main_layout->addWidget(sam_model_btn);
+    main_layout->addWidget(draw_btn);
     main_layout->addWidget(calculate_btn);
     main_layout->addWidget(edit_polygon_btn);
 
@@ -123,71 +133,19 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     main_layout->addWidget(clear_calculate_btn);
 
     main_layout->addStretch();
-    main_layout->setContentsMargins(5, 5, 0, 0);
+    main_layout->setContentsMargins(8, 0, 0, 0);
     main_layout->setSpacing(1);
 }
 
 GiantInteractionModeWidget::~GiantInteractionModeWidget()
 {
     delete main_layout;
-    delete item_menu;
-    delete calculate_menu;
+    delete exclusive_button_group;
 }
 
 bool GiantInteractionModeWidget::eventFilter(QObject* object, QEvent* event)
 {
-    if (object == draw_btn) {
-        if (event->type() == QEvent::MouseButtonPress) {
-            if (draw_btn->isChecked()) {
-                item_menu->exec(draw_btn->mapToGlobal(QPoint(draw_btn->width()+5, 5)));
-            }
-        }
-    }
-    else if (object == item_menu) {
-        if (event->type() == QEvent::Leave) {
-            if (draw_btn->isChecked()) {
-                item_menu->close();
-            }
-        }
-    }
-
-    else if (object == calculate_btn)
-    {
-        if (event->type() == QEvent::MouseButtonPress){
-            if (calculate_btn->isChecked()){
-				calculate_menu->exec(calculate_btn->mapToGlobal(QPoint(calculate_btn->width()+5, 5)));
-			}
-		}
-	}
-    else if (object == calculate_menu) {
-        if (event->type() == QEvent::Leave) {
-            if (calculate_btn->isChecked()) {
-				calculate_menu->close();
-			}
-		}
-    }
     return QObject::eventFilter(object, event);
-}
-
-void GiantInteractionModeWidget::paintEvent(QPaintEvent* event)
-{
-    Q_UNUSED(event);
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-}
-
-void GiantInteractionModeWidget::enterEvent(QEnterEvent* event)
-{
-    Q_UNUSED(event);
-    m_view->setEnterView(false);
-}
-
-void GiantInteractionModeWidget::leaveEvent(QEvent* event)
-{
-    Q_UNUSED(event);
-    m_view->setEnterView(true);
 }
 
 void GiantInteractionModeWidget::returnToDefaultMode()
@@ -195,15 +153,9 @@ void GiantInteractionModeWidget::returnToDefaultMode()
     observe_btn->setChecked(true);
 }
 
-void GiantInteractionModeWidget::setGraphicsView(GraphicsView* view)
+void GiantInteractionModeWidget::setInteractionModeStackWidget(InteractionModeStackWidget* w)
 {
-    m_view = view;
-    initModeMenu();
-}
-
-GraphicsItemMenu* GiantInteractionModeWidget::getGraphicsItemMenu() const
-{
-    return item_menu;
+    mode_stack_widget = w;
 }
 
 void GiantInteractionModeWidget::onRubberBtn(int checked)
@@ -224,6 +176,12 @@ void GiantInteractionModeWidget::onSelectBtn(int checked)
 void GiantInteractionModeWidget::onDrawBtn(int checked)
 {
     m_view->getGenericInteractionModel()->setPaintInteraction(checked);
+    if (checked) {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::DrawModeStackWidget);
+    }
+    else {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);
+    }
 }
 
 void GiantInteractionModeWidget::onEditPolygonBtn(int checked)
@@ -234,15 +192,10 @@ void GiantInteractionModeWidget::onEditPolygonBtn(int checked)
 void GiantInteractionModeWidget::onCalculateBtn(int checked)
 {
     m_view->getGenericInteractionModel()->setCalculateInteraction(checked);
-}
-
-void GiantInteractionModeWidget::initModeMenu()
-{
-    item_menu = new GraphicsItemMenu();
-    item_menu->installEventFilter(this);
-    item_menu->setGraphicsView(m_view);
-
-    calculate_menu = new CalculateModeMenu();
-    calculate_menu->installEventFilter(this);
-    calculate_menu->setGraphicsView(m_view);
+    if (checked) {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::CalculateModeStackWidget);
+    }
+    else {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);
+    }
 }

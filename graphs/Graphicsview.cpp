@@ -14,11 +14,12 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include "widgets/GraphicsItemMenu.h"
+#include "widgets/GraphicsItemWidget.h"
 #include "widgets/ViewToolBar.h";
 #include <QHBoxLayout>
 #include <QButtonGroup>
 #include "widgets/GiantInteractionModeWidget.h"
+#include "widgets/InteractionModeStackWidget.h"
 #include <model/ViewListContainer.h>
 
 #define EPS (1e-5) //除数最小量
@@ -89,6 +90,8 @@ void GraphicsView::initLayout()
     view_tool_bar = new ViewToolBar(this);
     view_tool_bar->setObjectName("view_tool_bar");
 
+    mode_stack_widget = new InteractionModeStackWidget(this);
+
     //设置交互模式控件
     interaction_mode_widget = new GiantInteractionModeWidget(this);
     horizontal_layout->addWidget(interaction_mode_widget);
@@ -96,6 +99,8 @@ void GraphicsView::initLayout()
     horizontal_layout->setSpacing(0);
 
     main_layout->addWidget(view_tool_bar);
+    main_layout->addWidget(mode_stack_widget);
+    main_layout->addSpacing(10);
     main_layout->addLayout(horizontal_layout);
     main_layout->setContentsMargins(0, 0, 0, 0);
     main_layout->setSpacing(0);
@@ -104,11 +109,13 @@ void GraphicsView::initLayout()
 
     view_tool_bar->setGraphicsView(this);
     interaction_mode_widget->setGraphicsView(this);
+    interaction_mode_widget->setInteractionModeStackWidget(mode_stack_widget);
+    mode_stack_widget->setGraphicsView(this);
 }
 
 void GraphicsView::paintContinue()
 {
-    foreach(QAction * btn, interaction_mode_widget->getGraphicsItemMenu()->getDrawActionList()) {
+    foreach(QPushButton * btn, mode_stack_widget->getGraphicsItemWidget()->getDrawButtonList()) {
         if (btn->isChecked()) {
             if (!btn->isEnabled())return;
             emit btn->toggled(true);
@@ -130,6 +137,11 @@ ViewTransFormModel* GraphicsView::getViewTransFormModel()
 GraphicsCalculateModel* GraphicsView::getGraphicsCalculateModel()
 {
     return &m_graphics_calculate_model;
+}
+
+InteractionModeStackWidget* GraphicsView::getInteractionModeStackWidget() const
+{
+    return mode_stack_widget;
 }
 
 void GraphicsView::setEnterView(bool ok)

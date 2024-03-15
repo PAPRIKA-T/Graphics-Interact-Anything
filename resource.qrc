@@ -69,5 +69,6 @@
         <file>res/qss/GenericStyle/background-image/deleteall_btn.png</file>
         <file>res/qss/GenericStyle/background-image/delete_cal_btn.png</file>
         <file>res/qss/GenericStyle/background-image/fit_screen_btn.png</file>
+        <file>res/qss/GenericStyle/background-image/sam_mode.png</file>
     </qresource>
 </RCC>

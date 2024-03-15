@@ -7,7 +7,7 @@
 CalculateModeWidget::CalculateModeWidget(QWidget* parent)
 	: QWidget(parent)
 {
-	int btn_width = 28; int btn_height = 28;
+	int btn_width = 18; int btn_height = 18;
 	main_layout = new QHBoxLayout(this);
 
     cal_center_btn = new GenericToolButton();
@@ -25,13 +25,13 @@ CalculateModeWidget::CalculateModeWidget(QWidget* parent)
     cal_angle_btn->setFixedSize(btn_width, btn_height);
     cal_angle_btn->setCheckable(true);
 
-    cal_center_btn->setIcon(QIcon(":/res/background-image/cal_center.png"));
-    cal_vertical_btn->setIcon(QIcon(":/res/background-image/cal_verti.png"));
-    cal_angle_btn->setIcon(QIcon(":/res/background-image/cal_angle.png"));
+    cal_center_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_center.png"));
+    cal_vertical_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_verti.png"));
+    cal_angle_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_angle.png"));
 
-    cal_center_btn->setCustomTooltip("CalCenter");
-    cal_vertical_btn->setCustomTooltip("CalVertical");
-    cal_angle_btn->setCustomTooltip("CalAngle");
+    cal_center_btn->setCustomTooltip("Calculate Center");
+    cal_vertical_btn->setCustomTooltip("Calculate Vertical");
+    cal_angle_btn->setCustomTooltip("Calculate Angle");
 
     exclusive_button_group = new QButtonGroup(this);
     exclusive_button_group->addButton(cal_center_btn);
@@ -39,15 +39,24 @@ CalculateModeWidget::CalculateModeWidget(QWidget* parent)
     exclusive_button_group->addButton(cal_angle_btn);
     exclusive_button_group->setExclusive(true);
 
-    main_layout->addSpacing(0);
-    main_layout->addWidget(cal_center_btn);
-    main_layout->addWidget(cal_vertical_btn);
-    main_layout->addWidget(cal_angle_btn);
+    foreach(QAbstractButton * btn, exclusive_button_group->buttons())
+    {
+        btn->setFixedSize(btn_width, btn_height);
+        btn->setCheckable(true);
+        btn->setIconSize(QSize(15, 15));
+        main_layout->addWidget(btn);
+    }
+    cal_center_btn->setChecked(true);
+
+    main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setSpacing(1);
     main_layout->addStretch();
     cal_center_btn->setChecked(true);
     connect(cal_center_btn, &QPushButton::toggled, this, &CalculateModeWidget::onCalCenterBtnClicked);
     connect(cal_vertical_btn, &QPushButton::toggled, this, &CalculateModeWidget::onCalVerticalBtnClicked);
     connect(cal_angle_btn, &QPushButton::toggled, this, &CalculateModeWidget::onCalAngleBtnClicked);
+
+    setFixedWidth(exclusive_button_group->buttons().size()* (btn_width + 1) - 1 + 17);
 }
 
 CalculateModeWidget::~CalculateModeWidget()

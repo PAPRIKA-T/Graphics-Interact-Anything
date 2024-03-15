@@ -8,6 +8,7 @@ QMenu::item
 {
     background-color: transparent; /* QAction默认背景色 */
     color: rgb(200, 200, 200); /* QAction文字颜色 */
+    padding:4px;
 }
 
 QMenu::item:selected 

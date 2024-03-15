@@ -22,6 +22,7 @@ class QButtonGroup;
 class ViewToolBar;
 class QHBoxLayout;
 class GiantInteractionModeWidget;
+class InteractionModeStackWidget;
 
 class GraphicsView : public QGraphicsView
 {
@@ -35,6 +36,7 @@ public:
     GenericInteractionModel* getGenericInteractionModel();
     ViewTransFormModel* getViewTransFormModel();
     GraphicsCalculateModel* getGraphicsCalculateModel();
+    InteractionModeStackWidget* getInteractionModeStackWidget()const ;
     const QPoint& getMouseCoordinate();
 
     void setMagImage(const QPointF& p); //设置放大镜控件的图像
@@ -96,6 +98,7 @@ private:
     QHBoxLayout* horizontal_layout = nullptr;
     GiantInteractionModeWidget* interaction_mode_widget = nullptr;
     ViewToolBar* view_tool_bar = nullptr; //view工具控件
+    InteractionModeStackWidget* mode_stack_widget = nullptr; //模式切换控件
 
     /********************************/
     class GraphicsScene* m_scene= nullptr; //实例对象pView的scene

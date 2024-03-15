@@ -34,7 +34,7 @@ public:
 private:
     QHBoxLayout* main_layout = nullptr;
     QPushButton* prompt_btn = nullptr;
-    QLabel* label = nullptr;;
+    QLabel* label = nullptr;
 };
 
 /****************************************Sam Widget*******************************************/
@@ -82,6 +82,7 @@ private:
     PromptWidget* pp_list_prompt_widget = nullptr;
     PromptWidget* np_list_prompt_widget = nullptr;
     QPushButton* segment_anything_btn = nullptr;
+
     QPushButton* positive_point = nullptr;
     QPushButton* negative_point = nullptr;
     QPushButton* box_prompt = nullptr;

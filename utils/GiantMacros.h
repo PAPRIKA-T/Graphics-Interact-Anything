@@ -2,7 +2,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QMouseEvent>
-
+class GraphicsView;
 #define G_Widget_PaintEventOverride \
 protected: \
     virtual void paintEvent(QPaintEvent *event) override{\
@@ -24,3 +24,20 @@ protected: \
 			    QMenu::mouseReleaseEvent(event);\
 		    }\
     };
+#include <graphs/Graphicsview.h>
+#define G_Widget_EnterLeaveView \
+protected: \
+    virtual void enterEvent(QEnterEvent* event) override { \
+        Q_UNUSED(event); \
+        m_view->setEnterView(false); \
+    } \
+    virtual void leaveEvent(QEvent* event) override { \
+        Q_UNUSED(event); \
+        m_view->setEnterView(true); \
+    }
+
+#define G_Widget_SetGraphicsView \
+public: \
+    void setGraphicsView(GraphicsView* v){ \
+	    m_view = v; \
+    }

@@ -131,10 +131,10 @@ void FileView::readImage()
         QStringList list = filepath.split('/');
         FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last()) - 1]);
         FileViewChildItem* child = new FileViewChildItem(list.last());
-        item->setIcon(QIcon(":/res/background-image/folder_icon.png"));
+        item->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_icon.png"));
         child->setData(filepath);
         child->setToolTip(filepath);
-        child->setIcon(QIcon(":/res/background-image/picture_item.png"));
+        child->setIcon(QIcon(":/res/qss/GenericStyle/background-image/picture_item.png"));
         list.removeAt(list.indexOf(list.last()));
         QString parent_path = list.join("/");
         item->setData(parent_path);
@@ -185,7 +185,7 @@ void FileView::readImageDir()
         FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last())]);
         item->setData(dirpath);
         item->setToolTip(dirpath);
-        item->setIcon(QIcon(":/res/background-image/folder_icon.png"));
+        item->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_icon.png"));
         tree_model->appendRow(item);
         foreach(auto fileInfo, fileInfoList) {// 遍历文件夹中的所有文件
             if (fileInfo.isFile()) {
@@ -199,7 +199,7 @@ void FileView::readImageDir()
                     child->setData(pixpath);
                     child->setToolTip(pixpath);
                     list.removeAt(list.indexOf(list.last()));
-                    child->setIcon(QIcon(":/res/background-image/picture_item.png"));
+                    child->setIcon(QIcon(":/res/qss/GenericStyle/background-image/picture_item.png"));
                     item->appendRow(child);
                 }
             }
@@ -252,10 +252,10 @@ void FileView::readITKImage()
         FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last()) - 1]);
         FileViewChildItem* child = new FileViewChildItem(list.last());
         child->setIsItkImageItem(true);
-        item->setIcon(QIcon(":/res/background-image/folder_icon.png"));
+        item->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_icon.png"));
         child->setData(filepath);
         child->setToolTip(filepath);
-        child->setIcon(QIcon(":/res/background-image/picture_item.png"));
+        child->setIcon(QIcon(":/res/qss/GenericStyle/background-image/picture_item.png"));
         list.removeAt(list.indexOf(list.last()));
         QString parent_path = list.join("/");
         item->setData(parent_path);
