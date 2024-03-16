@@ -12,34 +12,30 @@
 SceneToolWidget::SceneToolWidget(QWidget* parent)
     :QWidget(parent)
 {
-    setFixedHeight(32);
-    setMinimumWidth(200);
     main_layout = new QHBoxLayout(this);
     zoom_btn = new GenericToolButton(this);
     zoom_btn->setCheckable(true);
-    zoom_btn->setIcon(QIcon(":/res/background-image/zoom_in.png"));
+    zoom_btn->setIcon(QIcon(":/res/qss/Dark/background-image/zoom_in.png"));
     camera_btn = new GenericToolButton(this);
-    camera_btn->setIcon(QIcon(":/res/background-image/camera.png"));
+    camera_btn->setIcon(QIcon(":/res/qss/Dark/background-image/camera.png"));
     color_reverse_btn = new GenericToolButton(this);
-    color_reverse_btn->setIcon(QIcon(":/res/background-image/reverse.png"));
-    //color_reverse_btn->setCheckable(true);
+    color_reverse_btn->setIcon(QIcon(":/res/qss/Dark/background-image/reverse.png"));
     fix_screen_btn = new GenericToolButton(this);
-    fix_screen_btn->setIcon(QIcon(":/res/background-image/fix_screen.png"));
+    fix_screen_btn->setIcon(QIcon(":/res/qss/Dark/background-image/fix_screen.png"));
     center_on_btn = new GenericToolButton(this);
-    center_on_btn->setIcon(QIcon(":/res/background-image/center.png"));
+    center_on_btn->setIcon(QIcon(":/res/qss/Dark/background-image/center.png"));
     rotateR_btn = new GenericToolButton(this);
-    rotateR_btn->setIcon(QIcon(":/res/background-image/rotate_R.png"));
+    rotateR_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rotate_R.png"));
     rotateL_btn = new GenericToolButton(this);
-    rotateL_btn->setIcon(QIcon(":/res/background-image/rotate_L.png"));
-    clear_scene_btn = new GenericToolButton(this);
-    clear_scene_btn->setIcon(QIcon(":/res/background-image/delete.png"));
+    rotateL_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rotate_L.png"));
+
     turn_left_btn = new GenericToolButton(this);
-    turn_left_btn->setIcon(QIcon(":/res/background-image/left.png"));
+    turn_left_btn->setIcon(QIcon(":/res/qss/Dark/background-image/left.png"));
     turn_right_btn = new GenericToolButton(this);
-    turn_right_btn->setIcon(QIcon(":/res/background-image/right.png"));
+    turn_right_btn->setIcon(QIcon(":/res/qss/Dark/background-image/right.png"));
 
     mask_to_graphicsitem = new GenericToolButton(this);
-    mask_to_graphicsitem->setIcon(QIcon(":/res/background-image/mask_to_item.png"));
+    mask_to_graphicsitem->setIcon(QIcon(":/res/qss/Dark/background-image/mask_to_item.png"));
 
     mask_to_graphicsitem->setCustomTooltip("Mask To Item");
     zoom_btn->setCustomTooltip("Zoom In");
@@ -49,7 +45,6 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     center_on_btn->setCustomTooltip("Center On");
     rotateR_btn->setCustomTooltip("Rotate Right");
     rotateL_btn->setCustomTooltip("Rotate Left");
-    clear_scene_btn->setCustomTooltip("Clear");
     turn_left_btn->setCustomTooltip("Previous");
     turn_right_btn->setCustomTooltip("Next");
 
@@ -61,11 +56,9 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     connect(center_on_btn, &QPushButton::clicked, this, &SceneToolWidget::onCenterOnBtn);
     connect(rotateR_btn, &QPushButton::clicked, this, &SceneToolWidget::onRotateRBtn);
     connect(rotateL_btn, &QPushButton::clicked, this, &SceneToolWidget::onRotateLBtn);
-    connect(clear_scene_btn, &QPushButton::clicked, this, &SceneToolWidget::onClearSceneBtn);
     connect(turn_left_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnLeftBtn);
     connect(turn_right_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnRightBtn);
 
-    main_layout->addWidget(clear_scene_btn);
     main_layout->addWidget(turn_left_btn);
     main_layout->addWidget(turn_right_btn);
 
@@ -112,7 +105,7 @@ SceneToolWidget::~SceneToolWidget()
 
 void SceneToolWidget::onMaskToGraphicsItemBtn()
 {
-    view_list_container->getActivedView()->getGraphicsScene()->getScenePromptItemModel()->Mask2Item();
+    m_view->getGraphicsScene()->getScenePromptItemModel()->Mask2Item();
 }
 
 void SceneToolWidget::paintEvent(QPaintEvent* event)
@@ -124,9 +117,9 @@ void SceneToolWidget::paintEvent(QPaintEvent* event)
     style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
-void SceneToolWidget::setViewListContainer(ViewListContainer* vlc)
+void SceneToolWidget::setGraphicsView(GraphicsView* vlc)
 {
-    view_list_container = vlc;
+    m_view = vlc;
 }
 
 void SceneToolWidget::setFileView(FileView* f)
@@ -136,19 +129,19 @@ void SceneToolWidget::setFileView(FileView* f)
 
 void SceneToolWidget::onCameraBtn()
 {
-    view_list_container->getActivedView()->saveViewImage();
+    m_view->saveViewImage();
 }
 
 void SceneToolWidget::onZoomSceneBtn(int checked)
 {
-    emit view_list_container->getActivedView()->getGraphicsScene()->zoom3DLayout(checked);
-    view_list_container->getActivedView()->getViewTransFormModel()->setZoomIn(checked);
-    view_list_container->getActivedView()->getViewTransFormModel()->fitScreen();
+    emit m_view->getGraphicsScene()->zoom3DLayout(checked);
+    m_view->getViewTransFormModel()->setZoomIn(checked);
+    m_view->getViewTransFormModel()->fitScreen();
 }
 
 void SceneToolWidget::onColorReverseBtn()
 {
-    QImage org_image = view_list_container->getActivedView()->getGraphicsScene()->
+    QImage org_image = m_view->getGraphicsScene()->
         getPixmapItem()->getPixmap().toImage();
     if (org_image.isNull()) return;
     // 循环获得每个像素的rgb，循环减，进行反转
@@ -163,36 +156,30 @@ void SceneToolWidget::onColorReverseBtn()
         }
     }
 
-    view_list_container->getActivedView()->getGraphicsScene()->
+    m_view->getGraphicsScene()->
         getPixmapItem()->updatePixmap(QPixmap::fromImage(org_image));
 }
 
 void SceneToolWidget::onFixScreenBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->fitScreen();
+    m_view->getViewTransFormModel()->fitScreen();
 }
 
 void SceneToolWidget::onCenterOnBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->originPositonReturn();
+    m_view->getViewTransFormModel()->originPositonReturn();
 }
 
 void SceneToolWidget::onRotateRBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->rotateR();
-    view_list_container->getActivedView()->getGraphicsScene()->updateTextPos();
+    m_view->getViewTransFormModel()->rotateR();
+    m_view->getGraphicsScene()->updateTextPos();
 }
 
 void SceneToolWidget::onRotateLBtn()
 {
-    view_list_container->getActivedView()->getViewTransFormModel()->rotateL();
-    view_list_container->getActivedView()->getGraphicsScene()->updateTextPos();
-}
-
-void SceneToolWidget::onClearSceneBtn()
-{
-    view_list_container->getActivedView()->
-        getGraphicsScene()->clearSceneGraphicsItem();
+    m_view->getViewTransFormModel()->rotateL();
+    m_view->getGraphicsScene()->updateTextPos();
 }
 
 void SceneToolWidget::onTurnLeftBtn()

@@ -3,7 +3,7 @@
 #include <QColor>
 #include "graphs/ItemPointF.h"
 #define PEN_WIDTHF 1 //画笔宽度
-#define DEFAULT_COLOR_ITEM QColor(160, 160, 160) //item color
+#define DEFAULT_COLOR_ITEM QColor(255, 0, 255) //item color
 #define DEFAULT_COLOR_POINT_NOSELECTED QColor(255, 249, 57)
 #define DEFAULT_COLOR_POINT_SELECTED QColor(255, 20, 147)
 #define DEFAULT_COLOR_UNIQUE_POINT QColor(237, 153, 74)
@@ -59,7 +59,7 @@ public:
     const qreal getLineLength() const;
     void setLineLength(const qreal& l);
 
-    const qreal getPenWidth() const;
+    inline qreal getPenWidth() const;
     void setPenWidth(const qreal& p);
 
     void paintPoint(QPainter* painter, ItemPointF& p); //绘制交互点
@@ -81,3 +81,6 @@ private:
     QColor fill_color_hover{}; //悬浮填充颜色
     QColor fill_color_selected{}; //选中时填充颜色
 };
+
+inline qreal GraphicsPaintModel::getPenWidth() const 
+{ return pen_width; }

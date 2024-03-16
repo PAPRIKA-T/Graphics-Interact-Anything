@@ -9,13 +9,15 @@
 class ColorButton;
 class GraphicsItem;
 class ViewListContainer;
+class LabelBoardToolWidget;
+
 /*************************LabelBoard************************/
-class LabelBoardWidget :public QTableWidget
+class LabelBoard :public QTableWidget
 {
     Q_OBJECT
 public:
-    explicit LabelBoardWidget(QWidget* parent = nullptr);
-    LabelBoardWidget(int rows, int columns, QWidget* parent = nullptr);
+    explicit LabelBoard(QWidget* parent = nullptr);
+    LabelBoard(int rows, int columns, QWidget* parent = nullptr);
     void setViewListContainer(ViewListContainer*);
 
     void initWidget();

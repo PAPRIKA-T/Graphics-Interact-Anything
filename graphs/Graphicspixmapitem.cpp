@@ -6,8 +6,7 @@ GraphicsPixmapItem::GraphicsPixmapItem(const QPixmap &pixmap)
 {
     setFlags(QGraphicsItem::ItemIsMovable);
     if (!pixmap.isNull()) setPixmap(pixmap);
-    setData(0,"GraphicsPixmapItem");
-}
+    setData(0,"GraphicsPixmapItem");}
 
 void GraphicsPixmapItem::setPixmap(const QPixmap &p)
 {

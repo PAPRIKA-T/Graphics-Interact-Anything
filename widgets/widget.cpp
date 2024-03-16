@@ -8,8 +8,7 @@
 #include <QGuiApplication>
 #include "widget.h"
 #include "GraphicsItemWidget.h"
-#include "LabelBoardWidget.h"
-#include "LabelBoardToolWidget.h"
+#include "LabelBoardWithTool.h"
 #include "ItemIndexView.h"
 #include "StatusWidget.h"
 #include "ImageSceneWidget3D.h"
@@ -18,30 +17,30 @@
 #include "ForePlayWidget.h"
 #include "TitleWidget.h"
 #include "MagnifyingGlassWidget.h"
-#include "SAM/samwidget.h"
 #include "graphs/Graphicsscene.h"
 #include "graphs/Graphicsview.h"
 #include "graphs/Graphicsitem.h"
 #include "graphs/Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 #include "ChosePathWidget.h"
+#include "MultiFunctionStackWidget.h"
 #include "StackWidget.h"
-#include "StackIconWidget.h"
 #include"ImageSceneWidget2D.h"
 #include "SceneToolWidget.h"
 #include "GiantInteractionModeWidget.h"
+#include "LabelBoard.h"
+#include "SAM/sam.h"
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     setObjectName("this_window");
-    setWindowIcon(QIcon(":/res/background-image/DRAW_ICON.png"));
-    setMouseTracking(true);
-
+    setWindowIcon(QPixmap(":/res/qss/GenericStyle/background-image/DRAW_ICON.png").scaled(15, 15));
+    setWindowTitle("Graphics-Interact-Anything");
     title_widget = new TitleWidget(this);
     title_widget->setObjectName("title_widget");
     title_widget->setTitleName("");
-    title_widget->setTitleIcon(QPixmap(":/res/background-image/DRAW_ICON.png").scaled(20, 20));
+    title_widget->setTitleIcon(QPixmap(":/res/qss/GenericStyle/background-image/DRAW_ICON.png").scaled(20, 20));
 
     /*****************设置界面控件*****************/
     {
@@ -53,9 +52,6 @@ Widget::Widget(QWidget *parent)
         view_list_container.setActivatdView(image_widget_2d->getGraphicsView());
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
-        image_widget_2d->getViewToolBar()->setViewListContainer(&view_list_container);
-        image_widget_2d->getGiantInteractionModeWidget()->setViewListContainer(&view_list_container);
-
         //设置TreeView
         file_view = new FileView();
         file_view->setObjectName("file_view");
@@ -63,32 +59,20 @@ Widget::Widget(QWidget *parent)
         image_widget_2d->getViewToolBar()->getSceneToolWidget()->setFileView(file_view);
         
         //LabelBoardWidget
-        label_board_widget = new LabelBoardWidget(label_board_under_widget);
-        label_board_under_widget = new QWidget(this);
-        label_board_under_widget->setObjectName("label_board_under_widget");
-        label_board_widget->setObjectName("label_board_widget");
-        view_list_container.getActivedView()->getGraphicsScene()->setLabelBoardWidget(label_board_widget);
-        label_board_widget->setViewListContainer(&view_list_container);
-        label_board_widget_layout = new QVBoxLayout(label_board_under_widget);
-        label_board_tool_wodget = new LabelBoardToolWidget(label_board_under_widget);
-        label_board_tool_wodget->setObjectName("label_board_tool_wodget");
-        label_board_tool_wodget->setLabelBoardWidget(label_board_widget);
-        label_board_widget_layout->addWidget(label_board_tool_wodget);
-        label_board_widget_layout->addWidget(label_board_widget);
-        label_board_widget_layout->setSpacing(0);
-        label_board_widget_layout->setContentsMargins(0, 0, 0, 0);
-        label_board_under_widget->setLayout(label_board_widget_layout);
+        label_board_widget = new LabelBoardWithTool(this);
+        view_list_container.getActivedView()->getGraphicsScene()->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
+        label_board_widget->getLabelBoardWidget()->setViewListContainer(&view_list_container);
         
         //设置图元索引控件
         item_index_view = new ItemIndexView(this);
         item_index_view->setObjectName("item_index_widget");
-        item_index_view->setLabelBoardWidget(label_board_widget);
+        item_index_view->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
         view_list_container.getActivedView()->getGraphicsScene()->setItemIndexView(item_index_view);
 
         //设置底部状态栏
         status_widget = new StatusWidget(this);
         status_widget->setObjectName("status_widget");
-        status_widget->setLeftLabelText("Version 2.2.0");
+        status_widget->setLeftLabelText("Version 2.3.0");
         file_view->setStatusWidget(status_widget);
 
         //Init foreplayWidget
@@ -98,29 +82,12 @@ Widget::Widget(QWidget *parent)
         foreplay_widget->setViewListContainer(&view_list_container);
         file_view->setForeplayWidget(foreplay_widget);
 
-        //设置SamWidget
-        sam_widget = new SamWidget(this);
-        sam_widget->setObjectName("sam_widget");
-        view_list_container.getActivedView()->getGraphicsScene()
-            ->getScenePromptItemModel()->setSamWidget(sam_widget);
-
         //设置右下堆栈控件
-        stack_under_widget = new QWidget(this);
-        stack_widget_hori_layout = new QHBoxLayout(stack_under_widget);
-
-        stack_icon_widget = new StackIconWidget(stack_under_widget);
-        rb_stack_widget = new StackWidget(stack_under_widget);
+        rb_stack_widget = new MultiFunctionStackWidget();
         rb_stack_widget->setObjectName("rb_stack_widget");
-        rb_stack_widget->addWidget(file_view);
-        rb_stack_widget->addWidget(foreplay_widget);
-        rb_stack_widget->addWidget(item_index_view);
-        rb_stack_widget->addWidget(sam_widget);
-        rb_stack_widget->setContentsMargins(0, 0, 0, 0);
-        stack_widget_hori_layout->addWidget(stack_icon_widget);
-        stack_widget_hori_layout->addWidget(rb_stack_widget);
-        stack_widget_hori_layout->setContentsMargins(0, 0, 0, 0);
-        stack_widget_hori_layout->setSpacing(0);
-        stack_icon_widget->connectStackWidget(rb_stack_widget);
+        rb_stack_widget->getStackWidget()->addWidget(file_view);
+        rb_stack_widget->getStackWidget()->addWidget(foreplay_widget);
+        rb_stack_widget->getStackWidget()->addWidget(item_index_view);
     }
 
     title_widget->setParentWidget(this);
@@ -139,43 +106,46 @@ Widget::Widget(QWidget *parent)
         right_widget_splitter = new QSplitter(this);
         right_widget_splitter->setObjectName("right_tab_widget_splitter");
         right_widget_splitter->setOrientation(Qt::Vertical);
-        right_widget_splitter->addWidget(label_board_under_widget);
-        right_widget_splitter->addWidget(stack_under_widget);
+        right_widget_splitter->addWidget(label_board_widget);
+        right_widget_splitter->addWidget(rb_stack_widget);
         right_widget_splitter->setCollapsible(0, false);
         right_widget_splitter->setCollapsible(1, false);
         right_widget_splitter->setStretchFactor(0, 6);
         right_widget_splitter->setStretchFactor(1, 4);
-        right_widget_splitter->setHandleWidth(4);
-        right_widget_splitter->setContentsMargins(0, 2, 2, 0);
+        right_widget_splitter->setHandleWidth(3);
+        right_widget_splitter->setContentsMargins(0, 0, 0, 0);
 
         center_widget_splitter = new QSplitter(this);
-        center_widget_splitter->setObjectName("right_widget_splitter");
+        center_widget_splitter->setObjectName("center_widget_splitter");
         center_widget_splitter->addWidget(image_widget_2d);
         center_widget_splitter->addWidget(right_widget_splitter);
         center_widget_splitter->setStretchFactor(0, 6);
         center_widget_splitter->setStretchFactor(1, 4);
         center_widget_splitter->setCollapsible(0, false);
-        center_widget_splitter->setHandleWidth(2);
-        center_widget_splitter->setContentsMargins(0, 0, 0, 0);
+        center_widget_splitter->setHandleWidth(4);
+        center_widget_splitter->setContentsMargins(0, 0, 0, 2);
 
         //窗口总体布局器
         main_layout = new QVBoxLayout(this);
         main_layout->addWidget(title_widget);
         main_layout->addWidget(center_widget_splitter);
         main_layout->addWidget(status_widget);
-        main_layout->setContentsMargins(0, 0, 0, 0);
+        main_layout->setContentsMargins(1, 0, 1, 0);
         main_layout->setSpacing(0);
     }
     setWidgetSize();
+    initSamModel();
 }
 
 Widget::~Widget()
 {
-}
-
-QVBoxLayout* Widget::getMainLayout()
-{
-	return main_layout;
+	delete main_layout;
+	delete title_widget;
+	delete rb_stack_widget;
+	delete image_widget_2d;
+	delete image_widget_3d;
+	delete mag_glass_widget;
+    delete sam;
 }
 
 /*****************其他函数*********************/
@@ -189,22 +159,46 @@ FileView* Widget::getFileView()
     return file_view;
 }
 
-SamWidget* Widget::getSamWidget()
+Sam* Widget::getSam() const 
 {
-    return sam_widget;
+    return sam;
 }
 
 //设置各个控件部分的大小
 void Widget::setWidgetSize()
 {
     resize(1000, 700);
-    setMinimumSize(520, 220);
     image_widget_2d->resize(650, 600);
-    label_board_under_widget->setMinimumWidth(200);
     right_widget_splitter->setMinimumWidth(200);
-    center_widget_splitter->setMinimumSize(750, 570);
-    sam_widget->setMinimumHeight(100);
     //DimensionTrans();
+}
+
+//初始化sam模型
+void Widget::initSamModel()
+{
+    if (sam) return;
+    std::string pre_model_path{};
+    std::string model_path{};
+
+    pre_model_path = "ai_models/sam/mobile_sam_preprocess.onnx";
+    model_path = "ai_models/sam/mobile_sam.onnx";
+    if (!QFile::exists(QString::fromStdString(pre_model_path)) || 
+        !QFile::exists(QString::fromStdString(model_path))) {
+        status_widget->setRightLabelText("model file not exist!");
+        qDebug() << "Sam model file not exist!";
+		return;
+    }
+    Sam::Parameter param(pre_model_path, model_path, std::thread::hardware_concurrency());
+    param.providers[0].deviceType = 0; // cpu for preprocess
+    param.providers[1].deviceType = 1; // CUDA for sam
+    sam = new Sam(param);
+    if (!sam) {
+        status_widget->setRightLabelText("load Sam model fail!");
+        qDebug() << "load model fail!";
+        return;
+    }
+    status_widget->setRightLabelText("Sam Model Load Success!");
+    image_widget_2d->getGraphicsScene()->getScenePromptItemModel()->setSam(sam);
 }
 
 //切换图像显示控件
@@ -212,11 +206,11 @@ void Widget::imageWidgetAdd(ImageSceneWidget2D* image_widget)
 {
     view_list_container.pushBackView(image_widget->getGraphicsView());
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
-    m_scene->getScenePromptItemModel()->setSamWidget(sam_widget);
-    m_scene->setLabelBoardWidget(label_board_widget);
+    m_scene->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
     m_scene->setItemIndexView(item_index_view);
     connect(m_scene, &GraphicsScene::createItemIndex, item_index_view, 
         &ItemIndexView::addItemInitAfterPaint);
+    image_widget->getGraphicsScene()->getScenePromptItemModel()->setSam(sam);
 }
 
 void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
@@ -233,7 +227,7 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
     image_widget_2d = image_widget;
     view_list_container.setActivatdView(image_widget->getGraphicsView());
     image_widget->getGraphicsView()->setActived(true);
-    image_widget->setStyleSheet(QString::fromUtf8("border:1px solid #fe5820;"));
+    image_widget->setStyleSheet("border:1px solid #fe5820;");
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
     connectToolButton(image_widget_2d);
     QString pix_path = m_scene->getPixmapItem()->getPixmapPath();
@@ -343,26 +337,6 @@ void Widget::closeEvent(QCloseEvent *event)
     if (foreplay_widget->getAutoSave())
         foreplay_widget->saveItemToPathAllFormAllScene();
     QWidget::closeEvent(event);
-}
-
-void Widget::changeEvent(QEvent* event)
-{
-    if (event->type() == QEvent::WindowStateChange){
-        if (isMaximized()){
-            // 窗口被最大化时的处理
-            status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 0px;border-bottom-right-radius: 0px;}");
-            title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 0px;border-top-right-radius: 0px;}");
-        }
-        else if(isMinimized()){
-			// 窗口被最小化时的处理
-        }
-        else {
-            // 窗口被还原时的处理
-            status_widget->setStyleSheet("StatusWidget{border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;}");
-            title_widget->setStyleSheet("QWidget#title_widget{border-top-left-radius: 8px;border-top-right-radius: 8px;}");
-        }
-    }
-    QWidget::changeEvent(event);
 }
 
 void Widget::leaveEvent(QEvent* event)

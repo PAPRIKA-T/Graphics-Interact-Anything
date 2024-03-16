@@ -8,6 +8,7 @@ QMenu::item
 {
     background-color: transparent; /* QAction默认背景色 */
     color: rgb(200, 200, 200); /* QAction文字颜色 */
+    padding:4px;
 }
 
 QMenu::item:selected 
@@ -20,4 +21,10 @@ QMenu::item:pressed
 {
     background-color:rgb(65,65,65); /* QAction鼠标按下的背景色 */
     color: white; /* QAction鼠标按下时的文字颜色 */
+}
+
+QMenu::item:checked 
+{
+    background-color:rgb(57, 80, 124); /* QAction鼠标悬停或选中的背景色 */
+    color: white; /* QAction鼠标悬停或选中时的文字颜色 */
 }

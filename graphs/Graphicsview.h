@@ -18,11 +18,12 @@ class GraphicsPixmapItem;
 class ImageSceneWidget2D;
 class QVBoxLayout;
 class QPushButton;
-class GraphicsItemWidget;
 class QButtonGroup;
 class ViewToolBar;
 class QHBoxLayout;
 class GiantInteractionModeWidget;
+class InteractionModeStackWidget;
+class QTimer;
 
 class GraphicsView : public QGraphicsView
 {
@@ -33,18 +34,16 @@ public:
     GraphicsScene* getGraphicsScene() const;
     ViewToolBar* getViewToolBar() const;
     GiantInteractionModeWidget* getGiantInteractionModeWidget() const;
-
-    QPointF getPresentPosOnOriginImage();
-
     GenericInteractionModel* getGenericInteractionModel();
     ViewTransFormModel* getViewTransFormModel();
     GraphicsCalculateModel* getGraphicsCalculateModel();
-    void updateLbText(); //更新左下文本
-    
-    void setMagImage(const QPointF& p); //设置放大镜控件的图像
+    InteractionModeStackWidget* getInteractionModeStackWidget()const ;
+    const QPoint& getMouseCoordinate();
 
+    void setMagImage(const QPointF& p); //设置放大镜控件的图像
     void setPaintCross(bool ok);
     void setActived(bool ok);
+    void setEnterView(bool);
 
     QPixmap& getMagPixmap() {return grab_map;} //返回grabMap
 
@@ -67,6 +66,7 @@ signals:
     void mouseEnter(ImageSceneWidget2D*);
     void mouseLeave(ImageSceneWidget2D*);
     void mousePressed(ImageSceneWidget2D*);
+    void mouseEnterPixmapItem(bool);
 
 public slots:
     void hideAllText(); //全部文本隐藏
@@ -80,9 +80,14 @@ private:
     void initGraphicsScene(); //初始化scene
     void initLayout(); //初始化布局
     void paintContinue();
+    void promptContinue();
     void grabItemForCalculate(const QPoint&); //抓取坐标处图元传递给测量模型
     void keyDelete(); //删除函数
     void startPaintMode(QMouseEvent* event); //绘画模式启动！
+    void startSamMode(QMouseEvent* event); //sam模式启动！
+    void moveAtSamMode(QMouseEvent* event); //sam模式移动！
+
+    void showMenuAfterMouseRelease(QMouseEvent* event); //鼠标释放后显示菜单
     enum class MOUSE_PRESS_STATUS {
         LEFT_BUTTON_PRESSED,
         RIGHT_BUTTON_PRESSED,
@@ -99,10 +104,8 @@ private:
     QVBoxLayout* main_layout = nullptr;
     QHBoxLayout* horizontal_layout = nullptr;
     GiantInteractionModeWidget* interaction_mode_widget = nullptr;
-    GraphicsItemWidget* graphicsitem_widget = nullptr; //图形绘制按钮控件
-    QList<QPushButton*> draw_button_list; //绘图按钮链表
-    QButtonGroup* exclusive_graphics_btn_box = nullptr; //图形按钮互斥组
     ViewToolBar* view_tool_bar = nullptr; //view工具控件
+    InteractionModeStackWidget* mode_stack_widget = nullptr; //模式切换控件
 
     /********************************/
     class GraphicsScene* m_scene= nullptr; //实例对象pView的scene
@@ -125,6 +128,7 @@ private:
     bool paint_cross = false; //绘制十字线
     bool is_enter_view = false; //鼠标是否在view移动
     bool is_actived = false; //是否激活(3D视图下具有焦点)
+    bool is_mouse_enter_pixmap_item = false; //鼠标是否进入图像项
 };
 
 #endif // GRAPHICSVIEW_H

@@ -5,7 +5,7 @@
 #include <QStyledItemDelegate>
 
 class GraphicsItem;
-class LabelBoardWidget;
+class LabelBoard;
 /*************************ItemIndexView************************/
 class StandardGrphicsItem : public QStandardItem
 {
@@ -51,8 +51,8 @@ public:
     ItemIndexView(QWidget* parent = nullptr);
     ~ItemIndexView();
 
-    void setLabelBoardWidget(LabelBoardWidget* w) { label_board_widget = w; }
-    LabelBoardWidget* getLabelBoardWidget() { return label_board_widget; }
+    void setLabelBoardWidget(LabelBoard* w) { label_board_widget = w; }
+    LabelBoard* getLabelBoardWidget() { return label_board_widget; }
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void enterEvent(QEvent* event);
     QStandardItemModel* getItemDataModel() { return item_data_model; }
@@ -72,7 +72,7 @@ public slots:
     //void onCurrentIndexChanged(const QModelIndex& current, const QModelIndex& previous);
 
 private:
-    LabelBoardWidget* label_board_widget = nullptr;
+    LabelBoard* label_board_widget = nullptr;
     QModelIndex index; // 当前选中的位置
     QStandardItemModel* item_data_model = nullptr; //数据模型
     ItemSelectionModel* item_select_model = nullptr; //单元选择模型

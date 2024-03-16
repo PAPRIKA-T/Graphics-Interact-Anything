@@ -19,6 +19,8 @@
 #include <QHBoxLayout>
 #include <QButtonGroup>
 #include "widgets/GiantInteractionModeWidget.h"
+#include "widgets/InteractionModeStackWidget.h"
+#include "widgets/AiModelInteractWidget.h"
 #include <model/ViewListContainer.h>
 
 #define EPS (1e-5) //除数最小量
@@ -26,7 +28,7 @@
 GraphicsView::GraphicsView(QWidget *parent) :
     QGraphicsView(parent)
 {
-    setMinimumSize(250, 250);
+    setMinimumSize(150, 150);
     setViewport(new OpenGLWidget());
     // 隐藏水平/竖直滚动条
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -44,14 +46,7 @@ GraphicsView::GraphicsView(QWidget *parent) :
     initGraphicsScene();
     initLayout();
     connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
-
-    ViewListContainer view_list_container;
-    view_list_container.setActivatdView(this);
-    view_list_container.pushBackView(this);
-
-    view_tool_bar->setViewListContainer(&view_list_container);
-    interaction_mode_widget->setViewListContainer(&view_list_container);
-    graphicsitem_widget->setViewListContainer(&view_list_container);
+    connect(m_scene, &GraphicsScene::promptContinue, this, &GraphicsView::promptContinue);
 }
 
 GraphicsView::~GraphicsView()
@@ -59,8 +54,6 @@ GraphicsView::~GraphicsView()
     delete m_scene;
     delete horizontal_layout;
     delete main_layout;
-    delete graphicsitem_widget;
-    delete exclusive_graphics_btn_box;
     delete view_tool_bar;
     delete interaction_mode_widget;
 }
@@ -83,55 +76,60 @@ GiantInteractionModeWidget* GraphicsView::getGiantInteractionModeWidget() const
 void GraphicsView::initGraphicsScene()
 {
     m_scene = new GraphicsScene(this);
+    pixmap_item = m_scene->getPixmapItem();
     m_scene->setGraphicsView(this);
     setScene(m_scene);
-    pixmap_item = m_scene->getPixmapItem();
     generic_interaction_model.setGraphicsView(this);
     m_transform_model.setGraphicsView(this);
     m_graphics_calculate_model.setGraphicsScene(m_scene);
-    updateLbText();
 }
 
 void GraphicsView::initLayout()
 {
     main_layout = new QVBoxLayout(this);
     horizontal_layout = new QHBoxLayout();
-    graphicsitem_widget = new GraphicsItemWidget(this);
-    graphicsitem_widget->setObjectName("graphicsitem_widget");
-    graphicsitem_widget->connectSceneSignal(m_scene);
-    draw_button_list = graphicsitem_widget->getDrawButtonList();
-    exclusive_graphics_btn_box = new QButtonGroup(this);
-    exclusive_graphics_btn_box->setExclusive(true);
-    //draw_button_list.append(sam_widget->getPositivePointWidget()->getButton());
-    //draw_button_list.append(sam_widget->getNegativePointWidget()->getButton());
-    //draw_button_list.append(sam_widget->getBoxPromptWidget()->getButton());
-    //draw_button_list.append(sam_widget->getPPListPromptWidget()->getButton());
-    //draw_button_list.append(sam_widget->getNPListPromptWidget()->getButton());
-    foreach(QPushButton* btn, draw_button_list) {
-        exclusive_graphics_btn_box->addButton(btn);
-    }
-    draw_button_list[0]->setChecked(true);
-
     //设置图像窗口工具控件
     view_tool_bar = new ViewToolBar(this);
     view_tool_bar->setObjectName("view_tool_bar");
 
+    mode_stack_widget = new InteractionModeStackWidget(this);
+
     //设置交互模式控件
     interaction_mode_widget = new GiantInteractionModeWidget(this);
-    horizontal_layout->addWidget(graphicsitem_widget);
     horizontal_layout->addWidget(interaction_mode_widget);
     horizontal_layout->addStretch();
     horizontal_layout->setSpacing(0);
 
     main_layout->addWidget(view_tool_bar);
+    main_layout->addWidget(mode_stack_widget);
+    main_layout->addSpacing(10);
     main_layout->addLayout(horizontal_layout);
     main_layout->setContentsMargins(0, 0, 0, 0);
+    main_layout->setSpacing(0);
+    main_layout->addStretch();
     setLayout(main_layout);
+
+    view_tool_bar->setGraphicsView(this);
+    interaction_mode_widget->setGraphicsView(this);
+    interaction_mode_widget->setInteractionModeStackWidget(mode_stack_widget);
+    mode_stack_widget->setGraphicsView(this);
 }
 
 void GraphicsView::paintContinue()
 {
-    foreach(QPushButton * btn, draw_button_list) {
+    foreach(QPushButton * btn, mode_stack_widget->getGraphicsItemWidget()->getDrawButtonList()) {
+        if (btn->isChecked()) {
+            if (!btn->isEnabled())return;
+            emit btn->toggled(true);
+            break;
+        }
+    }
+}
+
+void GraphicsView::promptContinue()
+{
+    foreach(QAbstractButton* btn, mode_stack_widget->getAiModelInteractWidget()->
+        getExclusiveButtonGroup()->buttons()) {
         if (btn->isChecked()) {
             if (!btn->isEnabled())return;
             emit btn->toggled(true);
@@ -155,12 +153,21 @@ GraphicsCalculateModel* GraphicsView::getGraphicsCalculateModel()
     return &m_graphics_calculate_model;
 }
 
-QPointF GraphicsView::getPresentPosOnOriginImage()
+InteractionModeStackWidget* GraphicsView::getInteractionModeStackWidget() const
 {
-    return m_present_pos_on_origin_image;
+    return mode_stack_widget;
 }
 
-void GraphicsView::updateLbText()
+void GraphicsView::setEnterView(bool ok)
+{
+    is_enter_view = ok;
+    viewport()->update();
+    if (!ok && is_mouse_enter_pixmap_item) {
+        emit mouseEnterPixmapItem(false); is_mouse_enter_pixmap_item = false;
+    }
+}
+
+const QPoint& GraphicsView::getMouseCoordinate()
 {
     if (pixmap_item->getPixmap().isNull()) {
         m_present_pos_on_origin_image = mapToScene(m_present_pos).toPoint();
@@ -169,11 +176,21 @@ void GraphicsView::updateLbText()
         qreal scale{};
         scale = pixmap_item->getOriginWidth() / pixmap_item->getFscaleW();
         m_present_pos_on_origin_image = scale * pixmap_item->mapFromScene(mapToScene(m_present_pos)).toPoint();
+        if (mouse_press_status != MOUSE_PRESS_STATUS::NO_BUTTON_PRESSED) return m_present_pos_on_origin_image;
+        if (m_present_pos_on_origin_image.rx() > 0 && m_present_pos_on_origin_image.ry() > 0
+            && m_present_pos_on_origin_image.rx() < pixmap_item->getOriginWidth()
+            && m_present_pos_on_origin_image.ry() < pixmap_item->getOriginHeight()) {
+            if (!is_mouse_enter_pixmap_item) {
+                emit mouseEnterPixmapItem(true); is_mouse_enter_pixmap_item = true;
+            }
+        }
+        else {
+            if (is_mouse_enter_pixmap_item) {
+                emit mouseEnterPixmapItem(false); is_mouse_enter_pixmap_item = false;
+            }
+        }
     }
-    QString str1 = "X:" + QString::number(m_present_pos_on_origin_image.rx(), 'f', 0) + "px ";
-    QString str2 = "Y:" + QString::number(m_present_pos_on_origin_image.ry(), 'f', 0) + "px";
-    QString mouse_pos_to_img_pos = str1 + str2;
-    m_scene->getLeftBottomTextItem()->setPlainText(mouse_pos_to_img_pos);
+    return m_present_pos_on_origin_image;
 }
 
 void GraphicsView::setMagImage(const QPointF& p)
@@ -244,8 +261,38 @@ void GraphicsView::startPaintMode(QMouseEvent* event)
     else if (event->button() == Qt::RightButton) {
         if (m_scene->getIsCreatePolygon()) {
             m_scene->finishCreatePolygon();
-            emit m_scene->paintContinue();
         }
+    }
+}
+
+void GraphicsView::startSamMode(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton) {
+        m_scene->createPaintItemAtPoint(mapToScene(event->pos()));
+    }
+    else if (event->button() == Qt::RightButton) {
+        if (m_scene->getIsCreatePolygon()) {
+            m_scene->finishCreatePolygon();
+        }
+    }
+}
+
+void GraphicsView::moveAtSamMode(QMouseEvent* event)
+{
+    if (m_scene->getIsCreatePolygon()) {
+        if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
+            m_scene->pushBackPolygonPointConsitantly(mapToScene(m_present_pos));
+        }
+    }
+    else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
+    if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED) return;
+}
+
+void GraphicsView::showMenuAfterMouseRelease(QMouseEvent* event)
+{
+    if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+        if (itemAt(event->pos()) == nullptr || itemAt(event->pos()) == pixmap_item)
+            is_context_menu = true;
     }
 }
 
@@ -297,6 +344,12 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         startPaintMode(event);
     }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
+		startSamMode(event);
+        if(mouse_press_status != MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) 
+            m_scene->getSamSegmentTimer()->stop();
+	}
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
         if (event->button() == Qt::LeftButton) {
@@ -309,6 +362,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
 void GraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseMoveEvent(event);
+
     if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
         mouse_interaction = MOUSE_INTERACTION::PRESSED_AND_MOVE;
     }
@@ -350,7 +404,11 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         }
         else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     }
-    updateLbText();
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
+        moveAtSamMode(event);
+    }
+    m_scene->updateRtText();
 }
 
 void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
@@ -362,16 +420,32 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
             m_scene->updateItemIndexView();
         }
         else if (event->button() == Qt::RightButton) {
-            if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
-                if (itemAt(event->pos()) == nullptr || itemAt(event->pos()) == pixmap_item)
-                    is_context_menu = true;
-            }
+            showMenuAfterMouseRelease(event);
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_PAINT) {
         if (event->button() == Qt::LeftButton) {
             m_scene->afterSetPaintItemPoint(mapToScene(event->pos()));
+        }
+        else if (event->button() == Qt::RightButton) {
+            if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+                emit m_scene->paintContinue();
+			}
+        }
+    }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
+        if (event->button() == Qt::LeftButton) {
+            m_scene->afterSetPromptItemPoint(mapToScene(event->pos()));
+        }
+        else{
+            if (event->button() == Qt::RightButton) {
+                if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+                    emit m_scene->promptContinue();
+                }
+            }
+            m_scene->getSamSegmentTimer()->start();
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 
@@ -384,7 +458,9 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
     }
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_OBSERVE) {
-
+        if (event->button() == Qt::RightButton) {
+            showMenuAfterMouseRelease(event);
+        }
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
@@ -561,11 +637,10 @@ void GraphicsView::deCalLine()
     m_scene = dynamic_cast<GraphicsScene *>(scene());
     foreach(QGraphicsItem *item, items())
     {
-        if(m_scene->isPaintItem(item)) {
-            GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-            if(new_item->data(1)=="CalculateLine")
-                    new_item->onActionRemoveSelf();
-        }
+        if (!items().contains(item)) continue;
+        GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+        if(new_item && new_item->data(1)=="CalculateLine")
+                new_item->onActionRemoveSelf();
     }
 }
 
@@ -653,7 +728,8 @@ void GraphicsView::paintEvent(QPaintEvent *event)
 
 void GraphicsView::enterEvent(QEnterEvent* event)
 {
-    emit mouseEnter(dynamic_cast<ImageSceneWidget2D*>(parentWidget()));
+    if(mouse_press_status == MOUSE_PRESS_STATUS::NO_BUTTON_PRESSED)
+        emit mouseEnter(dynamic_cast<ImageSceneWidget2D*>(parentWidget()));
     is_enter_view = true;
 	event->accept();
     viewport()->update();
@@ -665,6 +741,9 @@ void GraphicsView::leaveEvent(QEvent* event)
     is_enter_view = false;
 	event->accept();
     viewport()->update();
+    if (is_mouse_enter_pixmap_item) {
+        emit mouseEnterPixmapItem(false); is_mouse_enter_pixmap_item = false;
+    }
 }
 
 void GraphicsView::resizeEvent(QResizeEvent* event)
@@ -676,3 +755,4 @@ void GraphicsView::resizeEvent(QResizeEvent* event)
         (m_scene->height() - m_scene->getPixmapItem()->getFscaleH()) / 2));
     m_transform_model.originPositonReturn();
 }
+

@@ -1,12 +1,13 @@
 #include "GraphicsScene.h"
 #include "GraphicsView.h"
 #include "ThumbnailPixmapItem.h"
-#include "widgets/LabelBoardWidget.h"
+#include "widgets/LabelBoard.h"
 #include "widgets/ItemIndexView.h"
 #include "widgets/StatusWidget.h"
 #include "GraphicsTextItem.h"
 #include "utils/ColorOperation.h"
 #include "AllGraphics.h"
+#include <QTimer>
 #define EPS (1e-5)
 
 GraphicsScene::GraphicsScene(QWidget *parent)
@@ -22,6 +23,10 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     pixmap_item->setFlag(QGraphicsItem::ItemIsMovable,false);
     initTextItem();
     scene_prompt_model.setGraphicsScene(this);
+
+    sam_segment_timer = new QTimer();
+    sam_segment_timer->setInterval(500);
+    QObject::connect(sam_segment_timer, &QTimer::timeout,this, &GraphicsScene::samSegmentRealTime);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -32,12 +37,19 @@ GraphicsScene::~GraphicsScene()
     delete text_left_up;
     delete pixmap_item;
     delete thumbnail_item;
+    delete sam_segment_timer;
 }
 
 void GraphicsScene::setGraphicsView(GraphicsView* v)
 {
     m_view = v; 
     updateRtText();
+    QObject::connect(m_view, &GraphicsView::mouseEnterPixmapItem,
+        [this](bool ok) {
+            if (!is_paint_prompt_item) return;
+            if(ok)sam_segment_timer->start();
+            else sam_segment_timer->stop();
+        });
 }
 
 GraphicsView* GraphicsScene::getGraphicsView()
@@ -55,12 +67,12 @@ ItemIndexView* GraphicsScene::getItemIndexView()
     return item_index_view;
 }
 
-void GraphicsScene::setLabelBoardWidget(LabelBoardWidget* w)
+void GraphicsScene::setLabelBoardWidget(LabelBoard* w)
 {
     label_board_widget = w;
 }
 
-LabelBoardWidget* GraphicsScene::getLabelBoardWidget()
+LabelBoard* GraphicsScene::getLabelBoardWidget()
 {
     return label_board_widget;
 }
@@ -123,6 +135,11 @@ GraphicsTextItem* GraphicsScene::getRightUpTextItem()
     return text_right_up;
 }
 
+QTimer* GraphicsScene::getSamSegmentTimer() const
+{
+    return sam_segment_timer;
+}
+
 void GraphicsScene::initTextItem()
 {
     if (text_left_up || text_left_bottom || text_right_bottom || text_right_up) {
@@ -150,6 +167,7 @@ void GraphicsScene::initTextItem()
     text_left_bottom->setTextWidth(-1);
     addItem(text_left_bottom);
     text_left_bottom->setPlainText(str1 + str2);
+    text_left_bottom->setVisible(false);
 
     //初始化右下文本item
     text_right_bottom = new GraphicsTextItem(QPointF(0, 0));
@@ -265,6 +283,35 @@ void GraphicsScene::afterSetPaintItemPoint(const QPointF& p)
     if (set_point_fp_list.isEmpty()) {
         painting_item = nullptr;
         emit paintContinue();
+    }
+}
+
+void GraphicsScene::afterSetPromptItemPoint(const QPointF& p)
+{
+    if (!painting_item)return;
+    if (is_creating_polygon) {
+        if (is_paint_prompt_item) {
+            finishCreatePolygon();
+            emit promptContinue();
+        }
+        return;
+    }
+    QList<std::pair<GraphicsItem*, void (GraphicsItem::*)(const QPointF&)>>&
+        set_point_fp_list = painting_item->getSetPointFunctionList();
+    if (!set_point_fp_list.isEmpty()) {
+        set_point_fp_list.removeFirst();
+        if (!set_point_fp_list.isEmpty() && set_point_fp_list.first().second == &GraphicsItem::generateOtherItems) {
+            auto class_pointer = set_point_fp_list.first().first;
+            auto member_function_pointer = set_point_fp_list.first().second;
+            (class_pointer->*member_function_pointer)(class_pointer->mapFromScene(p));
+            set_point_fp_list.removeFirst();
+        }
+    }
+
+    is_paint_new_item = false;
+    if (set_point_fp_list.isEmpty()) {
+        painting_item = nullptr;
+        emit promptContinue();
         startAiModelSegment();
     }
 }
@@ -297,6 +344,9 @@ void GraphicsScene::initPaintFinishGraphicsItem()
 void GraphicsScene::initPaintPromptItem()
 {
     is_paint_prompt_item = true;
+    painting_item->getGraphicsTextModel().setIsHideText(true);
+    initItemSettingAfterPaint(painting_item);
+    createPromptItem();
 }
 
 void GraphicsScene::initPaintFinishPromptItem()
@@ -391,15 +441,21 @@ void GraphicsScene::updateItemIndexView()
 
 void GraphicsScene::updateRtText()
 {
-    QString str1 = "ImgW:" + QString::number(pixmap_item->getOriginWidth(), 'f', 0) + "px ";
-    QString str2 = "ImgH:" + QString::number(pixmap_item->getOriginHeight(), 'f', 0) + "px";
+    QString str1 = "W:" + QString::number(pixmap_item->getOriginWidth(), 'f', 0);
+    QString str2 = "H:" + QString::number(pixmap_item->getOriginHeight(), 'f', 0);
 
     qreal image_scale_total = m_view->getViewTransFormModel()->getImageScaleTotal();
     if (pixmap_item->getPixmap().isNull()) image_scale_total = 0;
     else image_scale_total = pixmap_item->getFscaleW() / pixmap_item->getOriginWidth() * 
         m_view->getViewTransFormModel()->getViewScale();
-    QString str3 = "Zoom:" + QString::number(image_scale_total, 'f', 2) + " ";
-    text_right_up->setPlainText(str1 + str2 + "\n" + str3);
+    QString str3 = "Zoom: " + QString::number(image_scale_total, 'f', 2) + " ";
+
+    QPoint m_present_pos_on_origin_image = m_view->getMouseCoordinate();
+
+    QString str4 = "X:" + QString::number(m_present_pos_on_origin_image.rx(), 'f', 0);
+    QString str5 = "Y:" + QString::number(m_present_pos_on_origin_image.ry(), 'f', 0);
+
+    text_right_up->setPlainText(str1 + " " + str2 + "\n" + str3 + "\n" + str4 + " " + str5);
     m_view->getViewTransFormModel()->setImageScaleTotal(image_scale_total);
 }
 
@@ -427,8 +483,6 @@ void GraphicsScene::addItemInitAfterPaint(GraphicsItem *item)
 {
     initItemSettingAfterPaint(item);
     addItem(item);
-    if (scene_prompt_model.getIsAiSegment()&&is_paint_prompt_item)
-        createPromptItem();
 }
 
 void GraphicsScene::addItemAcceptLabelBoardSetting(GraphicsItem* item)
@@ -518,13 +572,19 @@ void GraphicsScene::createPromptItem()
 
 void GraphicsScene::startAiModelSegment()
 {
-    if (scene_prompt_model.getIsAiSegment()) {
-        if (pixmap_item->getPixmapPath() == "") {
-            qDebug() << "no load iamge";
-            return;
-        }
-        if (is_paint_prompt_item)scene_prompt_model.generateAnnotation();
+    if (!is_paint_prompt_item)return;
+    if (pixmap_item->getPixmapPath() == "") {
+        qDebug() << "no load iamge";
+        return;
     }
+    scene_prompt_model.generateAnnotation();
+}
+
+void GraphicsScene::samSegmentRealTime()
+{
+    QPixmap p(pixmap_item->getPixmapPath());
+    pixmap_item->updatePixmap(p);
+    startAiModelSegment();
 }
 
 void GraphicsScene::finishCreatePolygon()
@@ -543,7 +603,7 @@ void GraphicsScene::finishCreatePolygon()
                 m_item->getGraphicsTransformModel().setImageScale(pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS));
             }
         }
-        if (scene_prompt_model.getIsAiSegment()) {
+        if (is_paint_prompt_item) {
             if (pixmap_item->getPixmapPath() == "") {
                 qDebug() << "no load iamge";
                 return;
@@ -680,8 +740,8 @@ void GraphicsScene::positivePointClicked(int checked)
 {
     if (checked) {
         initPaintGraphicsItem();
-        initPaintPromptItem();
         painting_item = new PositivePoint{};
+        initPaintPromptItem();
     }
     else {
         initPaintFinishGraphicsItem();
@@ -693,8 +753,8 @@ void GraphicsScene::negativePointClicked(int checked)
 {
     if (checked) {
         initPaintGraphicsItem();
-        initPaintPromptItem();
         painting_item = new NegativePoint{};
+        initPaintPromptItem();
     }
     else {
         initPaintFinishGraphicsItem();
@@ -706,8 +766,8 @@ void GraphicsScene::promptRectClicked(int checked)
 {
     if (checked) {
         initPaintGraphicsItem();
-        initPaintPromptItem();
         painting_item = new PromptRect{};
+        initPaintPromptItem();
     }
     else {
         initPaintFinishGraphicsItem();
@@ -719,11 +779,11 @@ void GraphicsScene::PPlineSegmentClicked(int checked)
 {
     if (checked) {
         startCreatePolygon();
-        initPaintPromptItem();
         painting_pol_item = new LineSegment{};
+        painting_item = painting_pol_item;
+        initPaintPromptItem();
         painting_pol_item->setFlag(QGraphicsItem::ItemIsMovable, false);
         painting_pol_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        painting_item = painting_pol_item;
         connect(this, SIGNAL(updatePoint(QPointF, bool)), painting_pol_item, SLOT(pullPoint(QPointF, bool)));
         painting_pol_item->setIsAcceptOthersSetting(false);
         painting_pol_item->setGraphicsColor(ColorOperation::generate_color_by_text("positiveP"));
@@ -740,11 +800,11 @@ void GraphicsScene::NPlineSegmentClicked(int checked)
 {
     if (checked) {
         startCreatePolygon();
-        initPaintPromptItem();
         painting_pol_item = new LineSegment{};
+        painting_item = painting_pol_item;
+        initPaintPromptItem();
         painting_pol_item->setFlag(QGraphicsItem::ItemIsMovable, false);
         painting_pol_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-        painting_item = painting_pol_item;
         painting_pol_item->setIsAcceptOthersSetting(false);
         painting_pol_item->setGraphicsColor(ColorOperation::generate_color_by_text("negtiveP"));
         painting_pol_item->getGraphicsTextModel().setLabelText("NPLineSegment");
@@ -772,7 +832,9 @@ void GraphicsScene::clearSceneGraphicsItem()
         }
     }
     initPaintFinishGraphicsItem();
-    emit paintContinue();
+
+    if(is_paint_prompt_item) emit promptContinue();
+    else emit paintContinue();
 }
 
 void GraphicsScene::resetScene()

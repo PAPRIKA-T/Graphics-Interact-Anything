@@ -3,51 +3,40 @@
 #include "Model/ViewListContainer.h"
 #include "graphs/GraphicsRect.h"
 #include <QStyleOption>
-#include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QButtonGroup>
 
 GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    int btn_width = 28;int btn_height = 28;
-    setFixedWidth(38);
-    setMinimumHeight(400);
+    int btn_width = 20;int btn_height = 20;
     //图形按钮垂直布局器
-    shape_btn_layout = new QVBoxLayout(this);
+    shape_btn_layout = new QHBoxLayout(this);
 
     destory_btn = new GenericToolButton();
     destory_btn->setObjectName("graphicsitem_btn");
-    destory_btn->setIcon(QIcon(":/res/background-image/destory.png"));
+    destory_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/destory.png"));
     destory_btn->setFixedSize(btn_width, btn_height);
     connect(destory_btn, &QPushButton::clicked, this, &GraphicsItemWidget::onDestoryBtn);
     //设置图形按钮
     point_btn = new GenericToolButton();
     point_btn->setObjectName("graphicsitem_btn");
-
     rect_btn = new GenericToolButton();
     rect_btn->setObjectName("graphicsitem_btn");
-
     line_btn = new GenericToolButton();
     line_btn->setObjectName("graphicsitem_btn");
-
     round_btn = new GenericToolButton();
     round_btn->setObjectName("graphicsitem_btn");
-
     pie_btn = new GenericToolButton();
     pie_btn->setObjectName("graphicsitem_btn");
-
     ellipse_btn = new GenericToolButton();
     ellipse_btn->setObjectName("graphicsitem_btn");
-
     line_segment_btn = new GenericToolButton();
     line_segment_btn->setObjectName("graphicsitem_btn");
-
     polygon_btn = new GenericToolButton();
     polygon_btn->setObjectName("graphicsitem_btn");
-
     angle_btn = new GenericToolButton();
     angle_btn->setObjectName("graphicsitem_btn");
-
     parallel_line_btn = new GenericToolButton();
     parallel_line_btn->setObjectName("graphicsitem_btn");
 
@@ -76,76 +65,47 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
 
     shape_btn_layout->addWidget(destory_btn);
 
-    foreach(QPushButton* btn, draw_button_list)
-    {
-        shape_btn_layout->addWidget(btn);
-        btn->setFixedSize(btn_width, btn_height);
-        btn->setCheckable(true);
-        btn->setIconSize(QSize(20, 20));
-    }
-    shape_btn_layout->setContentsMargins(5, 0, 5, 25);
-    shape_btn_layout->setSpacing(3);
+    exclusive_action_group = new QButtonGroup(this);
+
+        foreach(QPushButton* btn, draw_button_list)
+        {
+            shape_btn_layout->addWidget(btn);
+            btn->setFixedSize(btn_width, btn_height);
+            btn->setCheckable(true);
+            btn->setIconSize(QSize(15, 15));
+            btn->setObjectName("graphics_item_btn");
+            exclusive_action_group->addButton(btn);
+        }
+    draw_button_list[0]->setChecked(true);
+    shape_btn_layout->setContentsMargins(0, 0, 0, 0);
+    shape_btn_layout->setSpacing(1);
+    shape_btn_layout->addStretch();
     setLayout(shape_btn_layout);
 
-    point_btn->setIcon(QIcon(":/res/background-image/point.png"));
-    line_btn->setIcon(QIcon(":/res/background-image/line.png"));
-    round_btn->setIcon(QIcon(":/res/background-image/round.png"));
-    ellipse_btn->setIcon(QIcon(":/res/background-image/ellipse.png"));
-    rect_btn->setIcon(QIcon(":/res/background-image/rect.png"));
-    pie_btn->setIcon(QIcon(":/res/background-image/pie.png"));
-    polygon_btn->setIcon(QIcon(":/res/background-image/polygon.png"));
-    angle_btn->setIcon(QIcon(":/res/background-image/angle.png"));
-    parallel_line_btn->setIcon(QIcon(":/res/background-image/Parallel_line.png"));
-    line_segment_btn->setIcon(QIcon(":/res/background-image/line_segment.png"));
+    point_btn->setIcon(QIcon(":/res/qss/Dark/background-image/point.png"));
+    line_btn->setIcon(QIcon(":/res/qss/Dark/background-image/line.png"));
+    round_btn->setIcon(QIcon(":/res/qss/Dark/background-image/round.png"));
+    ellipse_btn->setIcon(QIcon(":/res/qss/Dark/background-image/ellipse.png"));
+    rect_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rect.png"));
+    pie_btn->setIcon(QIcon(":/res/qss/Dark/background-image/pie.png"));
+    polygon_btn->setIcon(QIcon(":/res/qss/Dark/background-image/polygon.png"));
+    angle_btn->setIcon(QIcon(":/res/qss/Dark/background-image/angle.png"));
+    parallel_line_btn->setIcon(QIcon(":/res/qss/Dark/background-image/Parallel_line.png"));
+    line_segment_btn->setIcon(QIcon(":/res/qss/Dark/background-image/line_segment.png"));
 
-    cal_center_btn = new GenericToolButton();
-    cal_center_btn->setObjectName("graphicsitem_btn");
-    cal_center_btn->setFixedSize(btn_width, btn_height);
-    cal_center_btn->setCheckable(true);
-
-    cal_vertical_btn = new GenericToolButton();
-    cal_vertical_btn->setObjectName("graphicsitem_btn");
-    cal_vertical_btn->setFixedSize(btn_width, btn_height);
-    cal_vertical_btn->setCheckable(true);
-
-    cal_angle_btn = new GenericToolButton();
-    cal_angle_btn->setObjectName("graphicsitem_btn");
-    cal_angle_btn->setFixedSize(btn_width, btn_height);
-    cal_angle_btn->setCheckable(true);
-
-    cal_center_btn->setIcon(QIcon(":/res/background-image/cal_center.png"));
-    cal_vertical_btn->setIcon(QIcon(":/res/background-image/cal_verti.png"));
-    cal_angle_btn->setIcon(QIcon(":/res/background-image/cal_angle.png"));
-
-    cal_center_btn->setCustomTooltip("CalCenter");
-    cal_vertical_btn->setCustomTooltip("CalVertical");
-    cal_angle_btn->setCustomTooltip("CalAngle");
-
-    exclusive_button_group = new QButtonGroup(this);
-    exclusive_button_group->addButton(cal_center_btn);
-    exclusive_button_group->addButton(cal_vertical_btn);
-    exclusive_button_group->addButton(cal_angle_btn);
-    exclusive_button_group->setExclusive(true);
-
-    shape_btn_layout->addSpacing(14);
-    shape_btn_layout->addWidget(cal_center_btn);
-    shape_btn_layout->addWidget(cal_vertical_btn);
-    shape_btn_layout->addWidget(cal_angle_btn);
-    shape_btn_layout->addStretch();
-    cal_center_btn->setChecked(true);
-    connect(cal_center_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalCenterBtnClicked);
-    connect(cal_vertical_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalVerticalBtnClicked);
-    connect(cal_angle_btn, &QPushButton::toggled, this, &GraphicsItemWidget::onCalAngleBtnClicked);
+    setFixedWidth((draw_button_list.size()+1)*(btn_width+1)-1+17);
 }
 
 GraphicsItemWidget::~GraphicsItemWidget()
 {
     delete shape_btn_layout;
+    delete exclusive_action_group;
 }
 
-void GraphicsItemWidget::setViewListContainer(ViewListContainer* vlc)
+void GraphicsItemWidget::setGraphicsView(GraphicsView* v)
 {
-    view_list_container = vlc;
+    m_view = v;
+    connectSceneSignal(m_view->getGraphicsScene());
 }
 
 QList<QPushButton*> GraphicsItemWidget::getDrawButtonList()
@@ -153,13 +113,15 @@ QList<QPushButton*> GraphicsItemWidget::getDrawButtonList()
     return draw_button_list;
 }
 
-void GraphicsItemWidget::paintEvent(QPaintEvent* event)
+void GraphicsItemWidget::paintItemLoad()
 {
-    Q_UNUSED(event);
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
+    foreach(QPushButton * btn, draw_button_list) {
+        if (btn->isChecked()) {
+            if (!btn->isEnabled())return;
+            emit btn->toggled(true);
+            break;
+        }
+    }
 }
 
 void GraphicsItemWidget::connectSceneSignal(GraphicsScene* s)
@@ -191,42 +153,6 @@ void GraphicsItemWidget::disconnectSceneSignal(GraphicsScene* s)
     disconnect(parallel_line_btn, &QPushButton::toggled, s, &GraphicsScene::parallelLineClicked);
 }
 
-void GraphicsItemWidget::onCalCenterBtnClicked(int checked)
-{
-    if (checked) {
-        for (GraphicsView* v : view_list_container->getViewList())
-            v->getGraphicsCalculateModel()->setCalMode(
-            GraphicsCalculateModel::CalModeType::CalCenterDis);
-    }
-    else {
-
-    }
-}
-
-void GraphicsItemWidget::onCalVerticalBtnClicked(int checked)
-{
-    if (checked) {
-        for (GraphicsView* v : view_list_container->getViewList())
-            v->getGraphicsCalculateModel()->setCalMode(
-            GraphicsCalculateModel::CalModeType::CalVertiDis);
-    }
-    else {
-
-    }
-}
-
-void GraphicsItemWidget::onCalAngleBtnClicked(int checked)
-{
-    if (checked) {
-        for (GraphicsView* v : view_list_container->getViewList())
-            v->getGraphicsCalculateModel()->setCalMode(
-            GraphicsCalculateModel::CalModeType::CalLineAngle);
-    }
-    else {
-
-    }
-}
-
 void GraphicsItemWidget::onDestoryBtn()
 {
     QList<GraphicsItem*> item_list;
@@ -235,6 +161,6 @@ void GraphicsItemWidget::onDestoryBtn()
         item_list.append(rect);
     }
     for (int i = 0; i < 1000; i++) {
-        view_list_container->getActivedView()->getGraphicsScene()->addItemInit(item_list[i]);
+        m_view->getGraphicsScene()->addItemInit(item_list[i]);
     }
 }

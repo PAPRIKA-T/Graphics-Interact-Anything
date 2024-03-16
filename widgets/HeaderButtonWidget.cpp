@@ -6,7 +6,6 @@
 #include <QMenu>
 #include "widget.h"
 #include "graphs/Graphicsview.h"
-#include "SAM/samwidget.h"
 
 HeaderButtonWidget::HeaderButtonWidget(QWidget*parent)
 	: QWidget(parent)

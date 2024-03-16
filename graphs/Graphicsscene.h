@@ -9,12 +9,13 @@
 #include "Graphicspixmapitem.h"
 #include "Model/ScenePromptItemModel.h"
 
-class LabelBoardWidget;
+class LabelBoard;
 class ItemIndexView;
 class GraphicsView;
 class InteractionPolygon;
 class ThumbnailPixmapItem;
 class GraphicsTextItem;
+class QTimer;
 
 class GraphicsScene: public QGraphicsScene
 {
@@ -27,8 +28,8 @@ public:
     GraphicsView* getGraphicsView();
     void setItemIndexView(ItemIndexView* i);
     ItemIndexView* getItemIndexView();
-    void setLabelBoardWidget(LabelBoardWidget* w);
-    LabelBoardWidget* getLabelBoardWidget();
+    void setLabelBoardWidget(LabelBoard* w);
+    LabelBoard* getLabelBoardWidget();
 
     ScenePromptItemModel* getScenePromptItemModel();
 
@@ -45,9 +46,10 @@ public:
     GraphicsTextItem* getLeftUpTextItem(); //获取左上文本item
     GraphicsTextItem* getRightBottomTextItem(); //获取右下文本item
     GraphicsTextItem* getRightUpTextItem(); //获取右上文本item
+    QTimer* getSamSegmentTimer() const; //获取sam模型分割定时器
 
     void initTextItem(); //初始化TextItem
-    void updateRtText(); //更新左下文本（鼠标位置）
+    void updateRtText(); //更新右上文本
     void updateRbText(int index, int total_index); //更新右上文本
     void updateTextPos(); //更新文本控件位置
     void updateThumbnailBox(); //更新缩略图
@@ -76,10 +78,12 @@ public:
     void resetScene();//重置界面
     void clearPaintCache(); /******每次绘制完图元时，会自动补充
     下一个图元，有时我们需要清除这个图元的补充******/
- 
+
+    void initPaintFinishPromptItem(); //取消提示图元绘制操作
 signals:
     void updatePoint(const QPointF &p,bool isCenter); //传递多边形点链表进item信号
     void paintContinue(); //继续绘画
+    void promptContinue(); //继续绘制模型提示图元
     void createItemIndex(GraphicsItem* item); //在item索引控件中添加index元素
     void zoom3DLayout(bool); //true为放大，false为缩小
 
@@ -107,23 +111,25 @@ private:
     void initPaintGraphicsItem(); //初始化绘画操作
     void initPaintFinishGraphicsItem(); //取消绘画操作
     void initPaintPromptItem(); //初始化提示图元绘制操作
-    void initPaintFinishPromptItem(); //取消提示图元绘制操作
     void initItemSettingAfterPaint(GraphicsItem* item);//item初始化设置
     void startCreatePolygon(); //开始绘制多边形
     void cancelCreatePolygon(); //取消绘制多边形
     void createPromptItem(); //生成模型提示图元（一次只允许输入一个提示矩形框）
-    
     void startAiModelSegment(); //使用自动分割模块,添加完提示图元之后，更新mask
+
+    void samSegmentRealTime(); //sam实时自动分割
     /***********用于绘制graphicsItem, 参数点坐标需要映射到scene上,
   三条函数基本配合使用，目前用在鼠标事件中***********/
     void createPaintItemAtPoint(const QPointF&);
     void setPaintItemPoint(const QPointF&);
     void afterSetPaintItemPoint(const QPointF&);
+    void afterSetPromptItemPoint(const QPointF&);
 
     GraphicsView* m_view = nullptr;
-    LabelBoardWidget* label_board_widget = nullptr;
+    LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{};
+    QTimer* sam_segment_timer = nullptr; //sam模型分割定时器
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象

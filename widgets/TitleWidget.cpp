@@ -88,6 +88,8 @@ TitleWidget::TitleWidget(QWidget* parent)
     QAction* help_version = new QAction("Version");
     QAction* help_about = new QAction("About");
     QAction* theme_divert = new QAction("Theme Divert");
+    theme_divert->setCheckable(true);
+    theme_divert->setChecked(true);
 
     connect(help_doc, &QAction::triggered, this, &TitleWidget::on_help_doc_clicked);
     connect(help_contact, &QAction::triggered, [=]() {
@@ -116,11 +118,11 @@ TitleWidget::TitleWidget(QWidget* parent)
     help_menu->addAction(theme_divert);
     help_menu_btn->setMenu(help_menu);
 
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(8);
     main_layout->addWidget(title_icon);
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(0);
     main_layout->addWidget(title_name);
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(0);
     main_layout->addWidget(file_menu_btn);
     main_layout->addWidget(segment_menu_btn);
     main_layout->addWidget(edit_menu_btn);
