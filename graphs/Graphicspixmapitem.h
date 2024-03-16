@@ -20,18 +20,19 @@ public:
         fScaleW = w;fScaleH = h;
         scene_compare_origin_scale = fScaleW / origin_width;
     } //设置图像宽高
-    qreal getFscaleH(){return fScaleH;} //获取图像高度
-    qreal getFscaleW(){return fScaleW;} //获取图像宽度
-    qreal getOriginWidth(){return origin_width;} //获取图像原始宽度
-    qreal getOriginHeight(){return origin_height;} //获取图像原始高度
-    qreal getScale(){return m_fScale;} //获取宽高比
+    const qreal& getFscaleH(){return fScaleH;} //获取图像高度
+    const qreal& getFscaleW(){return fScaleW;} //获取图像宽度
+    const qreal& getOriginWidth(){return origin_width;} //获取图像原始宽度
+    const qreal& getOriginHeight(){return origin_height;} //获取图像原始高度
+    const qreal& getScale(){return m_fScale;} //获取宽高比
     void setPixmapPath(const QString& f);//设置图像路径
-    QString getPixmapPath() { return pixmap_path; }//获取图像路径
-    qreal getSceneCompareOriginScale(){return scene_compare_origin_scale;}//获取图像原始尺寸与导入scene尺寸缩放比
+    QString& getPixmapPath() { return pixmap_path; }//获取图像路径
+    const qreal& getSceneCompareOriginScale(){return scene_compare_origin_scale;}//获取图像原始尺寸与导入scene尺寸缩放比
     void setSceneCompareOriginScale(qreal s){scene_compare_origin_scale = s;}//设置图像原始尺寸与导入scene尺寸缩放比
     cv::Mat getOrignImageMat(bool clone);
     virtual QRectF boundingRect() const override;
 
+protected:
 /****************************************************事件函数*********************************************************/
     virtual void paint(QPainter *painter,
                        const QStyleOptionGraphicsItem *option,

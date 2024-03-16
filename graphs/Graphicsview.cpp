@@ -162,6 +162,9 @@ void GraphicsView::setEnterView(bool ok)
 {
     is_enter_view = ok;
     viewport()->update();
+    if (!ok && is_mouse_enter_pixmap_item) {
+        emit mouseEnterPixmapItem(false); is_mouse_enter_pixmap_item = false;
+    }
 }
 
 const QPoint& GraphicsView::getMouseCoordinate()
@@ -173,6 +176,19 @@ const QPoint& GraphicsView::getMouseCoordinate()
         qreal scale{};
         scale = pixmap_item->getOriginWidth() / pixmap_item->getFscaleW();
         m_present_pos_on_origin_image = scale * pixmap_item->mapFromScene(mapToScene(m_present_pos)).toPoint();
+        if (mouse_press_status != MOUSE_PRESS_STATUS::NO_BUTTON_PRESSED) return m_present_pos_on_origin_image;
+        if (m_present_pos_on_origin_image.rx() > 0 && m_present_pos_on_origin_image.ry() > 0
+            && m_present_pos_on_origin_image.rx() < pixmap_item->getOriginWidth()
+            && m_present_pos_on_origin_image.ry() < pixmap_item->getOriginHeight()) {
+            if (!is_mouse_enter_pixmap_item) {
+                emit mouseEnterPixmapItem(true); is_mouse_enter_pixmap_item = true;
+            }
+        }
+        else {
+            if (is_mouse_enter_pixmap_item) {
+                emit mouseEnterPixmapItem(false); is_mouse_enter_pixmap_item = false;
+            }
+        }
     }
     return m_present_pos_on_origin_image;
 }
@@ -245,10 +261,6 @@ void GraphicsView::startPaintMode(QMouseEvent* event)
     else if (event->button() == Qt::RightButton) {
         if (m_scene->getIsCreatePolygon()) {
             m_scene->finishCreatePolygon();
-            emit m_scene->paintContinue();
-        }
-        else {
-            emit m_scene->paintContinue();
         }
     }
 }
@@ -261,11 +273,26 @@ void GraphicsView::startSamMode(QMouseEvent* event)
     else if (event->button() == Qt::RightButton) {
         if (m_scene->getIsCreatePolygon()) {
             m_scene->finishCreatePolygon();
-            emit m_scene->promptContinue();
         }
-        else {
-            emit m_scene->promptContinue();
+    }
+}
+
+void GraphicsView::moveAtSamMode(QMouseEvent* event)
+{
+    if (m_scene->getIsCreatePolygon()) {
+        if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
+            m_scene->pushBackPolygonPointConsitantly(mapToScene(m_present_pos));
         }
+    }
+    else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
+    if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED) return;
+}
+
+void GraphicsView::showMenuAfterMouseRelease(QMouseEvent* event)
+{
+    if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+        if (itemAt(event->pos()) == nullptr || itemAt(event->pos()) == pixmap_item)
+            is_context_menu = true;
     }
 }
 
@@ -320,6 +347,8 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
     else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
 		startSamMode(event);
+        if(mouse_press_status != MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) 
+            m_scene->getSamSegmentTimer()->stop();
 	}
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
@@ -333,6 +362,7 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
 void GraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsView::mouseMoveEvent(event);
+
     if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
         mouse_interaction = MOUSE_INTERACTION::PRESSED_AND_MOVE;
     }
@@ -376,13 +406,7 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
     }
     else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
-        if (m_scene->getIsCreatePolygon()) {
-            if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
-                m_scene->pushBackPolygonPointConsitantly(mapToScene(m_present_pos));
-            }
-        }
-        else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
-
+        moveAtSamMode(event);
     }
     m_scene->updateRtText();
 }
@@ -396,10 +420,7 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
             m_scene->updateItemIndexView();
         }
         else if (event->button() == Qt::RightButton) {
-            if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
-                if (itemAt(event->pos()) == nullptr || itemAt(event->pos()) == pixmap_item)
-                    is_context_menu = true;
-            }
+            showMenuAfterMouseRelease(event);
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 
@@ -407,11 +428,24 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         if (event->button() == Qt::LeftButton) {
             m_scene->afterSetPaintItemPoint(mapToScene(event->pos()));
         }
+        else if (event->button() == Qt::RightButton) {
+            if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+                emit m_scene->paintContinue();
+			}
+        }
     }
     else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
         if (event->button() == Qt::LeftButton) {
             m_scene->afterSetPromptItemPoint(mapToScene(event->pos()));
+        }
+        else{
+            if (event->button() == Qt::RightButton) {
+                if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+                    emit m_scene->promptContinue();
+                }
+            }
+            m_scene->getSamSegmentTimer()->start();
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 
@@ -424,7 +458,9 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
     }
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_OBSERVE) {
-
+        if (event->button() == Qt::RightButton) {
+            showMenuAfterMouseRelease(event);
+        }
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
@@ -692,7 +728,8 @@ void GraphicsView::paintEvent(QPaintEvent *event)
 
 void GraphicsView::enterEvent(QEnterEvent* event)
 {
-    emit mouseEnter(dynamic_cast<ImageSceneWidget2D*>(parentWidget()));
+    if(mouse_press_status == MOUSE_PRESS_STATUS::NO_BUTTON_PRESSED)
+        emit mouseEnter(dynamic_cast<ImageSceneWidget2D*>(parentWidget()));
     is_enter_view = true;
 	event->accept();
     viewport()->update();
@@ -704,6 +741,9 @@ void GraphicsView::leaveEvent(QEvent* event)
     is_enter_view = false;
 	event->accept();
     viewport()->update();
+    if (is_mouse_enter_pixmap_item) {
+        emit mouseEnterPixmapItem(false); is_mouse_enter_pixmap_item = false;
+    }
 }
 
 void GraphicsView::resizeEvent(QResizeEvent* event)

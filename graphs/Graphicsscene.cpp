@@ -7,6 +7,7 @@
 #include "GraphicsTextItem.h"
 #include "utils/ColorOperation.h"
 #include "AllGraphics.h"
+#include <QTimer>
 #define EPS (1e-5)
 
 GraphicsScene::GraphicsScene(QWidget *parent)
@@ -22,6 +23,10 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     pixmap_item->setFlag(QGraphicsItem::ItemIsMovable,false);
     initTextItem();
     scene_prompt_model.setGraphicsScene(this);
+
+    sam_segment_timer = new QTimer();
+    sam_segment_timer->setInterval(500);
+    QObject::connect(sam_segment_timer, &QTimer::timeout,this, &GraphicsScene::samSegmentRealTime);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -32,12 +37,19 @@ GraphicsScene::~GraphicsScene()
     delete text_left_up;
     delete pixmap_item;
     delete thumbnail_item;
+    delete sam_segment_timer;
 }
 
 void GraphicsScene::setGraphicsView(GraphicsView* v)
 {
     m_view = v; 
     updateRtText();
+    QObject::connect(m_view, &GraphicsView::mouseEnterPixmapItem,
+        [this](bool ok) {
+            if (!is_paint_prompt_item) return;
+            if(ok)sam_segment_timer->start();
+            else sam_segment_timer->stop();
+        });
 }
 
 GraphicsView* GraphicsScene::getGraphicsView()
@@ -121,6 +133,11 @@ GraphicsTextItem* GraphicsScene::getRightBottomTextItem()
 GraphicsTextItem* GraphicsScene::getRightUpTextItem()
 {
     return text_right_up;
+}
+
+QTimer* GraphicsScene::getSamSegmentTimer() const
+{
+    return sam_segment_timer;
 }
 
 void GraphicsScene::initTextItem()
@@ -328,6 +345,8 @@ void GraphicsScene::initPaintPromptItem()
 {
     is_paint_prompt_item = true;
     painting_item->getGraphicsTextModel().setIsHideText(true);
+    initItemSettingAfterPaint(painting_item);
+    createPromptItem();
 }
 
 void GraphicsScene::initPaintFinishPromptItem()
@@ -464,8 +483,6 @@ void GraphicsScene::addItemInitAfterPaint(GraphicsItem *item)
 {
     initItemSettingAfterPaint(item);
     addItem(item);
-    if (is_paint_prompt_item)
-        createPromptItem();
 }
 
 void GraphicsScene::addItemAcceptLabelBoardSetting(GraphicsItem* item)
@@ -555,13 +572,19 @@ void GraphicsScene::createPromptItem()
 
 void GraphicsScene::startAiModelSegment()
 {
-    if (is_paint_prompt_item) {
-        if (pixmap_item->getPixmapPath() == "") {
-            qDebug() << "no load iamge";
-            return;
-        }
-        if (is_paint_prompt_item)scene_prompt_model.generateAnnotation();
+    if (!is_paint_prompt_item)return;
+    if (pixmap_item->getPixmapPath() == "") {
+        qDebug() << "no load iamge";
+        return;
     }
+    scene_prompt_model.generateAnnotation();
+}
+
+void GraphicsScene::samSegmentRealTime()
+{
+    QPixmap p(pixmap_item->getPixmapPath());
+    pixmap_item->updatePixmap(p);
+    startAiModelSegment();
 }
 
 void GraphicsScene::finishCreatePolygon()

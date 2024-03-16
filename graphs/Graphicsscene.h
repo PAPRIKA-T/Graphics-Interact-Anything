@@ -15,6 +15,7 @@ class GraphicsView;
 class InteractionPolygon;
 class ThumbnailPixmapItem;
 class GraphicsTextItem;
+class QTimer;
 
 class GraphicsScene: public QGraphicsScene
 {
@@ -45,6 +46,7 @@ public:
     GraphicsTextItem* getLeftUpTextItem(); //获取左上文本item
     GraphicsTextItem* getRightBottomTextItem(); //获取右下文本item
     GraphicsTextItem* getRightUpTextItem(); //获取右上文本item
+    QTimer* getSamSegmentTimer() const; //获取sam模型分割定时器
 
     void initTextItem(); //初始化TextItem
     void updateRtText(); //更新右上文本
@@ -113,8 +115,9 @@ private:
     void startCreatePolygon(); //开始绘制多边形
     void cancelCreatePolygon(); //取消绘制多边形
     void createPromptItem(); //生成模型提示图元（一次只允许输入一个提示矩形框）
-    
     void startAiModelSegment(); //使用自动分割模块,添加完提示图元之后，更新mask
+
+    void samSegmentRealTime(); //sam实时自动分割
     /***********用于绘制graphicsItem, 参数点坐标需要映射到scene上,
   三条函数基本配合使用，目前用在鼠标事件中***********/
     void createPaintItemAtPoint(const QPointF&);
@@ -126,6 +129,7 @@ private:
     LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{};
+    QTimer* sam_segment_timer = nullptr; //sam模型分割定时器
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象

@@ -20,9 +20,7 @@ public:
 	ScenePromptItemModel();
 	~ScenePromptItemModel();
 	void setSamInteractWidget(AiModelInteractWidget* s);
-
 	void setSam(Sam*);
-
 	void setGraphicsScene(GraphicsScene*);
 	QList<GraphicsItem*> getPromptItemList();
 	void addPromptItem(GraphicsItem* item); //添加模型提示图元
@@ -47,15 +45,14 @@ private:
 	void  clearPromptList();
 	GraphicsScene* m_scene = nullptr;
 	Sam* sam = nullptr;
-
 	AiModelInteractWidget* sam_interact_widget = nullptr;
-
 	QList<GraphicsItem*> prompt_list;//model used prompt item list
 	std::list<cv::Point> positive_points = {};
 	std::list<cv::Point> negative_points = {};
 	MaskToItemType MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon; //掩码生成item的类型
-	bool is_load_model = false;
 	bool is_load_image = false;
 	QString load_image_path = "";
 	cv::Mat mask = {};
+
+	cv::Size input_size{};
 };

@@ -51,9 +51,9 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 
 	output_shape_widget = new ComboBoxHWidget(this);
 	output_shape_widget->setLabelText("Output:");
+	output_shape_widget->getComboBox()->addItem("Mask");
 	output_shape_widget->getComboBox()->addItem("Polygon");
 	output_shape_widget->getComboBox()->addItem("Rect");
-	output_shape_widget->getComboBox()->addItem("Mask");
 
 	output_shape_widget->setFixedHeight(26);
 	output_shape_widget->getComboBox()->setMinimumWidth(75);

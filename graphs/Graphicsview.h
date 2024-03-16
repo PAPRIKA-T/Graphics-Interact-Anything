@@ -23,6 +23,7 @@ class ViewToolBar;
 class QHBoxLayout;
 class GiantInteractionModeWidget;
 class InteractionModeStackWidget;
+class QTimer;
 
 class GraphicsView : public QGraphicsView
 {
@@ -65,6 +66,7 @@ signals:
     void mouseEnter(ImageSceneWidget2D*);
     void mouseLeave(ImageSceneWidget2D*);
     void mousePressed(ImageSceneWidget2D*);
+    void mouseEnterPixmapItem(bool);
 
 public slots:
     void hideAllText(); //全部文本隐藏
@@ -83,6 +85,9 @@ private:
     void keyDelete(); //删除函数
     void startPaintMode(QMouseEvent* event); //绘画模式启动！
     void startSamMode(QMouseEvent* event); //sam模式启动！
+    void moveAtSamMode(QMouseEvent* event); //sam模式移动！
+
+    void showMenuAfterMouseRelease(QMouseEvent* event); //鼠标释放后显示菜单
     enum class MOUSE_PRESS_STATUS {
         LEFT_BUTTON_PRESSED,
         RIGHT_BUTTON_PRESSED,
@@ -123,6 +128,7 @@ private:
     bool paint_cross = false; //绘制十字线
     bool is_enter_view = false; //鼠标是否在view移动
     bool is_actived = false; //是否激活(3D视图下具有焦点)
+    bool is_mouse_enter_pixmap_item = false; //鼠标是否进入图像项
 };
 
 #endif // GRAPHICSVIEW_H

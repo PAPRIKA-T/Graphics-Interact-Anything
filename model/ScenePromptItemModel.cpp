@@ -30,6 +30,7 @@ void ScenePromptItemModel::setSamInteractWidget(AiModelInteractWidget* s)
 void ScenePromptItemModel::setSam(Sam* s)
 {
     sam = s;
+    input_size = sam->getInputSize();
 }
 
 void ScenePromptItemModel::setGraphicsScene(GraphicsScene* s)
@@ -50,9 +51,8 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 bool ScenePromptItemModel::loadImage(const QString& image_path)
 {
     if (!sam)return false;
-    auto inputSize = sam->getInputSize();
     cv::Mat load_image{};
-    cv::resize(m_scene->getPixmapItem()->getOrignImageMat(false), load_image, inputSize);
+    cv::resize(m_scene->getPixmapItem()->getOrignImageMat(false), load_image, input_size);
     if (sam->loadImage(load_image)) {
         is_load_image = true;
         load_image_path = image_path;
@@ -148,28 +148,29 @@ void ScenePromptItemModel::removeAllPromptsItems()
     foreach(GraphicsItem * prompt_item, prompt_list){
         prompt_item->onActionRemoveSelf();
     }
+    emit m_scene->promptContinue();
 }
 
 void ScenePromptItemModel::generateAnnotation()
 {
     if (!sam)return;
+    clearPromptList();
     QSize origin_size = m_scene->getPixmapItem()->getPixmap().size(); //返回的是原始图像的尺寸
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
-    auto inputSize = sam->getInputSize();
     cv::Rect box_prompt = {};
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     foreach(GraphicsItem * prompt_item, prompt_list) {
         if (prompt_item->data(1) == "PositivePoint") {
             QPointF p = prompt_item->getCenterMeasurePos();
-            qreal p_x_convert = (p.x() * inputSize.width) / cv_origin_size.width;
-            qreal p_y_convert = (p.y() * inputSize.height) / cv_origin_size.height;
+            qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+            qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
             cv::Point cvPoint(p_x_convert, p_y_convert);
             positive_points.push_back(cvPoint);
         }
         else if (prompt_item->data(1) == "NegativePoint") {
             QPointF p = prompt_item->getCenterMeasurePos();
-            qreal p_x_convert = (p.x() * inputSize.width) / cv_origin_size.width;
-            qreal p_y_convert = (p.y() * inputSize.height) / cv_origin_size.height;
+            qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+            qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
             cv::Point cvPoint(p_x_convert, p_y_convert);
             negative_points.push_back(cvPoint);
         }
@@ -180,8 +181,8 @@ void ScenePromptItemModel::generateAnnotation()
             QPointF img_scale_p(scale, scale);
             for (PolygonPoint* p_item : lineseg_item->getPointItemList()) {
                 p = QpointFMultiplication(p_item->mapToItem(pixmap_item, p_item->getCenter()), img_scale_p);
-                qreal p_x_convert = (p.x() * inputSize.width) / cv_origin_size.width;
-                qreal p_y_convert = (p.y() * inputSize.height) / cv_origin_size.height;
+                qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+                qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
                 cv::Point cvPoint(p_x_convert, p_y_convert);
                 positive_points.push_back(cvPoint);
             }
@@ -193,8 +194,8 @@ void ScenePromptItemModel::generateAnnotation()
             QPointF img_scale_p(scale, scale);
             for (BPoint* p_item : lineseg_item->getPointItemList()) {
                 p = QpointFMultiplication(p_item->mapToItem(pixmap_item, p_item->getCenter()), img_scale_p);
-                qreal p_x_convert = (p.x() * inputSize.width) / cv_origin_size.width;
-                qreal p_y_convert = (p.y() * inputSize.height) / cv_origin_size.height;
+                qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+                qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
                 cv::Point cvPoint(p_x_convert, p_y_convert);
                 negative_points.push_back(cvPoint);
             }
@@ -202,10 +203,10 @@ void ScenePromptItemModel::generateAnnotation()
         else if (prompt_item->data(1) == "PromptRect") {
             QPointF p_s = prompt_item->getStartMeasurePos();
             QPointF p_e = prompt_item->getEdgeMeasurePos();
-            double ps_x_convert = (p_s.x() * inputSize.width) / cv_origin_size.width;
-            double ps_y_convert = (p_s.y() * inputSize.height) / cv_origin_size.height;
-            double pe_x_convert = (p_e.x() * inputSize.width) / cv_origin_size.width;
-            double pe_y_convert = (p_e.y() * inputSize.height) / cv_origin_size.height;
+            double ps_x_convert = (p_s.x() * input_size.width) / cv_origin_size.width;
+            double ps_y_convert = (p_s.y() * input_size.height) / cv_origin_size.height;
+            double pe_x_convert = (p_e.x() * input_size.width) / cv_origin_size.width;
+            double pe_y_convert = (p_e.y() * input_size.height) / cv_origin_size.height;
             cv::Point cvPSoint(ps_x_convert, ps_y_convert);
             cv::Point cvPEoint(pe_x_convert, pe_y_convert);
             box_prompt = cv::Rect{ cvPSoint, cvPEoint };
@@ -222,20 +223,17 @@ void ScenePromptItemModel::generateAnnotation()
 
     int output_shape = sam_interact_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
     if (output_shape == 0) {
-        MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
-        mask2Polygon(mask);
-        clearPromptList();
-    }
-    else if (output_shape == 1) {
-        MASK2ITEM_TYPE = MaskToItemType::MaskToRect;
-        mask2Rect(mask);
-        clearPromptList();
-    }
-    else if (output_shape == 2) {
         MASK2ITEM_TYPE = MaskToItemType::MaskToImg;
         mask2img(mask);
     }
-
+    else if (output_shape == 1) {
+        MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
+        mask2Polygon(mask);
+    }
+    else if (output_shape == 2) {
+        MASK2ITEM_TYPE = MaskToItemType::MaskToRect;
+        mask2Rect(mask);
+    }
 }
 
 void ScenePromptItemModel::Mask2Item()

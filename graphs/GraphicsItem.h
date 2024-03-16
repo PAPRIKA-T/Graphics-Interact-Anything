@@ -150,7 +150,7 @@ protected:
 
 /********************基本属性********************/
     int m_name = 0; //用于索引item（item的名字编号)
-    QList<std::pair<GraphicsItem*, void (GraphicsItem::*)(const QPointF&)>>set_point_fp_list; 
+    QList<std::pair<GraphicsItem*, void (GraphicsItem::*)(const QPointF&)>>set_point_fp_list = {};
     //scene点击时会根据链表的函数指针顺序依次对点赋值
     QMenu menu; //右键菜单
 
