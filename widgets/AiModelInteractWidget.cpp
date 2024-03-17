@@ -15,7 +15,7 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	main_layout = new QHBoxLayout(this);
 	embedding_btn = new GenericToolButton(this);
 	embedding_btn->setText("Embed");
-	embedding_btn->setObjectName("graphics_item_btn");
+	embedding_btn->setObjectName("view_attach_btn");
 	embedding_btn->setFixedSize(40, 20);
 
 	positive_point = new GenericToolButton(this);
@@ -45,7 +45,7 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 		btn->setFixedSize(btn_width, btn_height);
 		btn->setCheckable(true);
 		btn->setIconSize(QSize(15, 15));
-		btn->setObjectName("graphics_item_btn");
+		btn->setObjectName("view_attach_btn");
 	}
 	positive_point->setChecked(true);
 

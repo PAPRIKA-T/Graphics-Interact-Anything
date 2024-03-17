@@ -153,14 +153,13 @@ void ScenePromptItemModel::generateAnnotation()
 {
     QElapsedTimer timer;
     timer.start();
-
     if (!sam)return;
     clearPromptList();
-    QSize origin_size = m_scene->getPixmapItem()->getOriginalImage().size(); //返回的是原始图像的尺寸
+    GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
+    QSize origin_size = pixmap_item->getShowImage().size(); //返回的是原始图像的尺寸
     if (origin_size.isEmpty())return;
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
     cv::Rect box_prompt = {};
-    GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     foreach(GraphicsItem * prompt_item, prompt_list) {
         if (prompt_item->data(1) == "PositivePoint") {
             QPointF p = prompt_item->getCenterMeasurePos();
