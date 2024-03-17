@@ -30,8 +30,8 @@ TitleWidget::TitleWidget(QWidget* parent)
 {
     setFixedHeight(30);
     main_layout = new QHBoxLayout();
-    title_icon = new QLabel();
-    title_name = new QLabel();
+    title_icon = new QLabel(this);
+    title_name = new QLabel(this);
     title_name->setObjectName("title_name");
 
     //file菜单栏创建
@@ -88,8 +88,6 @@ TitleWidget::TitleWidget(QWidget* parent)
     QAction* help_version = new QAction("Version");
     QAction* help_about = new QAction("About");
     QAction* theme_divert = new QAction("Theme Divert");
-    theme_divert->setCheckable(true);
-    theme_divert->setChecked(true);
 
     connect(help_doc, &QAction::triggered, this, &TitleWidget::on_help_doc_clicked);
     connect(help_contact, &QAction::triggered, [=]() {
@@ -192,13 +190,4 @@ void TitleWidget::setMenuStyle()
     style_model.setMenuStyle(segment_menu);
     style_model.setMenuStyle(view_menu);
     style_model.setMenuStyle(help_menu);
-}
-
-void TitleWidget::paintEvent(QPaintEvent* event)
-{
-    QPainter painter(this);
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-    QWidget::paintEvent(event);
 }

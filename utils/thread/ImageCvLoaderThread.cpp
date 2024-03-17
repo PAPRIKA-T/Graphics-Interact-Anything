@@ -15,10 +15,10 @@ void ImageCvLoaderThread::run()
         return;
     }
 
-    orgin_img = cv::imread(pixmapPath.toStdString(), -1);
+    orgin_mat = cv::imread(pixmapPath.toStdString(), -1);
 
-    if (!orgin_img.empty()) {
-        emit imageLoaded(orgin_img); // 发送加载成功的图像信号
+    if (!orgin_mat.empty()) {
+        emit imageLoaded(orgin_mat); // 发送加载成功的图像信号
     }
     else {
         qDebug() << "Image load fail";

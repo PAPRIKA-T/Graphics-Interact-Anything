@@ -48,6 +48,21 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     turn_left_btn->setCustomTooltip("Previous");
     turn_right_btn->setCustomTooltip("Next");
 
+    button_list.append(mask_to_graphicsitem);
+    button_list.append(camera_btn);
+    button_list.append(zoom_btn);
+    button_list.append(color_reverse_btn);
+    button_list.append(fix_screen_btn);
+    button_list.append(center_on_btn);
+    button_list.append(rotateR_btn);
+    button_list.append(rotateL_btn);
+    button_list.append(turn_left_btn);
+    button_list.append(turn_right_btn);
+
+    foreach(QPushButton * btn, button_list) {
+        btn->setObjectName("view_attach_btn");
+    }
+
     connect(mask_to_graphicsitem, &QPushButton::clicked, this, &SceneToolWidget::onMaskToGraphicsItemBtn);
     connect(camera_btn, &QPushButton::clicked, this, &SceneToolWidget::onCameraBtn);
     connect(zoom_btn, &QPushButton::clicked, this, &SceneToolWidget::onZoomSceneBtn);
@@ -68,7 +83,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     line_thr->setLineWidth(1);
     line_thr->setContentsMargins(2, 5, 2, 5);
     QPalette palette = line_thr->palette();
-    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
+    palette.setColor(QPalette::WindowText, QColor(255, 255, 255));
     line_thr->setPalette(palette);
 
     main_layout->addWidget(line_thr);
@@ -85,7 +100,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     line_second->setLineWidth(1);
     line_second->setContentsMargins(2, 5, 2, 5);
     palette = line_second->palette();
-    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
+    palette.setColor(QPalette::WindowText, QColor(255, 255, 255));
     line_second->setPalette(palette);
 
     main_layout->addWidget(line_second);
@@ -95,6 +110,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     main_layout->addWidget(mask_to_graphicsitem);
     main_layout->setContentsMargins(2, 2, 2, 2);
     main_layout->setSpacing(6);
+
     setLayout(main_layout);
 }
 
@@ -142,7 +158,7 @@ void SceneToolWidget::onZoomSceneBtn(int checked)
 void SceneToolWidget::onColorReverseBtn()
 {
     QImage org_image = m_view->getGraphicsScene()->
-        getPixmapItem()->getPixmap().toImage();
+        getPixmapItem()->getShowImage();
     if (org_image.isNull()) return;
     // 循环获得每个像素的rgb，循环减，进行反转
     for (int w = 0; w < org_image.width(); ++w)
@@ -157,7 +173,7 @@ void SceneToolWidget::onColorReverseBtn()
     }
 
     m_view->getGraphicsScene()->
-        getPixmapItem()->updatePixmap(QPixmap::fromImage(org_image));
+        getPixmapItem()->updateShowImage(org_image);
 }
 
 void SceneToolWidget::onFixScreenBtn()

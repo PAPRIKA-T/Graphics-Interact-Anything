@@ -31,6 +31,7 @@ void LabelBoard::initWidget()
 
     QHeaderView* header = horizontalHeader();
     verticalHeader()->setVisible(false);
+    verticalHeader()->setDefaultSectionSize(20);
     header->setStretchLastSection(true);
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setMinimumSectionSize(30);//设置最小列宽
@@ -41,6 +42,13 @@ void LabelBoard::initWidget()
     setColumnWidth(2, 65);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_ITEM, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_POINT_NOSELECTED, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_POINT_SELECTED, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, Qt::blue, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, Qt::green, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, Qt::yellow, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, Qt::red, DEFAULT_LABEL);
+    setCurrentItem(itemAt(0, 0));
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::DoubleClicked);
     connect(this, &QTableWidget::cellChanged, this, &LabelBoard::onCellChanged);
@@ -49,6 +57,7 @@ void LabelBoard::initWidget()
 
 void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QString& label)
 {
+    blockSignals(true);
     int last_row = this->rowCount();
     QTableWidgetItem* id_item{};
     QTableWidgetItem* label_item{};
@@ -85,6 +94,7 @@ void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QStrin
     setCurrentItem(item_0);
     scrollToItem(item_0);
     connect(color_btn, &ColorButton::sentSelf, this, &LabelBoard::onColorChanged);
+    blockSignals(false);
 }
 
 bool LabelBoard::isRowHasAdded(const QString& id, const QString& label)

@@ -1,19 +1,19 @@
 #include "GraphicspixmapItem.h"
 #include "utils/thread/ImageCvLoaderThread.h"
 
-GraphicsPixmapItem::GraphicsPixmapItem(const QPixmap &pixmap)
-    :QGraphicsPixmapItem (),pix(pixmap)
+GraphicsPixmapItem::GraphicsPixmapItem(const QImage &img)
+    :QGraphicsPixmapItem (),show_image(img)
 {
     setFlags(QGraphicsItem::ItemIsMovable);
-    if (!pixmap.isNull()) setPixmap(pixmap);
+    if (!img.isNull()) setShowImage(img);
     setData(0,"GraphicsPixmapItem");}
 
-void GraphicsPixmapItem::setPixmap(const QPixmap &p)
+void GraphicsPixmapItem::setShowImage(const QImage &i)
 {
-    if (p.isNull()) pixmap_path = "";
-    pix = p;
-    origin_width = pix.width();
-    origin_height = pix.height();
+    if (i.isNull()) pixmap_path = "";
+    show_image = i;
+    origin_width = show_image.width();
+    origin_height = show_image.height();
 
     m_fScale = origin_width/origin_height;
     if (origin_width > origin_height)
@@ -29,20 +29,16 @@ void GraphicsPixmapItem::setPixmap(const QPixmap &p)
     scene_compare_origin_scale = fScaleW / origin_width;
 }
 
-void GraphicsPixmapItem::setPixmap(const QString& path)
+void GraphicsPixmapItem::setShowImage(const QString& path)
 {
     QElapsedTimer timer;
     timer.start();
-    if (!original_image.load(path)) {
+    if (!show_image.load(path)) {
         qDebug() << path <<"GraphicsPixmapItem::setPixmap(image load fail)";
         return;
     }
-    //pix = QPixmap::fromImage(original_image);
-    //origin_width = pix.width();
-    //origin_height = pix.height();
-
-    origin_width = original_image.width();
-    origin_height = original_image.height();
+    origin_width = show_image.width();
+    origin_height = show_image.height();
     m_fScale = origin_width / origin_height;
     if (origin_width > origin_height)
     {
@@ -55,15 +51,13 @@ void GraphicsPixmapItem::setPixmap(const QString& path)
         fScaleW = fScaleH * m_fScale;
     }
     scene_compare_origin_scale = fScaleW / origin_width;
-
     setPixmapPath(path);
-
     qDebug() << "GraphicsPixmapItem::setPixmap " << timer.elapsed();
 }
 
-void GraphicsPixmapItem::updatePixmap(const QPixmap& p)
+void GraphicsPixmapItem::updateShowImage(const QImage& i)
 {
-    pix = p;
+    show_image = i;
     update();
 }
 
@@ -80,8 +74,8 @@ void GraphicsPixmapItem::setPixmapPath(const QString& f)
 
 cv::Mat GraphicsPixmapItem::getOrignImageMat(bool clone)
 {
-    if (!clone) return orgin_img;
-    else return orgin_img.clone();
+    if (!clone) return orgin_mat;
+    else return orgin_mat.clone();
 }
 
 // 碰撞矩形
@@ -94,9 +88,9 @@ QRectF GraphicsPixmapItem::boundingRect() const
     return rect;
 }
 
-void GraphicsPixmapItem::showOriginalPixmap()
+void GraphicsPixmapItem::showOriginalImage()
 {
-    pix = original_pixmap;
+    show_image = original_image;
 	update();
 }
 
@@ -108,17 +102,17 @@ void GraphicsPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     QRect img_rect(0,0,
                    static_cast<int>(fScaleW),static_cast<int>(fScaleH));
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
-    painter->drawImage(img_rect,original_image);
-    //painter->drawPixmap(img_rect,pix);
+    painter->drawImage(img_rect, show_image);
 }
 
 void GraphicsPixmapItem::LoadCvImageInNewThread(const QString& f)
 {
     ImageCvLoaderThread* image_read_thread = new ImageCvLoaderThread();
     connect(image_read_thread, &ImageCvLoaderThread::imageLoaded, [=](const cv::Mat& image) {
-        orgin_img = image;
-        //original_pixmap = pix;
-        //original_image = pix.toImage();
+        orgin_mat = image;
+        original_pixmap = QPixmap::fromImage(show_image);
+        original_image = show_image;
+
         });
     image_read_thread->setPixmapPath(f);
 }

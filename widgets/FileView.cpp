@@ -125,7 +125,7 @@ void FileView::readImage()
     {
         GraphicsScene* m_scene = view_list_container->getActivedView()->getGraphicsScene();
         foreplay_widget->saveItemToPathAllForm(m_scene);
-        m_scene->changePixmap(filepath);
+        m_scene->changeShowImage(filepath);
         status_widget->setRightLabelText(filepath);
         setFilePath(filepath);
         QStringList list = filepath.split('/');
@@ -213,7 +213,7 @@ void FileView::readImageDir()
     QStandardItem* first_child = tree_model->itemFromIndex(tree_model->index(0, 0, item->index()));
     pixpath = first_child->data().toString();
     status_widget->setRightLabelText(pixpath);
-    m_scene->changePixmap(pixpath);
+    m_scene->changeShowImage(pixpath);
     dirpath = dirpath + "/";
     load_filepath = pixpath;
     foreplay_widget->setAnnotationReadPath(dirpath);
@@ -238,10 +238,10 @@ void FileView::readITKImage()
         itk_helper->readNiiImage(filepath.toStdString().c_str());
         //vtk_widget->AddActorFromITK(itk_helper->ITK2VTKactor());
         //vtk_widget->visualizeNii(filepath);
-        QPixmap pix{};
+        QImage img{};
         for (int i = 0; i < 3; ++i) {
-            itk_helper->processAndConvertToPixmap(pix, i);
-            view_list[i]->getGraphicsScene()->changePixmap(pix);
+            itk_helper->processAndConvertToQImage(img, i);
+            view_list[i]->getGraphicsScene()->changeShowImage(img);
             view_list[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(filepath);
             view_list[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
@@ -334,10 +334,10 @@ void FileView::readITKImageDir()
         setFilePath(pixpath);
         status_widget->setRightLabelText(load_filepath);
         itk_helper->readNiiImage(load_filepath.toStdString().c_str());
-        QPixmap pix{};
+        QImage img{};
         for (int i = 0; i < 3; ++i) {
-            itk_helper->processAndConvertToPixmap(pix, i);
-            view_list_container->getViewList()[i]->getGraphicsScene()->changePixmap(pix);
+            itk_helper->processAndConvertToQImage(img, i);
+            view_list_container->getViewList()[i]->getGraphicsScene()->changeShowImage(img);
             view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(load_filepath);
             view_list_container->getViewList()[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
@@ -377,7 +377,7 @@ void FileView::readImageAtIndex(const QModelIndex& index)
             changeITKImage(load_filepath);
         }
         else {
-            m_scene->changePixmap(load_filepath);
+            m_scene->changeShowImage(load_filepath);
             foreplay_widget->readItemFromPathAllForm(m_scene);
             status_widget->setRightLabelText(load_filepath);
             m_scene->updateRbText(item->row() + 1, parent_item->rowCount());
@@ -394,10 +394,10 @@ void FileView::changeITKImage(const QString filepath)
     if (!filepath.trimmed().isEmpty())
     {
         itk_helper->readNiiImage(filepath.toStdString().c_str());
-        QPixmap pix{};
+        QImage img{};
         for (int i = 0; i < 3; ++i) {
-            itk_helper->processAndConvertToPixmap(pix, i);
-            view_list_container->getViewList()[i]->getGraphicsScene()->changePixmap(pix);
+            itk_helper->processAndConvertToQImage(img, i);
+            view_list_container->getViewList()[i]->getGraphicsScene()->changeShowImage(img);
             view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(filepath);
             view_list_container->getViewList()[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
@@ -527,7 +527,7 @@ void FileView::onSliceChangeOneByOne(bool dir)
 {
     if (!itk_helper)return;
     GraphicsView* emit_view = dynamic_cast<GraphicsView*>(sender());
-    QPixmap pix{};
+    QImage img{};
     QList<GraphicsView*> view_list = view_list_container->getViewList();
     for (int i = 0; i < 3; ++i) {
         if (view_list[i] == emit_view) {
@@ -540,9 +540,9 @@ void FileView::onSliceChangeOneByOne(bool dir)
                 --slice;
                 if (slice < 0)return;
             }
-            itk_helper->processAndConvertToPixmap(pix, i, slice);
-            emit_view->getGraphicsScene()->getPixmapItem()->updatePixmap(pix);
-            emit_view->getGraphicsScene()->getThumbnailItem()->updatePixmap(pix);
+            itk_helper->processAndConvertToQImage(img, i, slice);
+            emit_view->getGraphicsScene()->getPixmapItem()->updateShowImage(img);
+            emit_view->getGraphicsScene()->getThumbnailItem()->updateShowImage(img);
             emit_view->getGraphicsScene()->updateRbText(
                 itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
             return;

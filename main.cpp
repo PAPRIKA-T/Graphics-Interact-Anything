@@ -5,7 +5,7 @@
 #include "model/StyleSheetConfigModel.h"
 
 int GraphicsItem::count = 0; 
-StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::sheet_type = StyleSheetConfigModel::StyleSheetType::Dark;
+StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::sheet_type = StyleSheetConfigModel::StyleSheetType::Light;
 
 int main(int argc, char *argv[])
 {

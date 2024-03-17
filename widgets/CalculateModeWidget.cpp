@@ -11,19 +11,8 @@ CalculateModeWidget::CalculateModeWidget(QWidget* parent)
 	main_layout = new QHBoxLayout(this);
 
     cal_center_btn = new GenericToolButton();
-    cal_center_btn->setObjectName("graphicsitem_btn");
-    cal_center_btn->setFixedSize(btn_width, btn_height);
-    cal_center_btn->setCheckable(true);
-
     cal_vertical_btn = new GenericToolButton();
-    cal_vertical_btn->setObjectName("graphicsitem_btn");
-    cal_vertical_btn->setFixedSize(btn_width, btn_height);
-    cal_vertical_btn->setCheckable(true);
-
     cal_angle_btn = new GenericToolButton();
-    cal_angle_btn->setObjectName("graphicsitem_btn");
-    cal_angle_btn->setFixedSize(btn_width, btn_height);
-    cal_angle_btn->setCheckable(true);
 
     cal_center_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_center.png"));
     cal_vertical_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_verti.png"));
@@ -45,7 +34,7 @@ CalculateModeWidget::CalculateModeWidget(QWidget* parent)
         btn->setCheckable(true);
         btn->setIconSize(QSize(14, 14));
         main_layout->addWidget(btn);
-        btn->setObjectName("graphics_item_btn");
+        btn->setObjectName("view_attach_btn");
     }
     cal_center_btn->setChecked(true);
 

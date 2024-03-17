@@ -3,18 +3,17 @@
 #include <QColor>
 #include <QDebug>
 
-QPixmap CVOperation::matToPixmap(const cv::Mat& cvImage)
+QImage CVOperation::matToQImage(const cv::Mat& cvImage)
 {
     // 转换为 QImage
     QImage qImage(cvImage.data, cvImage.cols, cvImage.rows, cvImage.step, QImage::Format_RGB888);
     // 将 QImage 转换为 QPixmap
-    QPixmap pixmap = QPixmap::fromImage(qImage);
-    return pixmap;
+    return qImage;
 }
 
-cv::Mat CVOperation::QPixmapToMat(const QPixmap& pixmap, bool inCloneImageData)
+cv::Mat CVOperation::QImageToMat(const QImage& image, bool inCloneImageData)
 {
-    QImage org_image = pixmap.toImage();
+    QImage org_image = image;
     switch (org_image.format())
     {
         // 8-bit, 4 channel
@@ -75,16 +74,16 @@ cv::Mat CVOperation::getAnnotation(const cv::Mat& org_image, const cv::Mat& mask
     return result;
 }
 
-QPixmap CVOperation::getAnnotation(const QPixmap& org_image, const cv::Mat& mask, QColor color, bool random)
+QImage CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
 {
     if (org_image.isNull() || mask.empty()) {
         std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
-        QPixmap emptyPixmap{};
-        return emptyPixmap;
+        QImage emptyImage{};
+        return emptyImage;
     }
     // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
 
-    QImage image = org_image.toImage();
+    QImage image = org_image;
     if (random) {
         // generate random color
         cv::RNG rng(time(0));
@@ -99,36 +98,35 @@ QPixmap CVOperation::getAnnotation(const QPixmap& org_image, const cv::Mat& mask
             }
         }
     }
-
-    return  QPixmap::fromImage(image);
+    return image;
 }
 
-QPixmap CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
-{
-    if (org_image.isNull() || mask.empty()) {
-        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
-        QPixmap emptyPixmap{};
-        return emptyPixmap;
-    }
-    // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
-
-    QImage image{ org_image.size(), QImage::Format_ARGB32};
-    image = org_image;
-    
-    if (random) {
-        // generate random color
-        cv::RNG rng(time(0));
-        cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-        color = QColor(cv_color[0], cv_color[1], cv_color[2]);
-    }
-    color.setAlpha(200);
-    // 设置被掩膜遮住的部分的颜色
-    for (int i = 0; i < mask.rows; ++i) {
-        for (int j = 0; j < mask.cols; ++j) {
-            if (mask.at<uchar>(i, j) != 0) {
-                image.setPixelColor(j, i, color);
-            }
-        }
-    }
-    return  QPixmap::fromImage(image);
-}
+//QImage CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
+//{
+//    if (org_image.isNull() || mask.empty()) {
+//        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
+//        QImage emptyImage{};
+//        return emptyImage;
+//    }
+//    // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
+//
+//    QImage image{ org_image.size(), QImage::Format_ARGB32};
+//    image = org_image;
+//    
+//    if (random) {
+//        // generate random color
+//        cv::RNG rng(time(0));
+//        cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+//        color = QColor(cv_color[0], cv_color[1], cv_color[2]);
+//    }
+//    color.setAlpha(200);
+//    // 设置被掩膜遮住的部分的颜色
+//    for (int i = 0; i < mask.rows; ++i) {
+//        for (int j = 0; j < mask.cols; ++j) {
+//            if (mask.at<uchar>(i, j) != 0) {
+//                image.setPixelColor(j, i, color);
+//            }
+//        }
+//    }
+//    return image;
+//}

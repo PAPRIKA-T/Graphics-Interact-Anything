@@ -36,8 +36,8 @@ public:
     bool getIsPaintPromptItem(); //获取是否在绘制提示图元标志
 
     /***********图像设置***********/
-    void changePixmap(const QPixmap& p);//切换显示图像
-    void changePixmap(const QString& pixmap_path);//切换显示图像
+    void changeShowImage(const QImage&);//切换显示图像
+    void changeShowImage(const QString&);//切换显示图像
 
     /***********scene文本、缩略图图元***********/
     GraphicsPixmapItem* getPixmapItem(); //获取图像

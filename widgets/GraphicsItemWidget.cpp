@@ -14,31 +14,21 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     shape_btn_layout = new QHBoxLayout(this);
 
     destory_btn = new GenericToolButton();
-    destory_btn->setObjectName("graphicsitem_btn");
+    destory_btn->setObjectName("view_attach_btn");
     destory_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/destory.png"));
     destory_btn->setFixedSize(btn_width, btn_height);
     connect(destory_btn, &QPushButton::clicked, this, &GraphicsItemWidget::onDestoryBtn);
     //设置图形按钮
     point_btn = new GenericToolButton();
-    point_btn->setObjectName("graphicsitem_btn");
     rect_btn = new GenericToolButton();
-    rect_btn->setObjectName("graphicsitem_btn");
     line_btn = new GenericToolButton();
-    line_btn->setObjectName("graphicsitem_btn");
     round_btn = new GenericToolButton();
-    round_btn->setObjectName("graphicsitem_btn");
     pie_btn = new GenericToolButton();
-    pie_btn->setObjectName("graphicsitem_btn");
     ellipse_btn = new GenericToolButton();
-    ellipse_btn->setObjectName("graphicsitem_btn");
     line_segment_btn = new GenericToolButton();
-    line_segment_btn->setObjectName("graphicsitem_btn");
     polygon_btn = new GenericToolButton();
-    polygon_btn->setObjectName("graphicsitem_btn");
     angle_btn = new GenericToolButton();
-    angle_btn->setObjectName("graphicsitem_btn");
     parallel_line_btn = new GenericToolButton();
-    parallel_line_btn->setObjectName("graphicsitem_btn");
 
     draw_button_list.append(point_btn);
     draw_button_list.append(line_btn);
@@ -73,7 +63,7 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
             btn->setFixedSize(btn_width, btn_height);
             btn->setCheckable(true);
             btn->setIconSize(QSize(15, 15));
-            btn->setObjectName("graphics_item_btn");
+            btn->setObjectName("view_attach_btn");
             exclusive_action_group->addButton(btn);
         }
     draw_button_list[0]->setChecked(true);

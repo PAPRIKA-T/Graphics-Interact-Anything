@@ -73,15 +73,6 @@ const QString ForePlayWidget::getAnnotationSaveForm()
     return annotation_save_path_widget->getFormComboxContent();
 }
 
-void ForePlayWidget::paintEvent(QPaintEvent* event)
-{
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-    Q_UNUSED(event);
-}
-
 void ForePlayWidget::annotationReadPathChange(const QString& path)
 {
     foreach(FileViewParentItem * parent_item, file_view->getViewParentItemList()) {

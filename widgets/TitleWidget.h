@@ -28,9 +28,6 @@ public:
     void setParentWidget(Widget*);
     void setMenuStyle();
 
-protected:
-    virtual void paintEvent(QPaintEvent* event) override;
-
 public slots:
     void on_help_doc_clicked();
 private:

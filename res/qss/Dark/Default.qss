@@ -84,74 +84,86 @@ QCheckBox::indicator:unchecked
 }
 
 /************************************************Color Widget************************************************/
-QWidget#title_widget
-{
-    background-color:rgb(37, 37, 37);
-}
-
 QLabel#title_name
 {
     color:white;
 }
 
-Widget
+QWidget#this_window
 {
     background-color:rgb(37, 37, 37);
 }
 
-StatusWidget
+LabelBoardWithTool
 {
-    background-color:rgb(37, 37, 37);
+    background-color:rgb(50, 50, 50);
+}
+
+QStackedWidget#multi_fuction_stack_widget
+{
+    background-color:rgb(58, 58, 58);
 }
 
 ViewToolBar
 {
-    background-color:rgba(56, 56, 56, 200);
+    background-color:rgba(40, 40, 40, 200);
 }
 
-LabelBoardToolWidget
+QWidget#interaction_mode_stack_widget
 {
-    background-color:rgb(48, 48, 48);
-}
-
-QGraphicsView 
-{
-    background-color:rgb(70, 70, 70);
-    border: none;
-}
-
-QStackedWidget#interaction_mode_stack_widget
-{
-    background-color:rgba(58, 58, 58, 200);
+    background-color:rgba(40, 40, 40, 200);
     border-bottom-right-radius: 6px;
 }
 
-/*******************QSplitter*********************/
+/*******************QScrollBar******************/
+/*************vertical*************/
+QScrollBar:vertical 
+{
+    background-color: rgb(30, 30, 30);
+    width: 12px;
+}
+
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
+{
+    background-color:rgb(60, 60, 60);
+}
+
+QScrollBar::handle:vertical
+{
+    background-color:rgb(70, 70, 70);
+}
+
+/*************horizontal*************/
+
+QGraphicsView 
+{
+    border: none;
+    background-color:rgb(0, 0, 0);
+}
+
+/*********************************************Transparent*************************************************/
 QSplitter
 {
-    background-color:rgb(37, 37, 37);
+    background-color:transparent;
 }
 QSplitter::handle
 {
     background-color:transparent;
 }
 
-/*******************MagGlass widget*********************/
-QWidget#mag_glass_widget
+QWidget#title_widget
 {
-    background-color:rgb(76, 76, 76);
-    border: none;
+    background-color:transparent;
 }
 
-/*********************************************Transparent*************************************************/
 SceneToolWidget
 {
     background-color:transparent;
 }
 
-QWidget#label_board_with_tool
+QWidget#status_widget
 {
-
+    background-color:transparent;
 }
 
 QScrollArea
@@ -160,19 +172,7 @@ QScrollArea
     border:none;
 }
 
-QWidget#scroll_area_widget
-{
-    background-color:transparent;
-}
-
-/*******************SamWidget*********************/
-SamWidget#sam_widget
-{
-    background-color:transparent;
-}
-
-/*******************SamWidget*********************/
-ForePlayWidget#foreplay_widget
+QWidget#foreplay_widget
 {
     background-color:transparent;
 }
@@ -186,45 +186,20 @@ QHeaderView
 QHeaderView::section
 {
     color:rgb(240, 240, 240);
-    font-size: 11px;  /* 设置字体大小 */
+    font-size: 12px;  /* 设置字体大小 */
     font-weight: bold;
     background-color:transparent;
 }
 
 QTableView
 {
-    background-color:rgb(58, 58, 58);
+    background-color:transparent;
+    selection-background-color: #334d80; /*选中区域的背景色*/
     alternate-background-color:rgb(53,53,53);
     border: none;
-    font-size:11px;
+    font-size:12px;
     gridline-color: transparent;
     selection-color: #fe5820;
-    selection-background-color: rgb(55, 55, 55); /*选中区域的背景色*/
-}
-
-QTableView#item_index_widget
-{
-    background-color:rgb(58, 58, 58);
-    alternate-background-color:rgb(53,53,53);
-    border: none;
-    font-size:11px;
-    gridline-color: transparent;
-    selection-color: #fe5820;
-    selection-background-color: rgb(55, 55, 55); /*选中区域的背景色*/
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-QTableView#label_board_widget
-{
-    background-color:rgb(53, 53, 53);
-    alternate-background-color:rgb(48,48,48);
-    border: none;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    gridline-color: transparent;
-    selection-color: #fe5820;
-    selection-background-color: rgb(57, 80, 124); /*选中区域的背景色*/
 }
 
 QTableView::indicator:enabled
@@ -247,7 +222,7 @@ QTableView::item
 {
     font-family:"MicrosoftYaHei";
 	font-size:8px;
-    height:10px;
+    height:8px;
 }
 
 QTableView::item:hover
@@ -267,7 +242,7 @@ QTreeView::branch:open:has-children{
 
 FileView
 {
-    background-color:rgb(58, 58, 58);
+    background-color:transparent;
     alternate-background-color:rgb(53,53,53);
     color:#ced4da;
     show-decoration-selected: 1;
@@ -295,28 +270,6 @@ FileView#file_view::item:hover
     background-color:rgba(150, 51, 51, 100);
 }
 
-
-/*******************QScrollBar******************/
-/*************vertical*************/
-QScrollBar:vertical 
-{
-    background-color: rgb(30, 30, 30);
-    width: 12px;
-}
-
-QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
-{
-    background-color:rgb(60, 60, 60);
-}
-
-QScrollBar::handle:vertical
-{
-    background-color:rgb(70, 70, 70);
-}
-
-/*************horizontal*************/
-
-
 /*************************************************button style************************************************/
 GenericToolButton
 {
@@ -329,7 +282,7 @@ GenericToolButton
 GenericToolButton:hover
 {
     color:rgb(240, 240, 240);
-    background-color:rgba(88, 88, 88, 150);
+    background-color:rgb(60, 60, 60);
 }
 GenericToolButton:pressed
 {
@@ -347,65 +300,27 @@ GenericToolButton::menu-indicator
 }
 
 /*******stack_btn*******/
-GenericToolButton#stack_btn
-{
-    color:#FFFFFFFF;
-    font-family:MicrosoftYaHei;
-    font-size:13px;
-    background-color:transparent;
-
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
 GenericToolButton#stack_btn:checked
 {
-    color:#FFFFFFFF;
     background-color:rgb(58, 58, 58);
-}
-GenericToolButton#stack_btn:hover
-{
-    background-color:rgba(60, 60, 60, 100);
 }
 
 /*******interaction_mode_btn*******/
-GenericToolButton#interaction_mode_btn
-{
-    background-color:rgb(48, 48, 48);
-    border-radius: 4px;
-}
-GenericToolButton#interaction_mode_btn:hover
-{
-    color:rgb(240, 240, 240);
-    background-color:rgba(88, 88, 88, 150);
-}
 GenericToolButton#interaction_mode_btn:pressed
 {
-    color:rgb(240, 240, 240);
     background-color:rgb(65,65,65);
 }
 GenericToolButton#interaction_mode_btn:checked
 {
-    background-color:#0082B2;
+    background-color:#4772b3;
 }
 
-
-/*******graphics_item_btn*******/
-GenericToolButton#graphics_item_btn
+/*******view_attach_btn*******/
+GenericToolButton#view_attach_btn:checked
 {
-    background-color:rgb(90, 90, 90);
-    color:rgb(200, 200, 200);
+    background-color:rgb(255, 60, 60);
 }
-GenericToolButton#graphics_item_btn:hover
+GenericToolButton#view_attach_btn:pressed
 {
-    color:rgb(240, 240, 240);
-    background-color:rgba(88, 88, 88, 150);
-}
-GenericToolButton#graphics_item_btn:checked
-{
-    background-color:#2A8CB1;
-}
-GenericToolButton#graphics_item_btn:pressed
-{
-    color:rgb(240, 240, 240);
     background-color:rgb(65,65,65);
 }

@@ -88,14 +88,14 @@ void ScenePromptItemModel::segmentAnything()
     cv::normalize(maskAuto, maskAuto, 0, 255, cv::NORM_MINMAX, CV_8UC1);
     maskAuto.convertTo(maskAuto, CV_8UC1);
 
-    QSize origin_size = m_scene->getPixmapItem()->getPixmap().size();
+    QSize origin_size = m_scene->getPixmapItem()->getShowImage().size();
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
     cv::resize(maskAuto, maskAuto, cv_origin_size);
 
     cv::Mat org_image = CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(true), maskAuto);
-    QPixmap mask_image = CVOperation::matToPixmap(org_image);
+    QImage mask_image = CVOperation::matToQImage(org_image);
     mask = maskAuto;
-    m_scene->getPixmapItem()->updatePixmap(mask_image);
+    m_scene->getPixmapItem()->updateShowImage(mask_image);
 }
 
 void ScenePromptItemModel::mask2Rect(const cv::Mat& mask)
@@ -138,8 +138,8 @@ void ScenePromptItemModel::mask2img(const cv::Mat& mask)
 
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
-    QPixmap mask_image = CVOperation::getAnnotation(pixmap_item->getOriginalImage(), mask, c, false);
-    pixmap_item->updatePixmap(mask_image);
+    QImage mask_image = CVOperation::getAnnotation(pixmap_item->getOriginalImage(), mask, c, false);
+    pixmap_item->updateShowImage(mask_image);
 }
 
 void ScenePromptItemModel::removeAllPromptsItems()
@@ -257,8 +257,7 @@ void ScenePromptItemModel::removeItemFromPromptList()
     GraphicsItem* self = dynamic_cast<GraphicsItem*>(sender());
     prompt_list.removeOne(self);
     if (prompt_list.size() == 0) {
-        QPixmap p(m_scene->getPixmapItem()->getPixmapPath());
-        m_scene->getPixmapItem()->updatePixmap(p);
+        m_scene->getPixmapItem()->showOriginalImage();
         clearMask();
     }
 }

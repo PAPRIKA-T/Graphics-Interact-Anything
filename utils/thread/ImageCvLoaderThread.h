@@ -18,5 +18,5 @@ public slots:
 
 private:
     QString pixmapPath{};
-    cv::Mat orgin_img{};
+    cv::Mat orgin_mat{};
 };

@@ -13,9 +13,9 @@
 GraphicsScene::GraphicsScene(QWidget *parent)
     :QGraphicsScene (parent)
 {
-    QPixmap pix;
-    pixmap_item = new GraphicsPixmapItem(pix);
-    thumbnail_item = new ThumbnailPixmapItem(pix);
+    QImage img;
+    pixmap_item = new GraphicsPixmapItem(img);
+    thumbnail_item = new ThumbnailPixmapItem(img);
     thumbnail_item->setGraphicsScene(this);
     setItemIndexMethod(QGraphicsScene::NoIndex);
     addItem(pixmap_item);
@@ -76,19 +76,19 @@ bool GraphicsScene::getIsPaintPromptItem()
     return is_paint_prompt_item;
 }
 
-void GraphicsScene::changePixmap(const QPixmap& p)
+void GraphicsScene::changeShowImage(const QImage& img)
 {
-    pixmap_item->setPixmap(p);
-    thumbnail_item->setPixmap(pixmap_item->getPixmap());
+    pixmap_item->setShowImage(img);
+    thumbnail_item->setShowImage(pixmap_item->getShowImage());
     m_view->getViewTransFormModel()->setOriginPosition(QPoint((width() - pixmap_item->getFscaleW()) / 2,
         (height() - pixmap_item->getFscaleH()) / 2));
     m_view->getViewTransFormModel()->resetTransform();
 }
 
-void GraphicsScene::changePixmap(const QString& pixmap_path)
+void GraphicsScene::changeShowImage(const QString& image_path)
 {
-    pixmap_item->setPixmap(pixmap_path);
-    thumbnail_item->setPixmap(pixmap_item->getPixmap());
+    pixmap_item->setShowImage(image_path);
+    thumbnail_item->setShowImage(pixmap_item->getShowImage());
     m_view->getViewTransFormModel()->setOriginPosition(QPoint((width() - pixmap_item->getFscaleW()) / 2,
         (height() - pixmap_item->getFscaleH()) / 2));
     m_view->getViewTransFormModel()->resetTransform();
@@ -565,7 +565,7 @@ void GraphicsScene::startAiModelSegment()
 }
 void GraphicsScene::samSegmentRealTime()
 {
-    pixmap_item->showOriginalPixmap();
+    pixmap_item->showOriginalImage();
     startAiModelSegment();
 }
 
@@ -821,9 +821,9 @@ void GraphicsScene::clearSceneGraphicsItem()
 
 void GraphicsScene::resetScene()
 {
-    QPixmap pix;
+    QImage img{};
     clearSceneGraphicsItem();
-    changePixmap(pix);
+    changeShowImage(img);
     text_right_bottom->setPlainText("0 of 0");
     updateRtText();
     update();

@@ -47,6 +47,8 @@ GraphicsView::GraphicsView(QWidget *parent) :
     initLayout();
     connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
     connect(m_scene, &GraphicsScene::promptContinue, this, &GraphicsView::promptContinue);
+
+    //setBackgroundBrush(QBrush(QColor(0, 0, 0)));
 }
 
 GraphicsView::~GraphicsView()
@@ -169,7 +171,7 @@ void GraphicsView::setEnterView(bool ok)
 
 const QPoint& GraphicsView::getMouseCoordinate()
 {
-    if (pixmap_item->getPixmap().isNull()) {
+    if (pixmap_item->getShowImage().isNull()) {
         m_present_pos_on_origin_image = mapToScene(m_present_pos).toPoint();
     }
     else {
@@ -722,7 +724,6 @@ void GraphicsView::paintEvent(QPaintEvent *event)
         //绘制纵向线
         painter.drawLine(QPoint(m_present_pos.rx(), 0), QPoint(m_present_pos.rx(), height()));
     }
-
 }
 
 void GraphicsView::enterEvent(QEnterEvent* event)

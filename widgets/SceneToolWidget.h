@@ -7,6 +7,7 @@ class GraphicsView;
 class QHBoxLayout;
 class GenericToolButton;
 class GiantInteractionModeWidget;
+class QPushButton;
 
 /*************************SceneToolWidget************************/
 class SceneToolWidget : public QWidget
@@ -33,6 +34,8 @@ private:
     QHBoxLayout* main_layout = nullptr;
     FileView* file_view = nullptr;
     GraphicsView* m_view = nullptr;
+
+    QList<QPushButton*> button_list; //按钮链表
     GenericToolButton* mask_to_graphicsitem = nullptr;
     GenericToolButton* camera_btn = nullptr;
     GenericToolButton* zoom_btn = nullptr;

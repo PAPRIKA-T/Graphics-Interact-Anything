@@ -23,7 +23,7 @@ public:
     void setAnnotationSavePath(const QString& path);
     const QString getAnnotationReadForm();
     const QString getAnnotationSaveForm();
-    virtual void paintEvent(QPaintEvent* event) override;
+
     ChosePathWidget* getReadPathWidget() { return annotation_read_path_widget; }
     ChosePathWidget* getSavePathWidget() { return annotation_save_path_widget; }
 

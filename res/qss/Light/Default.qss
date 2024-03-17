@@ -2,17 +2,16 @@
 QComboBox
 {   
     color:#fe5820;
-    background-color:transparent;
+    background-color:rgb(180, 180, 180);
     border: none;
-    font-size:14px;
+    font-size:13px;
+    border-radius: 6px;
 }
 
-QComboBox QAbstractItemView 
+QComboBox QAbstractItemView::item:selected
 {
-    /*outline: 0px solid gray;*/   /* 选定项的虚框 */
-    color: white;
-    background-color: rgb(65, 65, 65);   /* 整个下拉窗体的背景色 */
-    selection-background-color: transparent;   /* 整个下拉窗体被选中项的背景色 */
+    background-color:rgb(88, 88, 88); /* QAction鼠标悬停或选中的背景色 */
+    color: white; /* QAction鼠标悬停或选中时的文字颜色 */
 }
 
 QComboBox::drop-down {
@@ -28,19 +27,19 @@ QComboBox::down-arrow
     background: transparent; /* 下拉箭头的的背景色 */
     padding: 0px 0px 0px 0px; /* 上内边距、右内边距、下内边距、左内边距 */
  
-    image: url(:/res/background-image/left_arrow.png);
+    image: url(:/res/qss/Dark/background-image/left_arrow.png);
 }
 
 /* 点击下拉箭头 */
 QComboBox::down-arrow:on 
 { 
-    image: url(:/res/background-image/bottom_arrow.png); /* 显示上拉箭头 */
+    image: url(:/res/qss/Dark/background-image/bottom_arrow.png); /* 显示上拉箭头 */
 }
 
 /*******************QLabel*********************/
 QLabel
 {
-    color:rgb(240, 240, 240);
+    color:#1d1c1c;
     font-family:MicrosoftYaHei;
     font-size:14px;
 }
@@ -48,7 +47,7 @@ QLabel
 /*******************QLineEdit*********************/
 QLineEdit
 {
-    color: white;
+    color: #1d1c1c;
     font-family:MicrosoftYaHei;
     background-color:transparent;
     border:none;
@@ -67,64 +66,93 @@ QCheckBox::indicator
 
 QCheckBox::indicator:checked
 {
-	image: url(:/res/background-image/checkbox.png);
+	image: url(:/res/qss/GenericStyle/background-image/checkbox.png);
 }
 
 QCheckBox::indicator:unchecked
 {
-	image: url(:/res/background-image/uncheckbox.png);
+	image: url(:/res/qss/GenericStyle/background-image/uncheckbox.png);
 }
 
 /************************************************Color Widget************************************************/
-QWidget#title_widget
-{
-    background-color:rgb(37, 37, 37);
-}
-
 QLabel#title_name
 {
-    color:white;
-}
-ViewToolBar
-{
-    background-color:rgb(56, 56, 56);
+    color:#1d1c1c;
 }
 
-LabelBoardToolWidget
+QWidget#this_window
 {
-    background-color:rgb(48, 48, 48);
+    background-color:#fffefb;
 }
+
+LabelBoardWithTool
+{
+    background-color:rgb(235, 235, 235);
+}
+
+QStackedWidget#multi_fuction_stack_widget
+{
+    background-color:rgb(235, 235, 235);
+}
+
+ViewToolBar
+{
+    background-color:rgba(40, 40, 40, 200);
+}
+
+QWidget#interaction_mode_stack_widget
+{
+    background-color:rgba(40, 40, 40, 200);
+    border-bottom-right-radius: 6px;
+}
+
+/*******************QScrollBar******************/
+/*************vertical*************/
+QScrollBar:vertical 
+{
+    background-color: rgb(30, 30, 30);
+    width: 12px;
+}
+
+QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
+{
+    background-color:rgb(200, 200, 200);
+}
+
+QScrollBar::handle:vertical
+{
+    background-color:rgb(240, 240, 240);
+}
+
+/*************horizontal*************/
 
 QGraphicsView 
 {
-    background-color:rgb(65, 65, 65);
+    border: none;
+    background-color:rgb(0, 0, 0);
 }
 
-QWidget#label_board_under_widget
+/*********************************************Transparent*************************************************/
+QSplitter
 {
-    background-color:rgb(63, 63, 63);
+    background-color:transparent;
 }
-
-
-StatusWidget
+QSplitter::handle
 {
-    background-color:rgb(37, 37, 37);
+    background-color:transparent;
 }
 
-QWidget#rb_stack_widget
-{
-    background-color:rgb(58, 58, 58);
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-/*******************Transparent*********************/
-Widget
+QWidget#title_widget
 {
     background-color:transparent;
 }
 
 SceneToolWidget
+{
+    background-color:transparent;
+}
+
+QWidget#status_widget
 {
     background-color:transparent;
 }
@@ -135,28 +163,9 @@ QScrollArea
     border:none;
 }
 
-QWidget#scroll_area_widget
+QWidget#foreplay_widget
 {
     background-color:transparent;
-}
-
-GraphicsItemWidget#graphicsitem_widget
-{
-    background-color:transparent;
-}
-
-/*******************QSplitter*********************/
-
-QSplitter::handle
-{
-    background-color:rgb(35, 35, 35);
-}
-
-/*******************MagGlass widget*********************/
-QWidget#mag_glass_widget
-{
-    background-color:rgb(76, 76, 76);
-    border: none;
 }
 
 /*******************QTableView*********************/
@@ -167,46 +176,20 @@ QHeaderView
 
 QHeaderView::section
 {
-    color:rgb(240, 240, 240);
-    font-size: 11px;  /* 设置字体大小 */
+    color:rgb(80, 80, 80);
+    font-size: 12px;  /* 设置字体大小 */
     font-weight: bold;
     background-color:transparent;
 }
 
 QTableView
 {
-    background-color:rgb(58, 58, 58);
-    alternate-background-color:rgb(53,53,53);
+    background-color:transparent;
+    selection-background-color: #cccbc8; /*选中区域的背景色*/
     border: none;
-    font-size:11px;
-    gridline-color: transparent;
+    font-size:12px;
+    gridline-color: black;
     selection-color: #fe5820;
-    selection-background-color: rgb(55, 55, 55); /*选中区域的背景色*/
-}
-
-QTableView#item_index_widget
-{
-    background-color:rgb(58, 58, 58);
-    alternate-background-color:rgb(53,53,53);
-    border: none;
-    font-size:11px;
-    gridline-color: transparent;
-    selection-color: #fe5820;
-    selection-background-color: rgb(55, 55, 55); /*选中区域的背景色*/
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
-}
-
-QTableView#label_board_widget
-{
-    background-color:rgb(53, 53, 53);
-    alternate-background-color:rgb(48,48,48);
-    border: none;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    gridline-color: transparent;
-    selection-color: #fe5820;
-    selection-background-color: rgb(57, 80, 124); /*选中区域的背景色*/
 }
 
 QTableView::indicator:enabled
@@ -217,24 +200,25 @@ QTableView::indicator:enabled
 
 QTableView::indicator:enabled:unchecked 
 { 
-    image: url(:/res/background-image/uncheckbox.png);
+    image: url(:/res/qss/GenericStyle/background-image/uncheckbox.png);
 }
 
 QTableView::indicator:enabled:checked 
 { 
-    image: url(:/res/background-image/checkbox.png);
+    image: url(:/res/qss/GenericStyle/background-image/checkbox.png);
 }
 
 QTableView::item
 {
+    color:#1d1c1c;
     font-family:"MicrosoftYaHei";
 	font-size:8px;
-    height:10px;
+    height:8px;
 }
 
 QTableView::item:hover
 {
-    background-color:rgb(80, 80, 80);
+    background-color:rgb(240, 240, 240);
 }
 
 /*******************Filepath widget*********************/
@@ -249,18 +233,14 @@ QTreeView::branch:open:has-children{
 
 FileView
 {
-    background-color:rgb(58, 58, 58);
-    alternate-background-color:rgb(53,53,53);
-    color:#ced4da;
+    background-color:transparent;
     show-decoration-selected: 1;
     border: none;
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px;
 }
 
 FileView::item 
 {
-    color: rgb(200, 200, 200);
+    color: black;
     font-family:"MicrosoftYaHei";
 	font-size:18px;
     height:20px;
@@ -268,8 +248,7 @@ FileView::item
 
 FileView#file_view::item:selected
 {
-    background-color:rgb(160, 30, 30);
-    color:white;
+    background-color:rgb(255, 30, 30);
 }
 
 FileView#file_view::item:hover
@@ -277,66 +256,27 @@ FileView#file_view::item:hover
     background-color:rgba(150, 51, 51, 100);
 }
 
-
-/*******************QScrollBar******************/
-/*************vertical*************/
-QScrollBar:vertical 
-{
-    background-color: rgb(30, 30, 30);
-    width: 12px;
-}
-
-QScrollBar::add-page:vertical,QScrollBar::sub-page:vertical
-{
-    background-color:rgb(60, 60, 60);
-}
-
-QScrollBar::handle:vertical
-{
-    background-color:rgb(70, 70, 70);
-}
-
-/*************horizontal*************/
-
-/*******************SamWidget*********************/
-SamWidget#sam_widget
-{
-    background-color:transparent;
-}
-
-/*******************SamWidget*********************/
-ForePlayWidget#foreplay_widget
-{
-    background-color:transparent;
-}
-
 /*************************************************button style************************************************/
 GenericToolButton
 {
-    color:rgb(200, 200, 200);
+    color:black;
     font-family:MicrosoftYaHei;
     font-size:13px;
     background-color:transparent;
     border-radius: 4px; 
 }
-
 GenericToolButton:hover
 {
-    color:rgb(240, 240, 240);
-    background-color:rgba(88, 88, 88, 150);
+    background-color:rgb(230, 230, 230);
 }
-
 GenericToolButton:pressed
 {
-    color:rgb(240, 240, 240);
-    background-color:rgb(65,65,65);
+    background-color:rgb(220,220,220);
 }
-
 GenericToolButton:checked
 {
     background-color:rgb(57, 80, 124);
 }
-
 GenericToolButton::menu-indicator
 {
     /* 该代码用于设计隐藏三角形箭头 */
@@ -344,54 +284,35 @@ GenericToolButton::menu-indicator
 }
 
 /*******stack_btn*******/
-GenericToolButton#stack_btn
-{
-    color:#FFFFFFFF;
-    font-family:MicrosoftYaHei;
-    font-size:13px;
-    background-color:transparent;
-
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
-
 GenericToolButton#stack_btn:checked
 {
-    color:#FFFFFFFF;
-    background-color:rgb(58, 58, 58);
+    background-color:rgb(220, 220, 220);
 }
 
-GenericToolButton#stack_btn:hover
+/*******interaction_mode_btn*******/
+GenericToolButton#interaction_mode_btn:pressed
 {
-    background-color:rgba(60, 60, 60, 100);
-}
-
-/*******title_right_btn*******/
-GenericToolButton#title_right_btn:hover
-{
-    background-color:rgba(88, 88, 88, 150);
-}
-
-/*******graphicsitem_btn*******/
-GenericToolButton#graphicsitem_btn
-{
-    background-color:rgb(48, 48, 48);
-    border-radius: 4px;
-}
-
-GenericToolButton#graphicsitem_btn:hover
-{
-    color:rgb(240, 240, 240);
-    background-color:rgba(88, 88, 88, 150);
-}
-
-GenericToolButton#graphicsitem_btn:pressed
-{
-    color:rgb(240, 240, 240);
     background-color:rgb(65,65,65);
 }
-
-GenericToolButton#graphicsitem_btn:checked
+GenericToolButton#interaction_mode_btn:checked
 {
-    background-color:rgb(67, 90, 134);
+    background-color:#4772b3;
+}
+GenericToolButton#interaction_mode_btn:hover
+{
+    background-color:rgb(60, 60, 60);
+}
+
+/*******view_attach_btn*******/
+GenericToolButton#view_attach_btn:checked
+{
+    background-color:rgb(255, 60, 60);
+}
+GenericToolButton#view_attach_btn:hover
+{
+    background-color:rgb(60, 60, 60);
+}
+GenericToolButton#view_attach_btn:pressed
+{
+    background-color:rgb(65,65,65);
 }

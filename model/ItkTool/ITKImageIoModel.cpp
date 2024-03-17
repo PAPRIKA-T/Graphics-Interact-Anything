@@ -24,7 +24,7 @@ void ITKImageIoModel::readNiiImage(const char* file_path)
 	normalizeImageByFilter(org_image, gray_image, 0, 255);
 }
 
-void ITKImageIoModel::processAndConvertToPixmap(QPixmap& out_pixmap, int dimension, int slice_index)
+void ITKImageIoModel::processAndConvertToQImage(QImage& out_image, int dimension, int slice_index)
 {
 	if (dimension < 0 || dimension>2) {
 		std::cout <<"ITKImageHelper::processAndConvertToPixmap dimension wrong!" << std::endl;
@@ -61,7 +61,7 @@ void ITKImageIoModel::processAndConvertToPixmap(QPixmap& out_pixmap, int dimensi
 	QImage qImage{};
 	ITKImageToQImage(qImage, filter->GetOutput(), !dimension);
 	// 转换为QPixmap
-	out_pixmap = QPixmap::fromImage(qImage);
+	out_image = qImage;
 	return;
 }
 

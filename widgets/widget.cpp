@@ -53,13 +53,14 @@ Widget::Widget(QWidget *parent)
         view_list_container.pushBackView(image_widget_2d->getGraphicsView());
 
         //设置TreeView
-        file_view = new FileView();
+        file_view = new FileView(this);
         file_view->setObjectName("file_view");
         file_view->setViewListContainer(&view_list_container);
         image_widget_2d->getViewToolBar()->getSceneToolWidget()->setFileView(file_view);
         
         //LabelBoardWidget
         label_board_widget = new LabelBoardWithTool(this);
+        label_board_widget->setObjectName("label_board_widget");
         view_list_container.getActivedView()->getGraphicsScene()->setLabelBoardWidget(label_board_widget->getLabelBoardWidget());
         label_board_widget->getLabelBoardWidget()->setViewListContainer(&view_list_container);
         
@@ -83,13 +84,11 @@ Widget::Widget(QWidget *parent)
         file_view->setForeplayWidget(foreplay_widget);
 
         //设置右下堆栈控件
-        rb_stack_widget = new MultiFunctionStackWidget();
-        rb_stack_widget->setObjectName("rb_stack_widget");
+        rb_stack_widget = new MultiFunctionStackWidget(this);
         rb_stack_widget->getStackWidget()->addWidget(file_view);
         rb_stack_widget->getStackWidget()->addWidget(foreplay_widget);
         rb_stack_widget->getStackWidget()->addWidget(item_index_view);
     }
-
     title_widget->setParentWidget(this);
 
     /*****************连接信号*****************/
@@ -110,8 +109,8 @@ Widget::Widget(QWidget *parent)
         right_widget_splitter->addWidget(rb_stack_widget);
         right_widget_splitter->setCollapsible(0, false);
         right_widget_splitter->setCollapsible(1, false);
-        right_widget_splitter->setStretchFactor(0, 6);
-        right_widget_splitter->setStretchFactor(1, 4);
+        right_widget_splitter->setStretchFactor(0, 4);
+        right_widget_splitter->setStretchFactor(1, 6);
         right_widget_splitter->setHandleWidth(3);
         right_widget_splitter->setContentsMargins(0, 0, 0, 0);
 
@@ -139,13 +138,20 @@ Widget::Widget(QWidget *parent)
 
 Widget::~Widget()
 {
-	delete main_layout;
 	delete title_widget;
-	delete rb_stack_widget;
 	delete image_widget_2d;
 	delete image_widget_3d;
-	delete mag_glass_widget;
+	//delete mag_glass_widget;
+    delete label_board_widget;
+    delete status_widget;
     delete sam;
+    delete file_view;
+    delete item_index_view;
+    delete foreplay_widget;
+    delete rb_stack_widget;
+    delete right_widget_splitter;
+    delete center_widget_splitter;
+    delete main_layout;
 }
 
 /*****************其他函数*********************/
@@ -169,7 +175,7 @@ void Widget::setWidgetSize()
 {
     resize(1000, 700);
     image_widget_2d->resize(650, 600);
-    right_widget_splitter->setMinimumWidth(200);
+    right_widget_splitter->setMinimumWidth(250);
     //DimensionTrans();
 }
 
@@ -302,19 +308,6 @@ void Widget::DimensionTrans()
         connectToolButton(image_widget_2d);
     }
     //view_tool_bar->getInteractionModeWidget()->returnToDefaultMode();
-}
-
-/*******************override virtual function********************/
-
-void Widget::paintEvent(QPaintEvent *event)
-{
-    QPainter painter(this);
-    QStyleOption opt;
-    opt.initFrom(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
-    Q_UNUSED(event);
-    painter.setBrush(QColor(40, 40, 40));
-    painter.drawRect(rect().adjusted(15, 15, -15, -15));
 }
 
 void Widget::keyPressEvent(QKeyEvent *event)

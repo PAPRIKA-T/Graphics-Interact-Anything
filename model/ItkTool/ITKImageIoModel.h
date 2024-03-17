@@ -28,7 +28,7 @@ class ITKImageIoModel
 public:
 	ITKImageIoModel();
 	void readNiiImage(const char* file_path);
-	void processAndConvertToPixmap(QPixmap& out_pixmap, int dimension, int slice_index = -1);
+	void processAndConvertToQImage(QImage&, int dimension, int slice_index = -1);
 	int getCurSliceIndex(int dimension) { return cur_slice_index[dimension]; }
 	int getDimensionSize(int dimension) { return origin_size[dimension]; }
 	void normalizeImageByFilter(

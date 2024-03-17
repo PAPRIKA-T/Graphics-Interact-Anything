@@ -36,6 +36,7 @@ ItemIndexView::ItemIndexView(QWidget* parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     QHeaderView* header = horizontalHeader();
     verticalHeader()->setVisible(false);
+    verticalHeader()->setDefaultSectionSize(18);
     header->setStretchLastSection(true);
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setMinimumSectionSize(30);//设置最小列宽
