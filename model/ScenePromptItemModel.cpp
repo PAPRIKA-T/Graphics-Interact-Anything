@@ -133,9 +133,6 @@ void ScenePromptItemModel::mask2Polygon(const cv::Mat& mask)
 
 void ScenePromptItemModel::mask2img(const cv::Mat& mask)
 {
-    QElapsedTimer timer;
-    timer.start();
-
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
     QImage mask_image = CVOperation::getAnnotation(pixmap_item->getOriginalImage(), mask, c, false);
@@ -159,7 +156,8 @@ void ScenePromptItemModel::generateAnnotation()
 
     if (!sam)return;
     clearPromptList();
-    QSize origin_size = m_scene->getPixmapItem()->getPixmap().size(); //返回的是原始图像的尺寸
+    QSize origin_size = m_scene->getPixmapItem()->getOriginalImage().size(); //返回的是原始图像的尺寸
+    if (origin_size.isEmpty())return;
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
     cv::Rect box_prompt = {};
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
