@@ -1,5 +1,6 @@
 ﻿#include "CVOperation.h"
 #include <QPixmap>
+#include <QColor>
 #include <QDebug>
 
 QPixmap CVOperation::matToPixmap(const cv::Mat& cvImage)
@@ -48,45 +49,86 @@ cv::Mat CVOperation::QPixmapToMat(const QPixmap& pixmap, bool inCloneImageData)
     return cv::Mat();
 }
 
-void CVOperation::setMaskColor(const cv::Mat& mask, cv::Mat& color_mask, cv::Vec3b color, bool random)
-{
-    if (random) {
-        // generate random color
-        cv::RNG rng(time(0));
-        cv::Vec3b color_rng(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-        // 遍历图像的每个像素，根据掩膜来应用颜色
-        for (int y = 0; y < mask.rows; y++) {
-            for (int x = 0; x < mask.cols; x++) {
-                if (mask.at<uchar>(y, x) > 0) {
-                    color_mask.at<cv::Vec3b>(y, x) = cv::Vec3b(color_rng[0], color_rng[1], color_rng[2]);
-                }
-            }
-        }return;
-    }
-    for (int y = 0; y < mask.rows; y++) {
-        for (int x = 0; x < mask.cols; x++) {
-            if (mask.at<uchar>(y, x) > 0) {
-                color_mask.at<cv::Vec3b>(y, x) = cv::Vec3b(color[0], color[1], color[2]);
-            }
-        }
-    }
-}
-
 cv::Mat CVOperation::getAnnotation(const cv::Mat& org_image, const cv::Mat& mask, cv::Vec3b color, bool random)
 {
     if (org_image.empty() || mask.empty()) {
         std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
-        cv::Mat emptyMat;
+        cv::Mat emptyMat{};
         return emptyMat;
     }
     // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
-    cv::Mat result;
-    cv::Mat coloredMask = cv::Mat::zeros(org_image.size(), org_image.type());
-
-    // generate random color
-    setMaskColor(mask, coloredMask, color, random);
-    cv::cvtColor(coloredMask, coloredMask, cv::COLOR_BGR2RGB);
-    cv::cvtColor(org_image, result, cv::COLOR_BGR2RGB);
-    result = result + coloredMask * 0.8;
+    cv::Mat result = org_image;
+    if (random) {
+        // generate random color
+        cv::RNG rng(time(0));
+        color = cv::Vec3b (rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+    }
+    // 设置被掩膜遮住的部分的颜色
+    for (int i = 0; i < mask.rows; ++i) {
+        for (int j = 0; j < mask.cols; ++j) {
+            if (mask.at<uchar>(i, j) != 0) {
+                result.at<cv::Vec3b>(i, j) = color*0.5;
+            }
+        }
+    }
+    cv::cvtColor(result, result, cv::COLOR_BGR2RGB);
     return result;
+}
+
+QPixmap CVOperation::getAnnotation(const QPixmap& org_image, const cv::Mat& mask, QColor color, bool random)
+{
+    if (org_image.isNull() || mask.empty()) {
+        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
+        QPixmap emptyPixmap{};
+        return emptyPixmap;
+    }
+    // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
+
+    QImage image = org_image.toImage();
+    if (random) {
+        // generate random color
+        cv::RNG rng(time(0));
+        cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+        color = QColor(cv_color[0], cv_color[1], cv_color[2]);
+    }
+    // 设置被掩膜遮住的部分的颜色
+    for (int i = 0; i < mask.rows; ++i) {
+        for (int j = 0; j < mask.cols; ++j) {
+            if (mask.at<uchar>(i, j) != 0) {
+                image.setPixel(j, i, color.rgb());
+            }
+        }
+    }
+
+    return  QPixmap::fromImage(image);
+}
+
+QPixmap CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
+{
+    if (org_image.isNull() || mask.empty()) {
+        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
+        QPixmap emptyPixmap{};
+        return emptyPixmap;
+    }
+    // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
+
+    QImage image{ org_image.size(), QImage::Format_ARGB32};
+    image = org_image;
+    
+    if (random) {
+        // generate random color
+        cv::RNG rng(time(0));
+        cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+        color = QColor(cv_color[0], cv_color[1], cv_color[2]);
+    }
+    color.setAlpha(200);
+    // 设置被掩膜遮住的部分的颜色
+    for (int i = 0; i < mask.rows; ++i) {
+        for (int j = 0; j < mask.cols; ++j) {
+            if (mask.at<uchar>(i, j) != 0) {
+                image.setPixelColor(j, i, color);
+            }
+        }
+    }
+    return  QPixmap::fromImage(image);
 }

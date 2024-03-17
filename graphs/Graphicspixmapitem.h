@@ -16,6 +16,8 @@ public:
     void setPixmap(const QString& path);
     void updatePixmap(const QPixmap &p);//更新图像，只更新内容
     QPixmap getPixmap(){return pix;} //获取图像
+    const QImage& getOriginalImage(){return original_image;} //获取原始图像
+    const QPixmap& getOriginalPixmap(){return original_pixmap;} //获取原始图像
     void setPixSize(double w,double h){
         fScaleW = w;fScaleH = h;
         scene_compare_origin_scale = fScaleW / origin_width;
@@ -32,6 +34,7 @@ public:
     cv::Mat getOrignImageMat(bool clone);
     virtual QRectF boundingRect() const override;
 
+    void showOriginalPixmap();
 protected:
 /****************************************************事件函数*********************************************************/
     virtual void paint(QPainter *painter,
@@ -41,6 +44,8 @@ protected:
 private:
     void LoadCvImageInNewThread(const QString&);
     QPixmap pix; //显示图像
+    QPixmap original_pixmap; //原始图像
+    QImage original_image; //原始图像
     QString pixmap_path = ""; //图像路径
     qreal m_fScale = 1; //宽高比
     qreal fScaleH = 1; //图像高度

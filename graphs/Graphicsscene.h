@@ -46,7 +46,6 @@ public:
     GraphicsTextItem* getLeftUpTextItem(); //获取左上文本item
     GraphicsTextItem* getRightBottomTextItem(); //获取右下文本item
     GraphicsTextItem* getRightUpTextItem(); //获取右上文本item
-    QTimer* getSamSegmentTimer() const; //获取sam模型分割定时器
 
     void initTextItem(); //初始化TextItem
     void updateRtText(); //更新右上文本
@@ -129,7 +128,6 @@ private:
     LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{};
-    QTimer* sam_segment_timer = nullptr; //sam模型分割定时器
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象

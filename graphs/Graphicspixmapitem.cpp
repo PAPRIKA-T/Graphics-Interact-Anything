@@ -31,13 +31,18 @@ void GraphicsPixmapItem::setPixmap(const QPixmap &p)
 
 void GraphicsPixmapItem::setPixmap(const QString& path)
 {
-    if (!pix.load(path)) {
+    QElapsedTimer timer;
+    timer.start();
+    if (!original_image.load(path)) {
         qDebug() << path <<"GraphicsPixmapItem::setPixmap(image load fail)";
         return;
     }
-    origin_width = pix.width();
-    origin_height = pix.height();
+    //pix = QPixmap::fromImage(original_image);
+    //origin_width = pix.width();
+    //origin_height = pix.height();
 
+    origin_width = original_image.width();
+    origin_height = original_image.height();
     m_fScale = origin_width / origin_height;
     if (origin_width > origin_height)
     {
@@ -52,6 +57,8 @@ void GraphicsPixmapItem::setPixmap(const QString& path)
     scene_compare_origin_scale = fScaleW / origin_width;
 
     setPixmapPath(path);
+
+    qDebug() << "GraphicsPixmapItem::setPixmap " << timer.elapsed();
 }
 
 void GraphicsPixmapItem::updatePixmap(const QPixmap& p)
@@ -87,6 +94,12 @@ QRectF GraphicsPixmapItem::boundingRect() const
     return rect;
 }
 
+void GraphicsPixmapItem::showOriginalPixmap()
+{
+    pix = original_pixmap;
+	update();
+}
+
 // 绘画事件
 void GraphicsPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
@@ -95,7 +108,8 @@ void GraphicsPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     QRect img_rect(0,0,
                    static_cast<int>(fScaleW),static_cast<int>(fScaleH));
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
-    painter->drawPixmap(img_rect,pix);
+    painter->drawImage(img_rect,original_image);
+    //painter->drawPixmap(img_rect,pix);
 }
 
 void GraphicsPixmapItem::LoadCvImageInNewThread(const QString& f)
@@ -103,6 +117,8 @@ void GraphicsPixmapItem::LoadCvImageInNewThread(const QString& f)
     ImageCvLoaderThread* image_read_thread = new ImageCvLoaderThread();
     connect(image_read_thread, &ImageCvLoaderThread::imageLoaded, [=](const cv::Mat& image) {
         orgin_img = image;
+        //original_pixmap = pix;
+        //original_image = pix.toImage();
         });
     image_read_thread->setPixmapPath(f);
 }

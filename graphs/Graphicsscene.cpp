@@ -23,10 +23,6 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     pixmap_item->setFlag(QGraphicsItem::ItemIsMovable,false);
     initTextItem();
     scene_prompt_model.setGraphicsScene(this);
-
-    sam_segment_timer = new QTimer();
-    sam_segment_timer->setInterval(500);
-    QObject::connect(sam_segment_timer, &QTimer::timeout,this, &GraphicsScene::samSegmentRealTime);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -37,19 +33,12 @@ GraphicsScene::~GraphicsScene()
     delete text_left_up;
     delete pixmap_item;
     delete thumbnail_item;
-    delete sam_segment_timer;
 }
 
 void GraphicsScene::setGraphicsView(GraphicsView* v)
 {
     m_view = v; 
     updateRtText();
-    QObject::connect(m_view, &GraphicsView::mouseEnterPixmapItem,
-        [this](bool ok) {
-            if (!is_paint_prompt_item) return;
-            if(ok)sam_segment_timer->start();
-            else sam_segment_timer->stop();
-        });
 }
 
 GraphicsView* GraphicsScene::getGraphicsView()
@@ -133,11 +122,6 @@ GraphicsTextItem* GraphicsScene::getRightBottomTextItem()
 GraphicsTextItem* GraphicsScene::getRightUpTextItem()
 {
     return text_right_up;
-}
-
-QTimer* GraphicsScene::getSamSegmentTimer() const
-{
-    return sam_segment_timer;
 }
 
 void GraphicsScene::initTextItem()
@@ -579,11 +563,9 @@ void GraphicsScene::startAiModelSegment()
     }
     scene_prompt_model.generateAnnotation();
 }
-
 void GraphicsScene::samSegmentRealTime()
 {
-    QPixmap p(pixmap_item->getPixmapPath());
-    pixmap_item->updatePixmap(p);
+    pixmap_item->showOriginalPixmap();
     startAiModelSegment();
 }
 

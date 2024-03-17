@@ -286,6 +286,8 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
     }
     else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED) return;
+
+    m_scene->samSegmentRealTime();
 }
 
 void GraphicsView::showMenuAfterMouseRelease(QMouseEvent* event)
@@ -347,8 +349,6 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
     else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
 		startSamMode(event);
-        if(mouse_press_status != MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) 
-            m_scene->getSamSegmentTimer()->stop();
 	}
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
@@ -445,7 +445,6 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
                     emit m_scene->promptContinue();
                 }
             }
-            m_scene->getSamSegmentTimer()->start();
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 

@@ -92,7 +92,7 @@ void ScenePromptItemModel::segmentAnything()
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
     cv::resize(maskAuto, maskAuto, cv_origin_size);
 
-    cv::Mat org_image = CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(false), maskAuto);
+    cv::Mat org_image = CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(true), maskAuto);
     QPixmap mask_image = CVOperation::matToPixmap(org_image);
     mask = maskAuto;
     m_scene->getPixmapItem()->updatePixmap(mask_image);
@@ -130,14 +130,15 @@ void ScenePromptItemModel::mask2Polygon(const cv::Mat& mask)
     removeAllPromptsItems();
 }
 
+
 void ScenePromptItemModel::mask2img(const cv::Mat& mask)
 {
+    QElapsedTimer timer;
+    timer.start();
+
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
-    cv::Vec3b cv_color(c.blue(), c.green(), c.red()); // 注意通道的顺序
-    QPixmap mask_image = CVOperation::matToPixmap(
-        CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(false)
-            , mask, cv_color, false));
+    QPixmap mask_image = CVOperation::getAnnotation(pixmap_item->getOriginalImage(), mask, c, false);
     pixmap_item->updatePixmap(mask_image);
 }
 
@@ -153,6 +154,9 @@ void ScenePromptItemModel::removeAllPromptsItems()
 
 void ScenePromptItemModel::generateAnnotation()
 {
+    QElapsedTimer timer;
+    timer.start();
+
     if (!sam)return;
     clearPromptList();
     QSize origin_size = m_scene->getPixmapItem()->getPixmap().size(); //返回的是原始图像的尺寸
@@ -217,23 +221,10 @@ void ScenePromptItemModel::generateAnnotation()
     if (pixmap_item->getPixmapPath() != load_image_path) {
         loadImage(image_path);
     }
-
     mask = sam->getMask(positive_points, negative_points, box_prompt);
     cv::resize(mask, mask, cv_origin_size);
-
-    int output_shape = sam_interact_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
-    if (output_shape == 0) {
-        MASK2ITEM_TYPE = MaskToItemType::MaskToImg;
-        mask2img(mask);
-    }
-    else if (output_shape == 1) {
-        MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
-        mask2Polygon(mask);
-    }
-    else if (output_shape == 2) {
-        MASK2ITEM_TYPE = MaskToItemType::MaskToRect;
-        mask2Rect(mask);
-    }
+    mask2img(mask);
+    qDebug() << "Elapsed time:" << timer.elapsed() << "milliseconds";
 }
 
 void ScenePromptItemModel::Mask2Item()
