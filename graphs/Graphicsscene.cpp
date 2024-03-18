@@ -329,7 +329,9 @@ void GraphicsScene::initPaintPromptItem()
 {
     is_paint_prompt_item = true;
     painting_item->getGraphicsTextModel().setIsHideText(true);
+    blockSignals(true);
     initItemSettingAfterPaint(painting_item);
+    blockSignals(false);
     createPromptItem();
 }
 
