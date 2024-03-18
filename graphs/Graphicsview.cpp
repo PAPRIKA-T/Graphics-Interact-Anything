@@ -98,6 +98,7 @@ void GraphicsView::initLayout()
 
     //设置交互模式控件
     interaction_mode_widget = new GiantInteractionModeWidget(this);
+    horizontal_layout->addSpacing(8);
     horizontal_layout->addWidget(interaction_mode_widget);
     horizontal_layout->addStretch();
     horizontal_layout->setSpacing(0);

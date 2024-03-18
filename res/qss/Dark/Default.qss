@@ -2,7 +2,7 @@
 QComboBox
 {   
     color:#fe5820;
-    background-color:rgb(37, 37, 37);
+    background-color:transparent;
     border: none;
     font-size:13px;
     border-radius: 6px;
@@ -91,12 +91,12 @@ QLabel#title_name
 
 QWidget#this_window
 {
-    background-color:rgb(37, 37, 37);
+    background-color:rgb(30, 30, 30);
 }
 
 LabelBoardWithTool
 {
-    background-color:rgb(50, 50, 50);
+    background-color:rgb(58, 58, 58);
 }
 
 QStackedWidget#multi_fuction_stack_widget
@@ -106,13 +106,19 @@ QStackedWidget#multi_fuction_stack_widget
 
 ViewToolBar
 {
-    background-color:rgba(40, 40, 40, 200);
+    background-color:rgba(0, 0, 0, 100);
 }
 
 QWidget#interaction_mode_stack_widget
 {
-    background-color:rgba(40, 40, 40, 200);
-    border-bottom-right-radius: 6px;
+    background-color:rgba(0, 0, 0, 100);
+    border-bottom-right-radius: 8px;
+}
+
+GiantInteractionModeWidget
+{
+    background-color:rgba(0, 0, 0, 100);
+    border-radius: 8px;
 }
 
 /*******************QScrollBar******************/
@@ -194,12 +200,12 @@ QHeaderView::section
 QTableView
 {
     background-color:transparent;
-    selection-background-color: #334d80; /*选中区域的背景色*/
     alternate-background-color:rgb(53,53,53);
     border: none;
     font-size:12px;
     gridline-color: transparent;
     selection-color: #fe5820;
+    outline:0px;
 }
 
 QTableView::indicator:enabled
@@ -229,7 +235,10 @@ QTableView::item:hover
 {
     background-color:rgb(80, 80, 80);
 }
-
+QTableView::item:selected
+{
+    background-color:#334d80;
+}
 /*******************Filepath widget*********************/
 QTreeView::branch:closed:has-children
 {
@@ -312,13 +321,13 @@ GenericToolButton#interaction_mode_btn:pressed
 }
 GenericToolButton#interaction_mode_btn:checked
 {
-    background-color:#4772b3;
+    background-color:rgba(65,65,65, 200);
 }
 
 /*******view_attach_btn*******/
 GenericToolButton#view_attach_btn:checked
 {
-    background-color:rgb(255, 60, 60);
+    background-color:rgba(255, 50, 50, 200);
 }
 GenericToolButton#view_attach_btn:pressed
 {

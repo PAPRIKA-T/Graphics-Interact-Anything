@@ -36,6 +36,7 @@ public:
     cv::Mat getOrignImageMat(bool clone);
 
     void showOriginalImage();
+    bool getIsLoadImageAllData() const;
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/
@@ -44,6 +45,7 @@ protected:
                        QWidget *widget) override;
 
 private:
+    void resetImageLoadStatus();
     void LoadCvImageInNewThread(const QString&);
 
     QPixmap original_pixmap; //原始图像
@@ -58,6 +60,8 @@ private:
     qreal origin_height = 1; //图像原始高度
     qreal scene_compare_origin_scale = 1; //图像原始尺寸与导入scene尺寸缩放比
     cv::Mat orgin_mat = {}; //原始图像矩阵
+
+    bool is_load_image_all_data = false;
 };
 
 #endif // GRAPHICSPIXMAPITEM_H

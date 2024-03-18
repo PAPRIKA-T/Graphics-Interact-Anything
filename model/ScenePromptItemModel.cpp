@@ -154,8 +154,9 @@ void ScenePromptItemModel::generateAnnotation()
     QElapsedTimer timer;
     timer.start();
     if (!sam)return;
-    clearPromptList();
     GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
+    if (!pixmap_item->getIsLoadImageAllData()) return;;
+    clearPromptList();
     QSize origin_size = pixmap_item->getShowImage().size(); //返回的是原始图像的尺寸
     if (origin_size.isEmpty())return;
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };

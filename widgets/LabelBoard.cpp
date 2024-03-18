@@ -28,7 +28,7 @@ void LabelBoard::initWidget()
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setColumnCount(3);
     setHorizontalHeaderLabels(QStringList() << "ID" << "CLR" << "Label_desc");
-
+    setShowGrid(true);
     QHeaderView* header = horizontalHeader();
     verticalHeader()->setVisible(false);
     verticalHeader()->setDefaultSectionSize(20);

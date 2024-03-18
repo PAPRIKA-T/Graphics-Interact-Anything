@@ -10,6 +10,7 @@ GraphicsPixmapItem::GraphicsPixmapItem(const QImage &img)
 
 void GraphicsPixmapItem::setShowImage(const QImage &i)
 {
+    resetImageLoadStatus();
     if (i.isNull()) pixmap_path = "";
     show_image = i;
     origin_width = show_image.width();
@@ -31,12 +32,14 @@ void GraphicsPixmapItem::setShowImage(const QImage &i)
 
 void GraphicsPixmapItem::setShowImage(const QString& path)
 {
+    resetImageLoadStatus();
     QElapsedTimer timer;
     timer.start();
     if (!show_image.load(path)) {
         qDebug() << path <<"GraphicsPixmapItem::setPixmap(image load fail)";
         return;
     }
+
     origin_width = show_image.width();
     origin_height = show_image.height();
     m_fScale = origin_width / origin_height;
@@ -90,8 +93,14 @@ QRectF GraphicsPixmapItem::boundingRect() const
 
 void GraphicsPixmapItem::showOriginalImage()
 {
+    if (!is_load_image_all_data)return;
     show_image = original_image;
 	update();
+}
+
+bool GraphicsPixmapItem::getIsLoadImageAllData() const
+{
+    return is_load_image_all_data;
 }
 
 // 绘画事件
@@ -105,6 +114,11 @@ void GraphicsPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->drawImage(img_rect, show_image);
 }
 
+void GraphicsPixmapItem::resetImageLoadStatus()
+{
+    is_load_image_all_data = false;
+}
+
 void GraphicsPixmapItem::LoadCvImageInNewThread(const QString& f)
 {
     ImageCvLoaderThread* image_read_thread = new ImageCvLoaderThread();
@@ -112,7 +126,7 @@ void GraphicsPixmapItem::LoadCvImageInNewThread(const QString& f)
         orgin_mat = image;
         original_pixmap = QPixmap::fromImage(show_image);
         original_image = show_image;
-
+        is_load_image_all_data = true;
         });
     image_read_thread->setPixmapPath(f);
 }

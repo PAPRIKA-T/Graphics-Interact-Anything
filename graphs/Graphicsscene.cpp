@@ -183,7 +183,7 @@ void GraphicsScene::updateTextPos()
     text_left_bottom->setPos(m_view->mapToScene(0, m_view->height() - text_left_bottom->boundingRect().height()));
     text_right_bottom->setPos(m_view->mapToScene(m_view->width() - text_right_bottom->boundingRect().width(),
         m_view->height() - text_right_bottom->boundingRect().height()));
-    text_right_up->setPos(m_view->mapToScene(m_view->width() - text_right_up->boundingRect().width(), 34));
+    text_right_up->setPos(m_view->mapToScene(m_view->width() - text_right_up->boundingRect().width(), 30));
 
     thumbnail_item->setPos(m_view->mapToScene(3, m_view->height() - thumbnail_item->boundingRect().height() - 5));
 }

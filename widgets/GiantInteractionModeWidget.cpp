@@ -12,15 +12,13 @@
 GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    setMouseTracking(true);
     int btn_width = 38;int btn_height = 32;
-    setMinimumHeight(294);
     /*************************Mode Btn************************/
     main_layout = new QVBoxLayout(this);
 
     sam_model_btn = new GenericToolButton(this);
     sam_model_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/sam_mode.png"));
-    sam_model_btn->setIconSize(QSize(32, 27));
+    sam_model_btn->setIconSize(QSize(28, 22));
 
     rubber_btn = new GenericToolButton(this);
     rubber_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/rubber_mode.png"));
@@ -28,23 +26,23 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 
     observe_btn = new GenericToolButton(this);
     observe_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/observe_mode.png"));
-    observe_btn->setIconSize(QSize(34, 28));
+    observe_btn->setIconSize(QSize(26, 22));
 
     select_btn = new GenericToolButton(this);
     select_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/select_mode.png"));
-    select_btn->setIconSize(QSize(45, 40));
+    select_btn->setIconSize(QSize(30, 25));
 
     edit_polygon_btn = new GenericToolButton(this);
     edit_polygon_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/edit_polygon_mode.png"));
-    edit_polygon_btn->setIconSize(QSize(26, 26));
+    edit_polygon_btn->setIconSize(QSize(22, 22));
 
     draw_btn = new GenericToolButton(this);
     draw_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/draw_mode.png"));
-    draw_btn->setIconSize(QSize(32, 27));
+    draw_btn->setIconSize(QSize(34, 31));
 
     calculate_btn = new GenericToolButton(this);
     calculate_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/calculate_mode.png"));
-    calculate_btn->setIconSize(QSize(24, 30));
+    calculate_btn->setIconSize(QSize(20, 26));
 
     rubber_btn->setCustomTooltip("Rubber Mode");
     observe_btn->setCustomTooltip("Observe Mode");
@@ -73,6 +71,8 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     }
     observe_btn->setChecked(true);
 
+    setFixedHeight((exclusive_button_group->buttons().size()+1)* (btn_height+2) -2 + 8 + 5 +5 +20);
+
     connect(rubber_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onRubberBtn);
     connect(observe_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onObserveBtn);
     connect(select_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onSelectBtn);
@@ -81,13 +81,16 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     connect(calculate_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onCalculateBtn);
     connect(sam_model_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onSamModelBtn);
 
+    main_layout->addWidget(draw_btn);
+    main_layout->addWidget(rubber_btn);
+    main_layout->addWidget(calculate_btn);
+    main_layout->addSpacing(5);
+
     main_layout->addWidget(observe_btn);
     main_layout->addWidget(select_btn);
-    main_layout->addWidget(rubber_btn);
+
     main_layout->addSpacing(5);
     main_layout->addWidget(sam_model_btn);
-    main_layout->addWidget(draw_btn);
-    main_layout->addWidget(calculate_btn);
     main_layout->addWidget(edit_polygon_btn);
 
     draw_btn->installEventFilter(this);
@@ -113,7 +116,7 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     fit_screen_btn->setCustomTooltip("Reset Camera");
     fit_screen_btn->setFixedSize(btn_width, btn_height);
     fit_screen_btn->setObjectName("interaction_mode_btn");
-    fit_screen_btn->setIconSize(QSize(28, 28));
+    fit_screen_btn->setIconSize(QSize(24, 24));
 
     connect(clear_scene_btn, &QPushButton::clicked, this, [this]() {
         m_view->getGraphicsScene()->clearSceneGraphicsItem(); });
@@ -125,14 +128,15 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
         m_view->getViewTransFormModel()->fitScreen();
         m_view->getViewTransFormModel()->originPositonReturn(); });
 
-    main_layout->addSpacing(5);
+    main_layout->addSpacing(20);
     main_layout->addWidget(fit_screen_btn);
-    main_layout->addWidget(clear_scene_btn);
-    main_layout->addWidget(clear_calculate_btn);
-
+    //main_layout->addWidget(clear_scene_btn);
+    //main_layout->addWidget(clear_calculate_btn);
+    clear_scene_btn->setVisible(false);
+    clear_calculate_btn->setVisible(false);
     main_layout->addStretch();
-    main_layout->setContentsMargins(8, 0, 0, 0);
-    main_layout->setSpacing(1);
+    main_layout->setContentsMargins(4, 4, 4, 4);
+    main_layout->setSpacing(2);
 }
 
 GiantInteractionModeWidget::~GiantInteractionModeWidget()

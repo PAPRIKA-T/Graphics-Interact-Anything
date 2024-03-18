@@ -21,6 +21,7 @@ public:
 
 protected:
     G_Widget_EnterLeaveView
+    G_Widget_PaintEventOverride
 
 private slots:
     void onRubberBtn(int checked); //橡皮擦模式

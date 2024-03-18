@@ -8,9 +8,9 @@ ViewToolBar::ViewToolBar(QWidget* parent)
 {
 	main_layout = new QHBoxLayout(this);
 	main_layout->addStretch();
-	main_layout->setContentsMargins(0, 0, 0, 0);
+	main_layout->setContentsMargins(8, 0, 8, 0);
 	main_layout->setSpacing(0);
-	setFixedHeight(32);
+	setFixedHeight(28);
 	setMinimumWidth(600);
 	setObjectName("view_tool_bar");
 

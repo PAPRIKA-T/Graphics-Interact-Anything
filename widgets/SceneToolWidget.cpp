@@ -61,6 +61,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
 
     foreach(QPushButton * btn, button_list) {
         btn->setObjectName("view_attach_btn");
+        btn->setFixedSize(24, 24);
     }
 
     connect(mask_to_graphicsitem, &QPushButton::clicked, this, &SceneToolWidget::onMaskToGraphicsItemBtn);
@@ -77,16 +78,7 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     main_layout->addWidget(turn_left_btn);
     main_layout->addWidget(turn_right_btn);
 
-    QFrame* line_thr = new QFrame(this);
-    line_thr->setFrameShape(QFrame::VLine);
-    line_thr->setFrameShadow(QFrame::Plain);
-    line_thr->setLineWidth(1);
-    line_thr->setContentsMargins(2, 5, 2, 5);
-    QPalette palette = line_thr->palette();
-    palette.setColor(QPalette::WindowText, QColor(255, 255, 255));
-    line_thr->setPalette(palette);
-
-    main_layout->addWidget(line_thr);
+    main_layout->addSpacing(10);
 
     main_layout->addWidget(fix_screen_btn);
     main_layout->addWidget(center_on_btn);
@@ -94,21 +86,12 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     main_layout->addWidget(rotateL_btn);
     main_layout->addWidget(rotateR_btn);
 
-    QFrame* line_second = new QFrame(this);
-    line_second->setFrameShape(QFrame::VLine);
-    line_second->setFrameShadow(QFrame::Plain);
-    line_second->setLineWidth(1);
-    line_second->setContentsMargins(2, 5, 2, 5);
-    palette = line_second->palette();
-    palette.setColor(QPalette::WindowText, QColor(255, 255, 255));
-    line_second->setPalette(palette);
-
-    main_layout->addWidget(line_second);
+    main_layout->addSpacing(10);
 
     main_layout->addWidget(camera_btn);
     main_layout->addWidget(zoom_btn);
     main_layout->addWidget(mask_to_graphicsitem);
-    main_layout->setContentsMargins(2, 2, 2, 2);
+    main_layout->setContentsMargins(0, 2, 0, 2);
     main_layout->setSpacing(6);
 
     setLayout(main_layout);
