@@ -97,20 +97,6 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     calculate_btn->installEventFilter(this);
 
     /*************************Function Btn************************/
-    clear_scene_btn = new GenericToolButton(this);
-    clear_scene_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/deleteall_btn.png"));
-    clear_scene_btn->setCustomTooltip("Delete All Annotation");
-    clear_scene_btn->setFixedSize(btn_width, btn_height);
-    clear_scene_btn->setObjectName("interaction_mode_btn");
-    clear_scene_btn->setIconSize(QSize(28, 28));
-
-    clear_calculate_btn = new GenericToolButton(this);
-    clear_calculate_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/delete_cal_btn.png"));
-    clear_calculate_btn->setCustomTooltip("Delete All Calculate Item");
-    clear_calculate_btn->setFixedSize(btn_width, btn_height);
-    clear_calculate_btn->setObjectName("interaction_mode_btn");
-    clear_calculate_btn->setIconSize(QSize(28, 28));
-
     fit_screen_btn = new GenericToolButton(this);
     fit_screen_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/fit_screen_btn.png"));
     fit_screen_btn->setCustomTooltip("Reset Camera");
@@ -118,22 +104,12 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     fit_screen_btn->setObjectName("interaction_mode_btn");
     fit_screen_btn->setIconSize(QSize(24, 24));
 
-    connect(clear_scene_btn, &QPushButton::clicked, this, [this]() {
-        m_view->getGraphicsScene()->clearSceneGraphicsItem(); });
-
-    connect(clear_calculate_btn, &QPushButton::clicked, this, [this]() {
-        m_view->deCalLine(); });
-
     connect(fit_screen_btn, &QPushButton::clicked, this, [this]() {
         m_view->getViewTransFormModel()->fitScreen();
         m_view->getViewTransFormModel()->originPositonReturn(); });
 
     main_layout->addSpacing(20);
     main_layout->addWidget(fit_screen_btn);
-    //main_layout->addWidget(clear_scene_btn);
-    //main_layout->addWidget(clear_calculate_btn);
-    clear_scene_btn->setVisible(false);
-    clear_calculate_btn->setVisible(false);
     main_layout->addStretch();
     main_layout->setContentsMargins(4, 4, 4, 4);
     main_layout->setSpacing(2);

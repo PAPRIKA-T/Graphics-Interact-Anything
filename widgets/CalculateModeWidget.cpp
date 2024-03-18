@@ -14,9 +14,9 @@ CalculateModeWidget::CalculateModeWidget(QWidget* parent)
     cal_vertical_btn = new GenericToolButton();
     cal_angle_btn = new GenericToolButton();
 
-    cal_center_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_center.png"));
-    cal_vertical_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_verti.png"));
-    cal_angle_btn->setIcon(QIcon(":/res/qss/Dark/background-image/cal_angle.png"));
+    cal_center_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/cal_center.png"));
+    cal_vertical_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/cal_verti.png"));
+    cal_angle_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/cal_angle.png"));
 
     cal_center_btn->setCustomTooltip("Calculate Center");
     cal_vertical_btn->setCustomTooltip("Calculate Vertical");

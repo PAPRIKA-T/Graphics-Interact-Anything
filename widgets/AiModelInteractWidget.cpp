@@ -17,6 +17,7 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	embedding_btn->setText("Embed");
 	embedding_btn->setObjectName("view_attach_btn");
 	embedding_btn->setFixedSize(40, 20);
+	embedding_btn->setVisible(false);
 
 	positive_point = new GenericToolButton(this);
 	positive_point->setIcon(QIcon(":/res/qss/GenericStyle/background-image/positive_point.png"));

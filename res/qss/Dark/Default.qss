@@ -327,7 +327,7 @@ GenericToolButton#interaction_mode_btn:checked
 /*******view_attach_btn*******/
 GenericToolButton#view_attach_btn:checked
 {
-    background-color:rgba(255, 50, 50, 200);
+    background-color:rgba(210, 50, 50, 200);
 }
 GenericToolButton#view_attach_btn:pressed
 {

@@ -18,9 +18,9 @@ CalculateModeMenu::CalculateModeMenu(QWidget* parent)
     cal_angle_btn->setObjectName("graphicsitem_btn");
     cal_angle_btn->setCheckable(true);
 
-    cal_center_btn->setIcon(QIcon(":/res/background-image/cal_center.png"));
-    cal_vertical_btn->setIcon(QIcon(":/res/background-image/cal_verti.png"));
-    cal_angle_btn->setIcon(QIcon(":/res/background-image/cal_angle.png"));
+    cal_center_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/cal_center.png"));
+    cal_vertical_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/cal_verti.png"));
+    cal_angle_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/cal_angle.png"));
 
     cal_center_btn->setText("CalCenter");
     cal_vertical_btn->setText("CalVertical");

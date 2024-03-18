@@ -53,8 +53,8 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     angle_btn->setCustomTooltip(tr("Angle"));
     parallel_line_btn->setCustomTooltip(tr("ParallelLine"));
 
-    shape_btn_layout->addWidget(destory_btn);
-
+    //shape_btn_layout->addWidget(destory_btn);
+    destory_btn->setVisible(false);
     exclusive_action_group = new QButtonGroup(this);
 
         foreach(QPushButton* btn, draw_button_list)
@@ -72,18 +72,18 @@ GraphicsItemWidget::GraphicsItemWidget(QWidget *parent)
     shape_btn_layout->addStretch();
     setLayout(shape_btn_layout);
 
-    point_btn->setIcon(QIcon(":/res/qss/Dark/background-image/point.png"));
-    line_btn->setIcon(QIcon(":/res/qss/Dark/background-image/line.png"));
-    round_btn->setIcon(QIcon(":/res/qss/Dark/background-image/round.png"));
-    ellipse_btn->setIcon(QIcon(":/res/qss/Dark/background-image/ellipse.png"));
-    rect_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rect.png"));
-    pie_btn->setIcon(QIcon(":/res/qss/Dark/background-image/pie.png"));
-    polygon_btn->setIcon(QIcon(":/res/qss/Dark/background-image/polygon.png"));
-    angle_btn->setIcon(QIcon(":/res/qss/Dark/background-image/angle.png"));
-    parallel_line_btn->setIcon(QIcon(":/res/qss/Dark/background-image/Parallel_line.png"));
-    line_segment_btn->setIcon(QIcon(":/res/qss/Dark/background-image/line_segment.png"));
+    point_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/point.png"));
+    line_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/line.png"));
+    round_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/round.png"));
+    ellipse_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/ellipse.png"));
+    rect_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/rect.png"));
+    pie_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/pie.png"));
+    polygon_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/polygon.png"));
+    angle_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/angle.png"));
+    parallel_line_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/Parallel_line.png"));
+    line_segment_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/line_segment.png"));
 
-    setFixedWidth((draw_button_list.size()+1)*(btn_width+1)-1+17);
+    setFixedWidth((draw_button_list.size())*(btn_width+1)-1+17);
 }
 
 GraphicsItemWidget::~GraphicsItemWidget()

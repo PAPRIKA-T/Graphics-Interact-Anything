@@ -46,4 +46,7 @@ private:
     GenericToolButton* rotateL_btn = nullptr;
     GenericToolButton* turn_left_btn = nullptr;
     GenericToolButton* turn_right_btn = nullptr;
+
+    GenericToolButton* clear_scene_btn = nullptr;
+    GenericToolButton* clear_calculate_btn = nullptr;
 };

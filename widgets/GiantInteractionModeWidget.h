@@ -45,8 +45,6 @@ private:
     GenericToolButton* edit_polygon_btn = nullptr;
     GenericToolButton* calculate_btn = nullptr;
 
-    GenericToolButton* clear_scene_btn = nullptr;
-    GenericToolButton* clear_calculate_btn = nullptr;
     GenericToolButton* fit_screen_btn = nullptr;
 
     /****************stack widgets*******************/
