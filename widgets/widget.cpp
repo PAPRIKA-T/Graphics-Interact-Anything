@@ -170,11 +170,16 @@ Sam* Widget::getSam() const
     return sam;
 }
 
+LabelBoardWithTool* Widget::getLabelBoardWithTool() const
+{
+    return label_board_widget;
+}
+
 //设置各个控件部分的大小
 void Widget::setWidgetSize()
 {
-    resize(1000, 700);
-    image_widget_2d->resize(650, 600);
+    resize(1000, 650);
+    image_widget_2d->resize(800, 550);
     right_widget_splitter->setMinimumWidth(250);
     //DimensionTrans();
 }
@@ -271,7 +276,6 @@ void Widget::DimensionTrans()
         image_widget_3d = new ImageSceneWidget3D(this);
         image_widget_3d->setObjectName("image_widget_3d");
         center_widget_splitter->insertWidget(0, image_widget_3d);
-        image_widget_3d->resize(650, 600);
         view_list_container.clearViewList();
 
         file_view->setVTKWidget(image_widget_3d->getVTKWidget());
@@ -299,7 +303,6 @@ void Widget::DimensionTrans()
         image_widget_3d->deleteLater();
         image_widget_3d = nullptr;
         image_widget_2d = new ImageSceneWidget2D(this);
-        image_widget_2d->resize(650, 600);
         image_widget_2d->setObjectName("image_widget_2d");
         center_widget_splitter->insertWidget(0, image_widget_2d);
         view_list_container.clearViewList();

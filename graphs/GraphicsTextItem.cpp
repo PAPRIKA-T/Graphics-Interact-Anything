@@ -21,6 +21,6 @@ void GraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
 void GraphicsTextItem::setBackGroundColor(const QColor& c)
 {
     back_ground_color = c; 
-    back_ground_color.setAlpha(100);
+    //back_ground_color.setAlpha(100);
 }
 

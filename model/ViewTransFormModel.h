@@ -4,7 +4,7 @@
 #include <QTransform>
 class GraphicsView;
 class GraphicsScene;
-class GraphicsPixmapItem;
+class GiantImageItem;
 
 class ViewTransFormModel
 {
@@ -44,7 +44,7 @@ public:
 private:
 	GraphicsView* m_view = nullptr;
 	GraphicsScene* m_scene = nullptr;
-	GraphicsPixmapItem* pixmap_item = nullptr;
+	GiantImageItem* pixmap_item = nullptr;
 	QPoint origin_position; //图像初始位置
 	qreal m_zoom_delta; //缩放的增量
 	qreal view_scale = 1.0; //view缩放值

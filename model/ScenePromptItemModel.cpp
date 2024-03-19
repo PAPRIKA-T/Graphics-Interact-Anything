@@ -1,6 +1,6 @@
 ﻿#include "ScenePromptItemModel.h"
 #include "graphs/Graphicsscene.h"
-#include "graphs/Graphicspixmapitem.h"
+#include "graphs/GiantMaskItem.h"
 #include "graphs/GraphicsPolygon.h"
 #include "graphs/GraphicsLineSegment.h"
 #include "widgets/LabelBoard.h"
@@ -36,6 +36,8 @@ void ScenePromptItemModel::setSam(Sam* s)
 void ScenePromptItemModel::setGraphicsScene(GraphicsScene* s)
 {
 	m_scene = s;
+    pixmap_item = m_scene->getPixmapItem();
+    initMaskItem();
 }
 
 QList<GraphicsItem*> ScenePromptItemModel::getPromptItemList()
@@ -48,6 +50,19 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
     removeAllPromptsItems();
 }
 
+void ScenePromptItemModel::acceptMaskItem()
+{
+    initMaskItem();
+}
+
+void ScenePromptItemModel::initMaskItem()
+{
+    current_mask_item = new GiantMaskItem();
+    current_mask_item->setImageSize(QSize(pixmap_item->getFscaleW(), pixmap_item->getFscaleH()));
+    current_mask_item->setParentItem(pixmap_item);
+    mask_item_list.push_back(current_mask_item);
+}
+
 bool ScenePromptItemModel::loadImage(const QString& image_path)
 {
     if (!sam)return false;
@@ -56,6 +71,7 @@ bool ScenePromptItemModel::loadImage(const QString& image_path)
     if (sam->loadImage(load_image)) {
         is_load_image = true;
         load_image_path = image_path;
+        current_mask_item->setImageSize(QSize(pixmap_item->getFscaleW(), pixmap_item->getFscaleH()));
         return true;
     }
     else {
@@ -78,9 +94,9 @@ void ScenePromptItemModel::segmentAnything()
         qDebug() << "SamWidget::no input image";
         return;
     }
-    if (m_scene->getPixmapItem()->getPixmapPath() != load_image_path)
+    if (pixmap_item->getPixmapPath() != load_image_path)
     {
-        QString path = m_scene->getPixmapItem()->getPixmapPath();
+        QString path = pixmap_item->getPixmapPath();
         loadImage(path);
     }
     cv::Mat maskAuto = sam->autoSegment({ 10, 10 });
@@ -88,12 +104,12 @@ void ScenePromptItemModel::segmentAnything()
     cv::normalize(maskAuto, maskAuto, 0, 255, cv::NORM_MINMAX, CV_8UC1);
     maskAuto.convertTo(maskAuto, CV_8UC1);
 
-    QSize origin_size = m_scene->getPixmapItem()->getShowImage().size();
+    QSize origin_size = pixmap_item->getShowImage().size();
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
     cv::resize(maskAuto, maskAuto, cv_origin_size);
 
-    cv::Mat org_image = CVOperation::getAnnotation(m_scene->getPixmapItem()->getOrignImageMat(true), maskAuto);
-    QImage mask_image = CVOperation::matToQImage(org_image);
+    cv::Mat org_image = CVOperation::setMaskOnImage(m_scene->getPixmapItem()->getOrignImageMat(true), maskAuto);
+    QImage mask_image = CVOperation::cvMat2QImage(org_image);
     mask = maskAuto;
     m_scene->getPixmapItem()->updateShowImage(mask_image);
 }
@@ -130,13 +146,12 @@ void ScenePromptItemModel::mask2Polygon(const cv::Mat& mask)
     removeAllPromptsItems();
 }
 
-
-void ScenePromptItemModel::mask2img(const cv::Mat& mask)
+void ScenePromptItemModel::generateGiantMaskItem(const cv::Mat& mask)
 {
-    GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
     QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
-    QImage mask_image = CVOperation::getAnnotation(pixmap_item->getOriginalImage(), mask, c, false);
-    pixmap_item->updateShowImage(mask_image);
+    c.setAlpha(100);
+    current_mask_item->setColor(c);
+    current_mask_item->setImage(CVOperation::cvMat2QImage(mask));
 }
 
 void ScenePromptItemModel::removeAllPromptsItems()
@@ -154,74 +169,23 @@ void ScenePromptItemModel::generateAnnotation()
     QElapsedTimer timer;
     timer.start();
     if (!sam)return;
-    GraphicsPixmapItem* pixmap_item = m_scene->getPixmapItem();
-    if (!pixmap_item->getIsLoadImageAllData()) return;;
-    clearPromptList();
+    if (!pixmap_item->getIsLoadImageAllData()) return;
+
     QSize origin_size = pixmap_item->getShowImage().size(); //返回的是原始图像的尺寸
     if (origin_size.isEmpty())return;
     cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
-    cv::Rect box_prompt = {};
-    foreach(GraphicsItem * prompt_item, prompt_list) {
-        if (prompt_item->data(1) == "PositivePoint") {
-            QPointF p = prompt_item->getCenterMeasurePos();
-            qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
-            qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
-            cv::Point cvPoint(p_x_convert, p_y_convert);
-            positive_points.push_back(cvPoint);
-        }
-        else if (prompt_item->data(1) == "NegativePoint") {
-            QPointF p = prompt_item->getCenterMeasurePos();
-            qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
-            qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
-            cv::Point cvPoint(p_x_convert, p_y_convert);
-            negative_points.push_back(cvPoint);
-        }
-        else if (prompt_item->data(1) == "PPLine") {
-            LineSegment* lineseg_item = dynamic_cast<LineSegment*>(prompt_item);
-            QPointF p{};
-            qreal scale = m_scene->getPixmapItem()->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
-            QPointF img_scale_p(scale, scale);
-            for (PolygonPoint* p_item : lineseg_item->getPointItemList()) {
-                p = QpointFMultiplication(p_item->mapToItem(pixmap_item, p_item->getCenter()), img_scale_p);
-                qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
-                qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
-                cv::Point cvPoint(p_x_convert, p_y_convert);
-                positive_points.push_back(cvPoint);
-            }
-        }
-        else if (prompt_item->data(1) == "NPLine") {
-            LineSegment* lineseg_item = dynamic_cast<LineSegment*>(prompt_item);
-            QPointF p{};
-            qreal scale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
-            QPointF img_scale_p(scale, scale);
-            for (BPoint* p_item : lineseg_item->getPointItemList()) {
-                p = QpointFMultiplication(p_item->mapToItem(pixmap_item, p_item->getCenter()), img_scale_p);
-                qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
-                qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
-                cv::Point cvPoint(p_x_convert, p_y_convert);
-                negative_points.push_back(cvPoint);
-            }
-        }
-        else if (prompt_item->data(1) == "PromptRect") {
-            QPointF p_s = prompt_item->getStartMeasurePos();
-            QPointF p_e = prompt_item->getEdgeMeasurePos();
-            double ps_x_convert = (p_s.x() * input_size.width) / cv_origin_size.width;
-            double ps_y_convert = (p_s.y() * input_size.height) / cv_origin_size.height;
-            double pe_x_convert = (p_e.x() * input_size.width) / cv_origin_size.width;
-            double pe_y_convert = (p_e.y() * input_size.height) / cv_origin_size.height;
-            cv::Point cvPSoint(ps_x_convert, ps_y_convert);
-            cv::Point cvPEoint(pe_x_convert, pe_y_convert);
-            box_prompt = cv::Rect{ cvPSoint, cvPEoint };
 
-        }
-    }
+    clearPromptList();
+    getSamPromptItems(prompt_list, sam_prompt_items);
+
     QString image_path = pixmap_item->getPixmapPath();
     if (pixmap_item->getPixmapPath() != load_image_path) {
         loadImage(image_path);
     }
-    mask = sam->getMask(positive_points, negative_points, box_prompt);
+    
+    mask = sam->getMask(sam_prompt_items.positive_points, sam_prompt_items.negative_points, sam_prompt_items.box_prompt);
     cv::resize(mask, mask, cv_origin_size);
-    mask2img(mask);
+    generateGiantMaskItem(mask);
     qDebug() << "Elapsed time:" << timer.elapsed() << "milliseconds";
 }
 
@@ -239,12 +203,6 @@ void ScenePromptItemModel::Mask2Item()
     }
 }
 
-cv::Mat ScenePromptItemModel::getMask(bool clone)
-{
-    if(clone) return mask.clone();
-    else return mask;
-}
-
 void ScenePromptItemModel::clearMask()
 {
     mask = {};
@@ -260,10 +218,72 @@ void ScenePromptItemModel::removeItemFromPromptList()
     }
 }
 
+void ScenePromptItemModel::getSamPromptItems(QList<GraphicsItem*>& l, SamPromptItems& s)
+{
+    QSize origin_size = pixmap_item->getShowImage().size(); //返回的是原始图像的尺寸
+    if (origin_size.isEmpty())return;
+    cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
+
+    foreach(GraphicsItem * prompt_item, l) {
+        if (prompt_item->data(1) == "PositivePoint") {
+            QPointF p = prompt_item->getCenterMeasurePos();
+            qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+            qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
+            cv::Point cvPoint(p_x_convert, p_y_convert);
+            s.positive_points.push_back(cvPoint);
+        }
+        else if (prompt_item->data(1) == "NegativePoint") {
+            QPointF p = prompt_item->getCenterMeasurePos();
+            qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+            qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
+            cv::Point cvPoint(p_x_convert, p_y_convert);
+            s.negative_points.push_back(cvPoint);
+        }
+        else if (prompt_item->data(1) == "PPLine") {
+            LineSegment* lineseg_item = dynamic_cast<LineSegment*>(prompt_item);
+            QPointF p{};
+            qreal scale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
+            QPointF img_scale_p(scale, scale);
+            for (PolygonPoint* p_item : lineseg_item->getPointItemList()) {
+                p = QpointFMultiplication(p_item->mapToItem(pixmap_item, p_item->getCenter()), img_scale_p);
+                qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+                qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
+                cv::Point cvPoint(p_x_convert, p_y_convert);
+                s.positive_points.push_back(cvPoint);
+            }
+        }
+        else if (prompt_item->data(1) == "NPLine") {
+            LineSegment* lineseg_item = dynamic_cast<LineSegment*>(prompt_item);
+            QPointF p{};
+            qreal scale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
+            QPointF img_scale_p(scale, scale);
+            for (BPoint* p_item : lineseg_item->getPointItemList()) {
+                p = QpointFMultiplication(p_item->mapToItem(pixmap_item, p_item->getCenter()), img_scale_p);
+                qreal p_x_convert = (p.x() * input_size.width) / cv_origin_size.width;
+                qreal p_y_convert = (p.y() * input_size.height) / cv_origin_size.height;
+                cv::Point cvPoint(p_x_convert, p_y_convert);
+                s.negative_points.push_back(cvPoint);
+            }
+        }
+        else if (prompt_item->data(1) == "PromptRect") {
+            QPointF p_s = prompt_item->getStartMeasurePos();
+            QPointF p_e = prompt_item->getEdgeMeasurePos();
+            double ps_x_convert = (p_s.x() * input_size.width) / cv_origin_size.width;
+            double ps_y_convert = (p_s.y() * input_size.height) / cv_origin_size.height;
+            double pe_x_convert = (p_e.x() * input_size.width) / cv_origin_size.width;
+            double pe_y_convert = (p_e.y() * input_size.height) / cv_origin_size.height;
+            cv::Point cvPSoint(ps_x_convert, ps_y_convert);
+            cv::Point cvPEoint(pe_x_convert, pe_y_convert);
+            s.box_prompt = cv::Rect{ cvPSoint, cvPEoint };
+
+        }
+    }
+}
+
 void ScenePromptItemModel::clearPromptList()
 {
-    positive_points.clear();
-    negative_points.clear();
+    sam_prompt_items.positive_points.clear();
+    sam_prompt_items.negative_points.clear();
 }
 
 void ScenePromptItemModel::addPromptItem(GraphicsItem* item)

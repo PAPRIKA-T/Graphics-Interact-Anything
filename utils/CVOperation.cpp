@@ -1,66 +1,90 @@
 ﻿#include "CVOperation.h"
 #include <QPixmap>
 #include <QColor>
+#include <QBitmap>
 #include <QDebug>
 
-QImage CVOperation::matToQImage(const cv::Mat& cvImage)
+QImage CVOperation::cvMat2QImage(const cv::Mat& mat)
 {
     // 转换为 QImage
-    QImage qImage(cvImage.data, cvImage.cols, cvImage.rows, cvImage.step, QImage::Format_RGB888);
-    // 将 QImage 转换为 QPixmap
-    return qImage;
+    // 8-bits unsigned, NO. OF CHANNELS = 1
+    if (mat.type() == CV_8UC1)
+    {
+        QImage image(mat.cols, mat.rows, QImage::Format_Indexed8);
+        // Set the color table (used to translate colour indexes to qRgb values)
+        image.setColorCount(256);
+        for (int i = 0; i < 256; i++)
+        {
+            image.setColor(i, qRgb(i, i, i));
+        }
+        // Copy input Mat
+        uchar* pSrc = mat.data;
+        for (int row = 0; row < mat.rows; row++)
+        {
+            uchar* pDest = image.scanLine(row);
+            memcpy(pDest, pSrc, mat.cols);
+            pSrc += mat.step;
+        }
+        return image;
+    }
+    // 8-bits unsigned, NO. OF CHANNELS = 3
+    else if (mat.type() == CV_8UC3)
+    {
+        // Copy input Mat
+        const uchar* pSrc = (const uchar*)mat.data;
+        // Create QImage with same dimensions as input Mat
+        QImage image(pSrc, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+        return image.rgbSwapped();
+    }
+    else if (mat.type() == CV_8UC4)
+    {
+        qDebug() << "CV_8UC4";
+        // Copy input Mat
+        const uchar* pSrc = (const uchar*)mat.data;
+        // Create QImage with same dimensions as input Mat
+        QImage image(pSrc, mat.cols, mat.rows, mat.step, QImage::Format_ARGB32);
+        return image.copy();
+    }
+    else
+    {
+        qDebug() << "ERROR: Mat could not be converted to QImage.";
+        return QImage();
+    }
 }
 
-cv::Mat CVOperation::QImageToMat(const QImage& image, bool inCloneImageData)
+cv::Mat CVOperation::QImage2cvMat(const QImage& image, bool inCloneImageData)
 {
-    QImage org_image = image;
-    switch (org_image.format())
+    cv::Mat mat{};
+    qDebug() << image.format();
+    switch (image.format())
     {
-        // 8-bit, 4 channel
+    case QImage::Format_ARGB32:
     case QImage::Format_RGB32:
-    {
-        cv::Mat mat(org_image.height(), org_image.width(), CV_8UC4, const_cast<uchar*>(org_image.bits()), org_image.bytesPerLine());
-        return (inCloneImageData ? mat.clone() : mat);
-    }
-
-    // 8-bit, 3 channel
+    case QImage::Format_ARGB32_Premultiplied:
+        mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
+        break;
     case QImage::Format_RGB888:
-    {
-        if (!inCloneImageData) {
-            qWarning() << "ASM::QImageToCvMat() - Conversion requires cloning since we use a temporary QImage";
-        }
-        QImage swapped = org_image.rgbSwapped();
-        return cv::Mat(swapped.height(), swapped.width(), CV_8UC3, const_cast<uchar*>(swapped.bits()), swapped.bytesPerLine()).clone();
-    }
-
-    // 8-bit, 1 channel
+        mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());
+        cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+        break;
     case QImage::Format_Indexed8:
-    {
-        cv::Mat  mat(org_image.height(), org_image.width(), CV_8UC1, const_cast<uchar*>(org_image.bits()), org_image.bytesPerLine());
-
-        return (inCloneImageData ? mat.clone() : mat);
-    }
-
-    default:
-        qDebug("Image format is not supported: depth=%d and %d format\n", org_image.depth(), org_image.format());
+        mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
         break;
     }
-    return cv::Mat();
+    return mat;
 }
 
-cv::Mat CVOperation::getAnnotation(const cv::Mat& org_image, const cv::Mat& mask, cv::Vec3b color, bool random)
+cv::Mat CVOperation::setMaskOnImage(const cv::Mat& org_image, const cv::Mat& mask, cv::Vec3b color, bool random)
 {
     if (org_image.empty() || mask.empty()) {
-        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
+        std::cerr << "SamWidget::setMaskOnImage Failed to load images" << std::endl;
         cv::Mat emptyMat{};
         return emptyMat;
     }
     // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
     cv::Mat result = org_image;
     if (random) {
-        // generate random color
-        cv::RNG rng(time(0));
-        color = cv::Vec3b (rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+        color = generateRandomVec3bColor();
     }
     // 设置被掩膜遮住的部分的颜色
     for (int i = 0; i < mask.rows; ++i) {
@@ -74,10 +98,10 @@ cv::Mat CVOperation::getAnnotation(const cv::Mat& org_image, const cv::Mat& mask
     return result;
 }
 
-QImage CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
+QImage CVOperation::setMaskOnImage(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
 {
     if (org_image.isNull() || mask.empty()) {
-        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
+        std::cerr << "SamWidget::setMaskOnImage Failed to load images" << std::endl;
         QImage emptyImage{};
         return emptyImage;
     }
@@ -85,10 +109,7 @@ QImage CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, 
 
     QImage image = org_image;
     if (random) {
-        // generate random color
-        cv::RNG rng(time(0));
-        cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-        color = QColor(cv_color[0], cv_color[1], cv_color[2]);
+        color = generateRandomQColor();
     }
     // 设置被掩膜遮住的部分的颜色
     for (int i = 0; i < mask.rows; ++i) {
@@ -101,32 +122,15 @@ QImage CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, 
     return image;
 }
 
-//QImage CVOperation::getAnnotation(const QImage& org_image, const cv::Mat& mask, QColor color, bool random)
-//{
-//    if (org_image.isNull() || mask.empty()) {
-//        std::cerr << "SamWidget::getAnnotation Failed to load images" << std::endl;
-//        QImage emptyImage{};
-//        return emptyImage;
-//    }
-//    // 创建一个彩色版本的掩码（在掩码上应用伪彩色，以便与原始图像叠加）
-//
-//    QImage image{ org_image.size(), QImage::Format_ARGB32};
-//    image = org_image;
-//    
-//    if (random) {
-//        // generate random color
-//        cv::RNG rng(time(0));
-//        cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
-//        color = QColor(cv_color[0], cv_color[1], cv_color[2]);
-//    }
-//    color.setAlpha(200);
-//    // 设置被掩膜遮住的部分的颜色
-//    for (int i = 0; i < mask.rows; ++i) {
-//        for (int j = 0; j < mask.cols; ++j) {
-//            if (mask.at<uchar>(i, j) != 0) {
-//                image.setPixelColor(j, i, color);
-//            }
-//        }
-//    }
-//    return image;
-//}
+QColor CVOperation::generateRandomQColor()
+{
+    cv::RNG rng(time(0));
+    cv::Vec3b cv_color = cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+    return QColor(cv_color[0], cv_color[1], cv_color[2]);
+}
+
+cv::Vec3b CVOperation::generateRandomVec3bColor()
+{
+    cv::RNG rng(time(0));
+    return cv::Vec3b(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
+}

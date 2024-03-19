@@ -346,7 +346,7 @@ PositivePoint::PositivePoint()
     setData(1, "PositivePoint");
     setFlag(QGraphicsItem::ItemIsMovable, false);
     is_accept_others_setting = false;
-    setGraphicsColor(ColorOperation::generate_color_by_text("positiveP"));
+    setGraphicsColor(ColorOperation::GenerateColorByText("positiveP"));
     is_generate_context_menu = false;
 }
 
@@ -358,7 +358,7 @@ NegativePoint::NegativePoint()
     setData(1, "NegativePoint");
     setFlag(QGraphicsItem::ItemIsMovable, false);
     is_accept_others_setting = false;
-    setGraphicsColor(ColorOperation::generate_color_by_text("negtiveP"));
+    setGraphicsColor(ColorOperation::GenerateColorByText("negtiveP"));
     is_generate_context_menu = false;
 }
 

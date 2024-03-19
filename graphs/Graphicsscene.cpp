@@ -14,7 +14,7 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     :QGraphicsScene (parent)
 {
     QImage img;
-    pixmap_item = new GraphicsPixmapItem(img);
+    pixmap_item = new GiantImageItem(img);
     thumbnail_item = new ThumbnailPixmapItem(img);
     thumbnail_item->setGraphicsScene(this);
     setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -94,7 +94,7 @@ void GraphicsScene::changeShowImage(const QString& image_path)
     m_view->getViewTransFormModel()->resetTransform();
 }
 
-GraphicsPixmapItem* GraphicsScene::getPixmapItem()
+GiantImageItem* GraphicsScene::getPixmapItem()
 {
     return pixmap_item;
 }
@@ -432,7 +432,7 @@ void GraphicsScene::updateRtText()
 
     qreal image_scale_total = m_view->getViewTransFormModel()->getImageScaleTotal();
     if (pixmap_item->getPixmap().isNull()) image_scale_total = 0;
-    else image_scale_total = pixmap_item->getFscaleW() / pixmap_item->getOriginWidth() * 
+    else image_scale_total = pixmap_item->getSceneCompareOriginScale() *
         m_view->getViewTransFormModel()->getViewScale();
     QString str3 = "Zoom: " + QString::number(image_scale_total, 'f', 2) + " ";
 
@@ -560,14 +560,13 @@ void GraphicsScene::startAiModelSegment()
 {
     if (!is_paint_prompt_item)return;
     if (pixmap_item->getPixmapPath() == "") {
-        qDebug() << "no load iamge";
+        //qDebug() << "no load iamge";
         return;
     }
     scene_prompt_model.generateAnnotation();
 }
 void GraphicsScene::samSegmentRealTime()
 {
-    pixmap_item->showOriginalImage();
     startAiModelSegment();
 }
 
@@ -770,7 +769,7 @@ void GraphicsScene::PPlineSegmentClicked(int checked)
         painting_pol_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         connect(this, SIGNAL(updatePoint(QPointF, bool)), painting_pol_item, SLOT(pullPoint(QPointF, bool)));
         painting_pol_item->setIsAcceptOthersSetting(false);
-        painting_pol_item->setGraphicsColor(ColorOperation::generate_color_by_text("positiveP"));
+        painting_pol_item->setGraphicsColor(ColorOperation::GenerateColorByText("positiveP"));
         painting_pol_item->getGraphicsTextModel().setLabelText("PPLine");
         painting_pol_item->setData(1, "PPLine");
     }
@@ -790,7 +789,7 @@ void GraphicsScene::NPlineSegmentClicked(int checked)
         painting_pol_item->setFlag(QGraphicsItem::ItemIsMovable, false);
         painting_pol_item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         painting_pol_item->setIsAcceptOthersSetting(false);
-        painting_pol_item->setGraphicsColor(ColorOperation::generate_color_by_text("negtiveP"));
+        painting_pol_item->setGraphicsColor(ColorOperation::GenerateColorByText("negtiveP"));
         painting_pol_item->getGraphicsTextModel().setLabelText("NPLineSegment");
         painting_pol_item->setData(1, "NPLine");
         connect(this, SIGNAL(updatePoint(QPointF, bool)), painting_pol_item, SLOT(pullPoint(QPointF, bool)));

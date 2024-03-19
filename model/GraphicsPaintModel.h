@@ -3,7 +3,7 @@
 #include <QColor>
 #include "graphs/ItemPointF.h"
 #define PEN_WIDTHF 1 //画笔宽度
-#define DEFAULT_COLOR_ITEM QColor(255, 0, 255) //item color
+#define DEFAULT_COLOR_ITEM QColor(180, 0, 150) //item color
 #define DEFAULT_COLOR_POINT_NOSELECTED QColor(255, 249, 57)
 #define DEFAULT_COLOR_POINT_SELECTED QColor(255, 20, 147)
 #define DEFAULT_COLOR_UNIQUE_POINT QColor(237, 153, 74)

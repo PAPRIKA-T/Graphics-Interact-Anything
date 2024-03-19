@@ -14,6 +14,10 @@ public:
 	LabelBoard* getLabelBoardWidget() const;
 	LabelBoardToolWidget* getLabelBoardToolWidget() const;
 	G_Widget_PaintEventOverride
+public slots:
+	void saveLabelFileToTxt();
+	void readLabelFileFromTxt();
+
 private:
 	LabelBoard* label_board_widget = nullptr;
 	LabelBoardToolWidget* label_board_tool_widget = nullptr;

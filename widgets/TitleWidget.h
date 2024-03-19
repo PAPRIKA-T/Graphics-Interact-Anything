@@ -43,10 +43,12 @@ private:
     GenericToolButton* help_menu_btn = nullptr;
     GenericToolButton* view_menu_btn = nullptr;
     GenericToolButton* edit_menu_btn = nullptr;
+    GenericToolButton* tag_menu_btn = nullptr;
 
     QMenu* file_menu = nullptr;
     QMenu* segment_menu = nullptr;
     QMenu* help_menu = nullptr;
     QMenu* view_menu = nullptr;
     QMenu* edit_menu = nullptr;
+    QMenu* tag_menu = nullptr;
 };

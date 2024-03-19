@@ -22,6 +22,7 @@
 #include "widgets/InteractionModeStackWidget.h"
 #include "widgets/AiModelInteractWidget.h"
 #include <model/ViewListContainer.h>
+#include "utils/thread/SamSegmentRealTimeThread.h"
 
 #define EPS (1e-5) //除数最小量
 
@@ -58,6 +59,27 @@ GraphicsView::~GraphicsView()
     delete main_layout;
     delete view_tool_bar;
     delete interaction_mode_widget;
+}
+
+void GraphicsView::initSamSegmentRealTimeThread(bool ok)
+{
+    if (ok) {
+        sam_segment_real_time_thread = new SamSegmentRealTimeThread(m_scene);
+        sam_segment_real_time_finished = true;
+        connect(this, &GraphicsView::startSamSegmentRealTime, sam_segment_real_time_thread, &SamSegmentRealTimeThread::startSamSegmentRealTime);
+        connect(sam_segment_real_time_thread, &SamSegmentRealTimeThread::finishSamSegmentRealTime, [this]() {
+            //sam_segment_real_time_finished = true;
+            });
+        QTimer* sam_segment_real_time_timer = new QTimer(this);
+        sam_segment_real_time_timer->setInterval(50);
+        connect(sam_segment_real_time_timer, &QTimer::timeout, [this]() {
+				emit startSamSegmentRealTime();
+			});
+        //sam_segment_real_time_timer->start();
+    }
+    else {
+        delete sam_segment_real_time_thread;
+    }
 }
 
 GraphicsScene* GraphicsView::getGraphicsScene() const
@@ -288,8 +310,8 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
         }
     }
     else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
-    if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED) return;
-
+    if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED ||
+        mouse_press_status == MOUSE_PRESS_STATUS::MIDDLE_BUTTON_PRESSED) return;
     m_scene->samSegmentRealTime();
 }
 
@@ -665,8 +687,8 @@ void GraphicsView::saveViewImage()
     }
     else pix = grab(viewport()->rect());
     // 抓取图像后,开启信息显示
-    m_scene->getLeftUpTextItem()->setVisible(true);
-    m_scene->getLeftBottomTextItem()->setVisible(true);
+    //m_scene->getLeftUpTextItem()->setVisible(true);
+    //m_scene->getLeftBottomTextItem()->setVisible(true);
     m_scene->getRightUpTextItem()->setVisible(true);
     m_scene->getRightBottomTextItem()->setVisible(true);
     showAllText();

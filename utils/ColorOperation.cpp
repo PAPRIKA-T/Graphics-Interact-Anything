@@ -3,7 +3,7 @@
 #include <QString>
 #include <QColor>
 
-QColor ColorOperation::generate_color_by_text(const QString& text)
+QColor ColorOperation::GenerateColorByText(const QString& text)
 {
     //translate text to hash
     QByteArray data_2_hash = text.toUtf8();

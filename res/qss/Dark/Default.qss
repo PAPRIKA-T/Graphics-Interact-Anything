@@ -96,7 +96,7 @@ QWidget#this_window
 
 LabelBoardWithTool
 {
-    background-color:rgb(58, 58, 58);
+    background-color:rgb(50, 50, 50);
 }
 
 QStackedWidget#multi_fuction_stack_widget
@@ -200,7 +200,7 @@ QHeaderView::section
 QTableView
 {
     background-color:transparent;
-    alternate-background-color:rgb(53,53,53);
+    alternate-background-color:rgb(58,58,58);
     border: none;
     font-size:12px;
     gridline-color: transparent;
@@ -291,7 +291,7 @@ GenericToolButton
 GenericToolButton:hover
 {
     color:rgb(240, 240, 240);
-    background-color:rgb(60, 60, 60);
+    background-color:rgb(70, 70, 70);
 }
 GenericToolButton:pressed
 {
@@ -327,7 +327,9 @@ GenericToolButton#interaction_mode_btn:checked
 /*******view_attach_btn*******/
 GenericToolButton#view_attach_btn:checked
 {
-    background-color:rgba(210, 50, 50, 200);
+    /*background-color:rgba(210, 50, 50, 200);*/
+    background-color:transparent;
+    border: 1px solid rgb(210, 50, 50);
 }
 GenericToolButton#view_attach_btn:pressed
 {

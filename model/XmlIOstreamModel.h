@@ -5,7 +5,7 @@ class GraphicsItem;
 class QDomDocument;
 class QDomElement;
 class QPointF;
-class GraphicsPixmapItem;
+class GiantImageItem;
 class GraphicsItemIoParameter;
 class QXmlStreamReader;
 
@@ -35,27 +35,27 @@ private:
 	void addItemList(QList<GraphicsItem*>&, GraphicsScene*);
 	/***************读取item信息*******************/
 	GraphicsItem* readBPointXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readInteractionRectXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readDoubleEndPointLineXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readInteractionEllipseXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readInteractionRoundXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 
 	GraphicsItem* readPolygonXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readLineSegmentXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 
 	GraphicsItem* readInteractionPieXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readAngleXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 	GraphicsItem* readParallelLineXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
-		GraphicsItemIoParameter&, GraphicsPixmapItem*, QPointF&);
+		GraphicsItemIoParameter&, GiantImageItem*, QPointF&);
 
 	GraphicsItem* readCalculateLineXml(QXmlStreamReader&, QString&, QList<GraphicsItem*>&,
 		GraphicsItemIoParameter&);
@@ -76,15 +76,15 @@ private:
 	void saveInteractionRoundXml(QDomDocument&, QDomElement&,
 		QDomElement&, GraphicsItem*, QPointF&, QPointF&);
 	void savePolygonXml(QDomDocument&, QDomElement&,
-		QDomElement&, GraphicsItem*, GraphicsPixmapItem*, QPointF&);
+		QDomElement&, GraphicsItem*, GiantImageItem*, QPointF&);
 	void saveLineSegmentXml(QDomDocument&, QDomElement&,
-		QDomElement&, GraphicsItem*, GraphicsPixmapItem*, QPointF&);
+		QDomElement&, GraphicsItem*, GiantImageItem*, QPointF&);
 	void saveInteractionPieXml(QDomDocument&, QDomElement&,
 		QDomElement&, GraphicsItem*, QPointF&, QPointF&, QPointF&);
 	void saveInteractionAngleXml(QDomDocument&, QDomElement&,
-		QDomElement&, GraphicsItem*, QPointF&, GraphicsPixmapItem*, QPointF&);
+		QDomElement&, GraphicsItem*, QPointF&, GiantImageItem*, QPointF&);
 	void saveParallelLineXml(QDomDocument&, QDomElement&,
-		QDomElement&, GraphicsItem*, QPointF&, QPointF&, GraphicsPixmapItem*, QPointF&);
+		QDomElement&, GraphicsItem*, QPointF&, QPointF&, GiantImageItem*, QPointF&);
 	void saveCalculateLineXml(QDomDocument&, QDomElement&, QDomElement&, GraphicsItem*);
 	void saveCalVerticalLineXml(QDomDocument&, QDomElement&, QDomElement&, GraphicsItem*);
 	void saveCalLineAngleLineXml(QDomDocument&, QDomElement&, QDomElement&, GraphicsItem*);

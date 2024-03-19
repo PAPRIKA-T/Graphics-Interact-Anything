@@ -14,7 +14,7 @@ class StatusWidget;
 class ForePlayWidget;
 class GraphicsTextItem;
 class GraphicsScene;
-class GraphicsPixmapItem;
+class GiantImageItem;
 class ImageSceneWidget2D;
 class QVBoxLayout;
 class QPushButton;
@@ -23,7 +23,7 @@ class ViewToolBar;
 class QHBoxLayout;
 class GiantInteractionModeWidget;
 class InteractionModeStackWidget;
-class QTimer;
+class SamSegmentRealTimeThread;
 
 class GraphicsView : public QGraphicsView
 {
@@ -31,6 +31,7 @@ class GraphicsView : public QGraphicsView
 public:
     GraphicsView(QWidget *parent = nullptr);
     ~GraphicsView();
+    void initSamSegmentRealTimeThread(bool); //初始化sam线程
     GraphicsScene* getGraphicsScene() const;
     ViewToolBar* getViewToolBar() const;
     GiantInteractionModeWidget* getGiantInteractionModeWidget() const;
@@ -67,6 +68,7 @@ signals:
     void mouseLeave(ImageSceneWidget2D*);
     void mousePressed(ImageSceneWidget2D*);
     void mouseEnterPixmapItem(bool);
+    void startSamSegmentRealTime();
 
 public slots:
     void hideAllText(); //全部文本隐藏
@@ -109,10 +111,12 @@ private:
 
     /********************************/
     class GraphicsScene* m_scene= nullptr; //实例对象pView的scene
-    GraphicsPixmapItem* pixmap_item = nullptr; //图像指针
+    GiantImageItem* pixmap_item = nullptr; //图像指针
     GenericInteractionModel generic_interaction_model;
     ViewTransFormModel m_transform_model;
     GraphicsCalculateModel m_graphics_calculate_model;
+
+    SamSegmentRealTimeThread* sam_segment_real_time_thread = nullptr; //sam线程
 
     QPixmap grab_map;//截取的图像
 
@@ -129,6 +133,7 @@ private:
     bool is_enter_view = false; //鼠标是否在view移动
     bool is_actived = false; //是否激活(3D视图下具有焦点)
     bool is_mouse_enter_pixmap_item = false; //鼠标是否进入图像项
+    bool sam_segment_real_time_finished = true; //sam实时分割
 };
 
 #endif // GRAPHICSVIEW_H

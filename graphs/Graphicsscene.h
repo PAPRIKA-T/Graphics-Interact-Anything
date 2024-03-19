@@ -21,6 +21,7 @@ class GraphicsScene: public QGraphicsScene
 {
     Q_OBJECT
         friend class GraphicsView;
+        friend class SamSegmentRealTimeThread;
 public:
     explicit GraphicsScene(QWidget *parent = nullptr); //构造函数
     ~GraphicsScene() override; //析构函数
@@ -40,7 +41,7 @@ public:
     void changeShowImage(const QString&);//切换显示图像
 
     /***********scene文本、缩略图图元***********/
-    GraphicsPixmapItem* getPixmapItem(); //获取图像
+    GiantImageItem* getPixmapItem(); //获取图像
     ThumbnailPixmapItem* getThumbnailItem(); //获取缩略图
     GraphicsTextItem* getLeftBottomTextItem(); //获取左下文本item
     GraphicsTextItem* getLeftUpTextItem(); //获取左上文本item
@@ -137,7 +138,7 @@ private:
     int Continuous_point_draw_interval = 20; //连续点绘制间隔
 
     QPointF image_pos_before_move{}; //图像移动前位置
-    GraphicsPixmapItem *pixmap_item= nullptr; //图像项
+    GiantImageItem *pixmap_item= nullptr; //图像项
     ThumbnailPixmapItem* thumbnail_item = nullptr; //图像缩略图
     GraphicsTextItem* text_left_bottom = nullptr; //左下文本
     GraphicsTextItem* text_left_up = nullptr; //左上文本
