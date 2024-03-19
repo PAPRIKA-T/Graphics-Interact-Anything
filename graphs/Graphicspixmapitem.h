@@ -16,6 +16,8 @@ public:
 
     const QImage& getOriginalImage(){return original_image;} //获取原始图像
 
+    const QSize& getFscaleSize(){return QSize(fScaleW,fScaleH);} //获取图像显示尺寸
+    const QSize& getOriginSize(){return QSize(origin_width,origin_height);} //获取图像原始尺寸
     const qreal& getFscaleH(){return fScaleH;} //获取图像高度
     const qreal& getFscaleW(){return fScaleW;} //获取图像宽度
     const qreal& getOriginWidth(){return origin_width;} //获取图像原始宽度
@@ -39,8 +41,8 @@ private:
     void resetImageLoadStatus();
     void LoadCvImageInNewThread(const QString&);
 
-    QImage original_image; //原始图像
-    QImage show_image; //显示图像
+    QImage original_image{}; //原始图像
+    QImage show_image{}; //显示图像
 
     QString pixmap_path = ""; //图像路径
     qreal m_fScale = 1; //宽高比

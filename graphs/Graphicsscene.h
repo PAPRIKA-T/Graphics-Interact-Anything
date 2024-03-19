@@ -60,8 +60,10 @@ public:
     void pixmapItemMoveBy(const QPointF&);
 
     /***********用于GraphicsItem添加***********/
-    void addItemAcceptLabelBoardSetting(GraphicsItem* item);
-    void addItemInit(GraphicsItem* item);//scene添加item初始化设置（保存读取、测量等方式添加图元）
+    void addItemAcceptLabelBoardSetting(GraphicsItem*);
+    void addItemInit(GraphicsItem*);//scene添加item初始化设置（保存读取、测量等方式添加图元）
+
+    void addMaskItem(GiantMaskItem*); //添加mask图元
 
     /***********多边形绘制相关(坐标相关的参数，一样需要映射到scene)***********/
     bool getIsCreatePolygon();
@@ -144,6 +146,8 @@ private:
     GraphicsTextItem* text_left_up = nullptr; //左上文本
     GraphicsTextItem* text_right_bottom = nullptr; //右下文本
     GraphicsTextItem* text_right_up = nullptr; //右上文本
+
+    QList<GiantMaskItem*> mask_item_list{};
 
     bool is_paint_prompt_item = false; //是否在绘制模型提示图元
 };

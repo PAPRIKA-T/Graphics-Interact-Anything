@@ -122,6 +122,7 @@ QImage CVOperation::setMaskOnImage(const QImage& org_image, const cv::Mat& mask,
     return image;
 }
 
+
 QColor CVOperation::generateRandomQColor()
 {
     cv::RNG rng(time(0));

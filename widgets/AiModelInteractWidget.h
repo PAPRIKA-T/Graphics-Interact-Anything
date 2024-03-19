@@ -19,10 +19,10 @@ public:
     ComboBoxHWidget* getOutputShapeWidget();
     QButtonGroup* getExclusiveButtonGroup() const;
     void promptItemLoad();
-
+    QPushButton* getAcceptBtn() const;
 private:
     void connectSceneSignal(GraphicsScene*);
-    GenericToolButton* embedding_btn = nullptr;
+    GenericToolButton* accept_btn = nullptr;
 
     QHBoxLayout* main_layout = nullptr;
     GraphicsView* m_view = nullptr;

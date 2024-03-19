@@ -22,7 +22,6 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     addItem(thumbnail_item);
     pixmap_item->setFlag(QGraphicsItem::ItemIsMovable,false);
     initTextItem();
-    scene_prompt_model.setGraphicsScene(this);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -59,6 +58,7 @@ ItemIndexView* GraphicsScene::getItemIndexView()
 void GraphicsScene::setLabelBoardWidget(LabelBoard* w)
 {
     label_board_widget = w;
+    scene_prompt_model.setGraphicsScene(this);
 }
 
 LabelBoard* GraphicsScene::getLabelBoardWidget()
@@ -499,6 +499,11 @@ void GraphicsScene::addItemInit(GraphicsItem* item)
     item->onPointSelected();
     item->onUpdatePointMessage();
     emit createItemIndex(item);
+}
+
+void GraphicsScene::addMaskItem(GiantMaskItem* mask)
+{
+    mask_item_list.push_back(mask);
 }
 
 bool GraphicsScene::getIsCreatePolygon()

@@ -1,13 +1,14 @@
 ﻿#include "GiantMaskItem.h"
 #include <QPainter>
 
+
 GiantMaskItem::GiantMaskItem(QGraphicsItem* parent)
 	: QAbstractGraphicsShapeItem(parent)
 {
 }
 
-GiantMaskItem::GiantMaskItem(const QImage& i, QGraphicsItem* parent)
-	:original_image(i), QAbstractGraphicsShapeItem(parent)
+GiantMaskItem::GiantMaskItem(const QPixmap& i, QGraphicsItem* parent)
+	:original_pixmap(i), QAbstractGraphicsShapeItem(parent)
 {
 }
 
@@ -25,20 +26,31 @@ QColor GiantMaskItem::getColor() const
 	return m_color;
 }
 
-void GiantMaskItem::setImageSize(const QSize& s)
+void GiantMaskItem::setImageSize(const QSize& s, const QSize& o)
 {
 	fScaleW = s.width();
 	fScaleH = s.height();
+
+	originW = o.width();
+	originH = o.height();
+
+	original_pixmap = QPixmap(s);
+	original_pixmap.fill(m_color);
 }
 
-void GiantMaskItem::setImage(const QImage& i)
+void GiantMaskItem::setMask(const QBitmap& m)
 {
-	original_image = i;
+	original_pixmap.fill(m_color);
+	original_pixmap.setMask(m);
+}
+
+void GiantMaskItem::setMaskOpacity(qreal opacity)
+{
+	mask_opacity = opacity;
 }
 
 QRectF GiantMaskItem::boundingRect() const
 {
-
 	QRectF rect;
 	rect.setTopLeft(QPointF(0, 0));
 	rect.setWidth(fScaleW);
@@ -53,6 +65,7 @@ void GiantMaskItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 	QRect img_rect(0, 0, static_cast<int>(fScaleW), static_cast<int>(fScaleH));
 	painter->setRenderHint(QPainter::SmoothPixmapTransform);
 	painter->setPen(m_color);
-	painter->drawImage(img_rect, original_image);
+	painter->setOpacity(mask_opacity);
+	painter->drawPixmap(img_rect, original_pixmap);
 }
 

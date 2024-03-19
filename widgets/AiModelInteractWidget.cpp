@@ -13,11 +13,10 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	int btn_width = 20; int btn_height = 20;
 
 	main_layout = new QHBoxLayout(this);
-	embedding_btn = new GenericToolButton(this);
-	embedding_btn->setText("Embed");
-	embedding_btn->setObjectName("view_attach_btn");
-	embedding_btn->setFixedSize(40, 20);
-	embedding_btn->setVisible(false);
+	accept_btn = new GenericToolButton(this);
+	accept_btn->setText("Accept");
+	accept_btn->setObjectName("view_attach_btn");
+	accept_btn->setFixedSize(48, 20);
 
 	positive_point = new GenericToolButton(this);
 	positive_point->setIcon(QIcon(":/res/qss/GenericStyle/background-image/positive_point.png"));
@@ -37,8 +36,6 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	exclusive_button_group->addButton(negative_point);
 	exclusive_button_group->addButton(box_prompt);
 
-	main_layout->addWidget(embedding_btn);
-	main_layout->addSpacing(8);
 
 	foreach(QAbstractButton * btn, exclusive_button_group->buttons())
 	{
@@ -62,16 +59,19 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 
 	main_layout->addSpacing(12);
 	main_layout->addWidget(output_shape_widget);
-	main_layout->setContentsMargins(0, 0, 0, 0);
+
+	main_layout->addSpacing(8);
+	main_layout->addWidget(accept_btn);
+	main_layout->setContentsMargins(8, 0, 0, 0);
 	main_layout->setSpacing(1);
 	main_layout->addStretch();
-	setFixedWidth(300);
+	setFixedWidth(286);
 }
 
 AiModelInteractWidget::~AiModelInteractWidget()
 {
 	delete main_layout;
-	delete embedding_btn;
+	delete accept_btn;
 	delete exclusive_button_group;
 	delete output_shape_widget;
 }
@@ -102,6 +102,11 @@ void AiModelInteractWidget::promptItemLoad()
 			break;
 		}
 	}
+}
+
+QPushButton* AiModelInteractWidget::getAcceptBtn() const
+{
+	return accept_btn;
 }
 
 void AiModelInteractWidget::connectSceneSignal(GraphicsScene* s)

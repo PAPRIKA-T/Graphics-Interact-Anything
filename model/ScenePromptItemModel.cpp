@@ -8,6 +8,7 @@
 #include "widgets/ComboBoxWidget.h"
 #include "widgets/AiModelInteractWidget.h"
 #include <QComboBox>
+#include <QPushButton>
 #include "widgets/SAM/sam.h"
 
 #define EPS 1e-5
@@ -25,6 +26,8 @@ ScenePromptItemModel::~ScenePromptItemModel()
 void ScenePromptItemModel::setSamInteractWidget(AiModelInteractWidget* s)
 {
     sam_interact_widget = s;
+    connect(sam_interact_widget->getAcceptBtn(), &QPushButton::clicked,
+        		this, &ScenePromptItemModel::acceptMaskItem);
 }
 
 void ScenePromptItemModel::setSam(Sam* s)
@@ -52,15 +55,19 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 
 void ScenePromptItemModel::acceptMaskItem()
 {
+    current_mask_item->setMaskOpacity(0.8);
+    removeAllPromptsItems();
     initMaskItem();
 }
 
 void ScenePromptItemModel::initMaskItem()
 {
     current_mask_item = new GiantMaskItem();
-    current_mask_item->setImageSize(QSize(pixmap_item->getFscaleW(), pixmap_item->getFscaleH()));
+    current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
+
+    current_mask_item->setMask(QBitmap());
     current_mask_item->setParentItem(pixmap_item);
-    mask_item_list.push_back(current_mask_item);
+    m_scene->addMaskItem(current_mask_item);
 }
 
 bool ScenePromptItemModel::loadImage(const QString& image_path)
@@ -71,7 +78,7 @@ bool ScenePromptItemModel::loadImage(const QString& image_path)
     if (sam->loadImage(load_image)) {
         is_load_image = true;
         load_image_path = image_path;
-        current_mask_item->setImageSize(QSize(pixmap_item->getFscaleW(), pixmap_item->getFscaleH()));
+        current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
         return true;
     }
     else {
@@ -149,9 +156,9 @@ void ScenePromptItemModel::mask2Polygon(const cv::Mat& mask)
 void ScenePromptItemModel::generateGiantMaskItem(const cv::Mat& mask)
 {
     QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
-    c.setAlpha(100);
     current_mask_item->setColor(c);
-    current_mask_item->setImage(CVOperation::cvMat2QImage(mask));
+    cv::bitwise_not(mask, mask);
+    current_mask_item->setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(mask)));
 }
 
 void ScenePromptItemModel::removeAllPromptsItems()
@@ -171,9 +178,9 @@ void ScenePromptItemModel::generateAnnotation()
     if (!sam)return;
     if (!pixmap_item->getIsLoadImageAllData()) return;
 
-    QSize origin_size = pixmap_item->getShowImage().size(); //返回的是原始图像的尺寸
-    if (origin_size.isEmpty())return;
-    cv::Size cv_origin_size = { origin_size.width(),origin_size.height() };
+    QSize fscale_size = pixmap_item->getFscaleSize(); //返回的是原始图像的尺寸
+    if (fscale_size.isEmpty())return;
+    cv::Size cv_fscale_size = { fscale_size.width(),fscale_size.height() };
 
     clearPromptList();
     getSamPromptItems(prompt_list, sam_prompt_items);
@@ -184,7 +191,7 @@ void ScenePromptItemModel::generateAnnotation()
     }
     
     mask = sam->getMask(sam_prompt_items.positive_points, sam_prompt_items.negative_points, sam_prompt_items.box_prompt);
-    cv::resize(mask, mask, cv_origin_size);
+    cv::resize(mask, mask, cv_fscale_size);
     generateGiantMaskItem(mask);
     qDebug() << "Elapsed time:" << timer.elapsed() << "milliseconds";
 }
@@ -193,11 +200,11 @@ void ScenePromptItemModel::Mask2Item()
 {
     if (mask.empty())return;
     int output_shape = sam_interact_widget->getOutputShapeWidget()->getComboBox()->currentIndex();
-    if (output_shape == 0) {
+    if (output_shape == 1) {
         MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon;
         mask2Polygon(mask);
     }
-    else if (output_shape == 1) {
+    else if (output_shape == 2) {
         MASK2ITEM_TYPE = MaskToItemType::MaskToRect;
         mask2Rect(mask);
     }

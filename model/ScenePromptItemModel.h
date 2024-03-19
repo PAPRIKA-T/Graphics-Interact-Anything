@@ -10,7 +10,7 @@ class GiantMaskItem;
 
 enum class MaskToItemType
 {
-	MaskToImg,
+	MaskNoConvert,
 	MaskToPolygon,
 	MaskToRect,
 };
@@ -50,19 +50,19 @@ private:
 	void generateGiantMaskItem(const cv::Mat& mask);
 	void removeItemFromPromptList(); //从模型提示图元列表移除
 	void getSamPromptItems(QList<GraphicsItem*>&, SamPromptItems&);
-	void  clearPromptList();
+	void clearPromptList();
+
 	GraphicsScene* m_scene = nullptr;
 	GiantImageItem* pixmap_item = nullptr;
 	Sam* sam = nullptr;
 	AiModelInteractWidget* sam_interact_widget = nullptr;
 	QList<GraphicsItem*> prompt_list{};//model used prompt item list
 	SamPromptItems sam_prompt_items{};
-	MaskToItemType MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon; //掩码生成item的类型
+	MaskToItemType MASK2ITEM_TYPE = MaskToItemType::MaskNoConvert; //掩码生成item的类型
 	bool is_load_image = false;
 	QString load_image_path = "";
 	
 	cv::Mat mask{};
 	cv::Size input_size{};
 	GiantMaskItem* current_mask_item = nullptr;
-	QList<GiantMaskItem*> mask_item_list{};
 };

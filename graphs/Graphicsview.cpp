@@ -312,6 +312,7 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
     else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED ||
         mouse_press_status == MOUSE_PRESS_STATUS::MIDDLE_BUTTON_PRESSED) return;
+    if (m_scene->getScenePromptItemModel()->getPromptItemList().size() > 1)return;
     m_scene->samSegmentRealTime();
 }
 
