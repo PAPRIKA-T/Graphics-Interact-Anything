@@ -40,7 +40,6 @@ void ScenePromptItemModel::setGraphicsScene(GraphicsScene* s)
 {
 	m_scene = s;
     pixmap_item = m_scene->getPixmapItem();
-    initMaskItem();
 }
 
 QList<GraphicsItem*> ScenePromptItemModel::getPromptItemList()
@@ -55,20 +54,24 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 
 void ScenePromptItemModel::acceptMaskItem()
 {
-    current_mask_item->setMaskOpacity(0.8);
+    current_mask_item->acceptMask();
     m_scene->addMaskItem(current_mask_item);
     removeAllPromptsItems();
-    initMaskItem();
+    initMaskItem(true);
 }
 
-void ScenePromptItemModel::initMaskItem()
+void ScenePromptItemModel::initMaskItem(bool ok)
 {
-    current_mask_item = new GiantMaskItem();
-    current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
-
-    current_mask_item->setMask(QBitmap());
-    current_mask_item->setParentItem(pixmap_item);
-    m_scene->addMaskItem(current_mask_item);
+    if (ok) {
+        current_mask_item = new GiantMaskItem();
+        current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
+        current_mask_item->setParentItem(pixmap_item);
+        m_scene->addMaskItem(current_mask_item);
+    }
+    else {
+        delete current_mask_item;
+        clearMask();
+    }
 }
 
 bool ScenePromptItemModel::loadImage(const QString& image_path)
@@ -219,6 +222,11 @@ void ScenePromptItemModel::Mask2Item()
 void ScenePromptItemModel::clearMask()
 {
     mask = {};
+}
+
+void ScenePromptItemModel::setSamModelInteraction(bool ok)
+{
+    initMaskItem(ok);
 }
 
 void ScenePromptItemModel::removeItemFromPromptList()

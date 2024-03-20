@@ -14,6 +14,7 @@ public:
     void setImageSize(const QSize&, const QSize&);
     void setMask(const QBitmap&);
     void setMaskOpacity(qreal opacity);
+    void acceptMask();
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/

@@ -1,6 +1,6 @@
 ﻿#include "GiantMaskItem.h"
 #include <QPainter>
-
+#include <QBitmap>
 
 GiantMaskItem::GiantMaskItem(QGraphicsItem* parent)
 	: QAbstractGraphicsShapeItem(parent)
@@ -35,7 +35,7 @@ void GiantMaskItem::setImageSize(const QSize& s, const QSize& o)
 	originH = o.height();
 
 	original_pixmap = QPixmap(s);
-	original_pixmap.fill(m_color);
+	original_pixmap.fill(Qt::transparent);
 }
 
 void GiantMaskItem::setMask(const QBitmap& m)
@@ -47,6 +47,12 @@ void GiantMaskItem::setMask(const QBitmap& m)
 void GiantMaskItem::setMaskOpacity(qreal opacity)
 {
 	mask_opacity = opacity;
+}
+
+void GiantMaskItem::acceptMask()
+{
+	if (original_pixmap.isNull())return;
+	setMaskOpacity(0.8);
 }
 
 QRectF GiantMaskItem::boundingRect() const

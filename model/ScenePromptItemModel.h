@@ -29,6 +29,8 @@ public:
 	void generateAnnotation();
 	void Mask2Item();
 	void removeAllPromptsItems(); //移除所有提示图元
+	void clearMask(); //清除掩码
+	void setSamModelInteraction(bool ok);
 
 public slots:
 	void onDeleteAllPromptItemBtn();
@@ -40,7 +42,7 @@ private:
 		std::list<cv::Point> negative_points{};
 		cv::Rect box_prompt = {};
 	};
-	void initMaskItem(); //初始化掩码图元
+	void initMaskItem(bool); //初始化掩码图元
 	bool loadImage(const QString&); //加载图片
 
 	void getSamPromptItems(QList<GraphicsItem*>&, SamPromptItems&); //获取模型提示图元
@@ -49,7 +51,6 @@ private:
 
 	void removeItemFromPromptList(); //从模型提示图元列表移除
 	void clearPromptList(); //清除提示图元列表
-	void clearMask(); //清除掩码
 
 	void mask2Rect(const cv::Mat&); //掩码转矩形
 	void mask2Polygon(const cv::Mat&); //掩码转多边形

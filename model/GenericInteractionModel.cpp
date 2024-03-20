@@ -126,8 +126,10 @@ void GenericInteractionModel::setSamModelInteraction(bool ok)
 	else {
 		m_view->viewport()->unsetCursor();
 		m_view->getGraphicsScene()->initPaintFinishPromptItem();
+		m_view->getGraphicsScene()->getScenePromptItemModel()->clearMask();
 	}
 	m_view->initSamSegmentRealTimeThread(ok);
+	m_view->getGraphicsScene()->getScenePromptItemModel()->setSamModelInteraction(ok);
 }
 
 void GenericInteractionModel::setPolygonItemEdit(bool ok)
