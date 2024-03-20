@@ -431,7 +431,7 @@ void GraphicsScene::updateRtText()
     QString str2 = "H:" + QString::number(pixmap_item->getOriginHeight(), 'f', 0);
 
     qreal image_scale_total = m_view->getViewTransFormModel()->getImageScaleTotal();
-    if (pixmap_item->getPixmap().isNull()) image_scale_total = 0;
+    if (pixmap_item->getShowImage().isNull()) image_scale_total = 0;
     else image_scale_total = pixmap_item->getSceneCompareOriginScale() *
         m_view->getViewTransFormModel()->getViewScale();
     QString str3 = "Zoom: " + QString::number(image_scale_total, 'f', 2) + " ";
@@ -449,7 +449,7 @@ void GraphicsScene::initItemSettingAfterPaint(GraphicsItem* item)
 {
     qreal scale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
     qreal view_scale = m_view->getViewTransFormModel()->getViewScale();
-    if (!pixmap_item->getPixmap().isNull()){
+    if (!pixmap_item->getShowImage().isNull()){
         item->getGraphicsTransformModel().setMeasureObject(pixmap_item);
         item->getGraphicsTransformModel().setImageScale(scale);
     }
@@ -482,7 +482,7 @@ void GraphicsScene::addItemInit(GraphicsItem* item)
 {
     qreal scale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
     qreal view_scale = m_view->getViewTransFormModel()->getViewScale();
-    if (!pixmap_item->getPixmap().isNull())
+    if (!pixmap_item->getShowImage().isNull())
     {
         item->getGraphicsTransformModel().setMeasureObject(pixmap_item);
         item->getGraphicsTransformModel().setImageScale(scale);
@@ -564,12 +564,13 @@ void GraphicsScene::createPromptItem()
 void GraphicsScene::startAiModelSegment()
 {
     if (!is_paint_prompt_item)return;
-    if (pixmap_item->getPixmapPath() == "") {
+    if (pixmap_item->getImagePath() == "") {
         //qDebug() << "no load iamge";
         return;
     }
     scene_prompt_model.generateAnnotation();
 }
+
 void GraphicsScene::samSegmentRealTime()
 {
     startAiModelSegment();
@@ -592,7 +593,7 @@ void GraphicsScene::finishCreatePolygon()
             }
         }
         if (is_paint_prompt_item) {
-            if (pixmap_item->getPixmapPath() == "") {
+            if (pixmap_item->getImagePath() == "") {
                 qDebug() << "no load iamge";
                 return;
             }

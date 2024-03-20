@@ -6,7 +6,7 @@ class QImage;
 namespace CVOperation {
 	//Mat数据与QImage数据互相转换
 	QImage cvMat2QImage(const cv::Mat&);
-	cv::Mat QImage2cvMat(const QImage&, bool inCloneImageData);
+	cv::Mat QImage2cvMat(const QImage&);
 	
 	//为原始图像org_image添加掩码mask，random表示是否随机给Mask上色,会返回一张被掩膜覆盖的图像
 	cv::Mat setMaskOnImage(const cv::Mat& org_image, const cv::Mat& mask,

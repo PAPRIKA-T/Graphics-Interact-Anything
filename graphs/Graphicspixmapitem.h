@@ -11,10 +11,13 @@ public:
     void setShowImage(const QImage &);//设置显示图像
     void setShowImage(const QString&);
     void updateShowImage(const QImage &);//更新图像，只更新内容
-    QImage getShowImage(){return show_image;} //获取图像
-    QPixmap getPixmap(){return QPixmap::fromImage(show_image);} //获取图像
+    void showOriginalImage();
 
+    cv::Mat getOrignImageMat(bool clone);
+    const QImage& getShowImage(){return show_image;} //获取图像
     const QImage& getOriginalImage(){return original_image;} //获取原始图像
+
+    bool getIsLoadImageAllData() const;
 
     const QSize& getFscaleSize(){return QSize(fScaleW,fScaleH);} //获取图像显示尺寸
     const QSize& getOriginSize(){return QSize(origin_width,origin_height);} //获取图像原始尺寸
@@ -23,13 +26,10 @@ public:
     const qreal& getOriginWidth(){return origin_width;} //获取图像原始宽度
     const qreal& getOriginHeight(){return origin_height;} //获取图像原始高度
     const qreal& getScale(){return m_fScale;} //获取宽高比
-    void setPixmapPath(const QString& f);//设置图像路径
-    QString& getPixmapPath() { return pixmap_path; }//获取图像路径
-    const qreal& getSceneCompareOriginScale(){return scene_compare_origin_scale;}//获取图像原始尺寸与导入scene尺寸缩放比
-    cv::Mat getOrignImageMat(bool clone);
+    const qreal& getSceneCompareOriginScale() { return show_compare_origin_size_scale; }//获取图像原始尺寸与导入scene尺寸缩放比
 
-    void showOriginalImage();
-    bool getIsLoadImageAllData() const;
+    void setImagePath(const QString& f);//设置图像路径
+    QString& getImagePath() { return pixmap_path; }//获取图像路径
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/
@@ -39,7 +39,8 @@ protected:
 
 private:
     void resetImageLoadStatus();
-    void LoadCvImageInNewThread(const QString&);
+    void LoadCvImageInNewThread();
+    void resetAllImageData();
 
     QImage original_image{}; //原始图像
     QImage show_image{}; //显示图像
@@ -50,10 +51,10 @@ private:
     qreal fScaleW = 1;  //图像宽度
     qreal origin_width = 1; //图像原始宽度
     qreal origin_height = 1; //图像原始高度
-    qreal scene_compare_origin_scale = 1; //图像原始尺寸与导入scene尺寸缩放比
+    qreal show_compare_origin_size_scale = 1; //图像原始尺寸与导入scene尺寸缩放比
     cv::Mat orgin_image_mat = {}; //原始图像矩阵
 
-    bool is_load_image_all_data = false;
+    bool is_load_image_all_data = false; //是否加载完整图像数据
 };
 
 #endif // GRAPHICSPIXMAPITEM_H

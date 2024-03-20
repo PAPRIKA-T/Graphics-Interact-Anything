@@ -1268,14 +1268,14 @@ void XmlIOstreamModel::createSaveXmlHeader(QDomDocument& domDoc, QDomElement& an
     domDoc.appendChild(version);
 
     GiantImageItem* pixmap_item = scene->getPixmapItem();
-    QFileInfo info = QFileInfo(scene->getPixmapItem()->getPixmapPath());
+    QFileInfo info = QFileInfo(scene->getPixmapItem()->getImagePath());
 
     createXmlElement(domDoc, annotation_element, "folder", 
-        FilePathOperation::getFileFolder(pixmap_item->getPixmapPath())); //创建节点folder
+        FilePathOperation::getFileFolder(pixmap_item->getImagePath())); //创建节点folder
     createXmlElement(domDoc, annotation_element, "filename", 
         info.fileName()); //创建节点filename
     createXmlElement(domDoc, annotation_element, "path", 
-        pixmap_item->getPixmapPath()); //创建节点path
+        pixmap_item->getImagePath()); //创建节点path
 
     QDomElement source_element = domDoc.createElement("source");  //创建父节点source
     {

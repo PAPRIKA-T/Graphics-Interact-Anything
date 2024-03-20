@@ -52,10 +52,10 @@ QImage CVOperation::cvMat2QImage(const cv::Mat& mat)
     }
 }
 
-cv::Mat CVOperation::QImage2cvMat(const QImage& image, bool inCloneImageData)
+cv::Mat CVOperation::QImage2cvMat(const QImage& image)
 {
     cv::Mat mat{};
-    qDebug() << image.format();
+    qDebug() << "CVOperation::QImage2cvMat " << image.format();
     switch (image.format())
     {
     case QImage::Format_ARGB32:

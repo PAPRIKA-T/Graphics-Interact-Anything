@@ -229,7 +229,7 @@ void GraphicsView::setMagImage(const QPointF& p)
     //r = r.intersected(visibleRect);
     //top_left = r.topLeft() - top_left;
     //mag_glass_widget->setPaintPos(top_left);
-    //grab_map = pixmap_item->getPixmap().copy(r);
+    //grab_map = pixmap_item->getShowPixmap().copy(r);
     //mag_glass_widget->update();
 }
 
@@ -304,6 +304,7 @@ void GraphicsView::startSamMode(QMouseEvent* event)
 
 void GraphicsView::moveAtSamMode(QMouseEvent* event)
 {
+    if (m_scene->getScenePromptItemModel()->getPromptItemList().size() > 1)return;
     if (m_scene->getIsCreatePolygon()) {
         if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
             m_scene->pushBackPolygonPointConsitantly(mapToScene(m_present_pos));
@@ -312,7 +313,6 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
     else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED ||
         mouse_press_status == MOUSE_PRESS_STATUS::MIDDLE_BUTTON_PRESSED) return;
-    if (m_scene->getScenePromptItemModel()->getPromptItemList().size() > 1)return;
     m_scene->samSegmentRealTime();
 }
 

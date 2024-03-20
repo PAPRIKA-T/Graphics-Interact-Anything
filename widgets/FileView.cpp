@@ -242,7 +242,7 @@ void FileView::readITKImage()
         for (int i = 0; i < 3; ++i) {
             itk_helper->processAndConvertToQImage(img, i);
             view_list[i]->getGraphicsScene()->changeShowImage(img);
-            view_list[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(filepath);
+            view_list[i]->getGraphicsScene()->getPixmapItem()->setImagePath(filepath);
             view_list[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
         setFilePath(filepath);
@@ -338,7 +338,7 @@ void FileView::readITKImageDir()
         for (int i = 0; i < 3; ++i) {
             itk_helper->processAndConvertToQImage(img, i);
             view_list_container->getViewList()[i]->getGraphicsScene()->changeShowImage(img);
-            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(load_filepath);
+            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setImagePath(load_filepath);
             view_list_container->getViewList()[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
         dirpath = dirpath + "/";
@@ -398,7 +398,7 @@ void FileView::changeITKImage(const QString filepath)
         for (int i = 0; i < 3; ++i) {
             itk_helper->processAndConvertToQImage(img, i);
             view_list_container->getViewList()[i]->getGraphicsScene()->changeShowImage(img);
-            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(filepath);
+            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setImagePath(filepath);
             view_list_container->getViewList()[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
         setFilePath(filepath);
@@ -483,11 +483,11 @@ void FileView::removeImage()
     {
         for (GraphicsView* view : view_list_container->getViewList()) {
             GraphicsScene* scene = view->getGraphicsScene();
-            if (load_filepath == scene->getPixmapItem()->getPixmapPath()) {
+            if (load_filepath == scene->getPixmapItem()->getImagePath()) {
                 load_filepath = "";
                 emit viewClear();
             }
-            QString par_path = FilePathOperation::getFileParentPath(scene->getPixmapItem()->getPixmapPath());
+            QString par_path = FilePathOperation::getFileParentPath(scene->getPixmapItem()->getImagePath());
             par_path = par_path.removeLast();
             if (par_path == remove_path) {
                 scene->resetScene();

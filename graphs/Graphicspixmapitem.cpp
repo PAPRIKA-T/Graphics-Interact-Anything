@@ -2,6 +2,7 @@
 #include <QPainter>
 #include <QGraphicsScene>
 #include "utils/thread/ImageCvLoaderThread.h"
+#include "utils/CVOperation.h"
 
 GiantImageItem::GiantImageItem(const QImage &img)
     :QAbstractGraphicsShapeItem(),show_image(img)
@@ -29,7 +30,8 @@ void GiantImageItem::setShowImage(const QImage &i)
         fScaleH = scene()->height();
         fScaleW = fScaleH * m_fScale;
     }
-    scene_compare_origin_scale = fScaleW / origin_width;
+    show_compare_origin_size_scale = fScaleW / origin_width;
+    LoadCvImageInNewThread();
 }
 
 void GiantImageItem::setShowImage(const QString& path)
@@ -52,8 +54,9 @@ void GiantImageItem::setShowImage(const QString& path)
         fScaleH = scene()->height();
         fScaleW = fScaleH * m_fScale;
     }
-    scene_compare_origin_scale = fScaleW / origin_width;
-    setPixmapPath(path);
+    show_compare_origin_size_scale = fScaleW / origin_width;
+    setImagePath(path);
+    LoadCvImageInNewThread();
 }
 
 void GiantImageItem::updateShowImage(const QImage& i)
@@ -62,7 +65,7 @@ void GiantImageItem::updateShowImage(const QImage& i)
     update();
 }
 
-void GiantImageItem::setPixmapPath(const QString& f)
+void GiantImageItem::setImagePath(const QString& f)
 {
     if (f.isEmpty()) {
         qDebug() << "pixmapPath is null!\nimage load fail"; 
@@ -70,7 +73,6 @@ void GiantImageItem::setPixmapPath(const QString& f)
         return;
     }
     pixmap_path = f;
-    LoadCvImageInNewThread(f);
 }
 
 cv::Mat GiantImageItem::getOrignImageMat(bool clone)
@@ -116,13 +118,27 @@ void GiantImageItem::resetImageLoadStatus()
     is_load_image_all_data = false;
 }
 
-void GiantImageItem::LoadCvImageInNewThread(const QString& f)
+void GiantImageItem::LoadCvImageInNewThread()
 {
     ImageCvLoaderThread* image_read_thread = new ImageCvLoaderThread();
-    connect(image_read_thread, &ImageCvLoaderThread::imageLoaded, [=](const cv::Mat& image) {
-        orgin_image_mat = image;
+    connect(image_read_thread, &ImageCvLoaderThread::imageLoaded, [=](const cv::Mat& m) {
+        if (m.empty()) {
+			qDebug() << "Empty Image";
+            resetAllImageData();
+			return;
+		}
+        orgin_image_mat = m;
         original_image = show_image;
         is_load_image_all_data = true;
         });
-    image_read_thread->setPixmapPath(f);
+    image_read_thread->translateQImage2cvMat(show_image);
+}
+
+void GiantImageItem::resetAllImageData()
+{
+    orgin_image_mat = cv::Mat{};
+    original_image = QImage();
+    show_image = original_image;
+    pixmap_path = "";
+    is_load_image_all_data = false;
 }

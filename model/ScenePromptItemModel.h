@@ -28,8 +28,6 @@ public:
 	void addPromptItem(GraphicsItem* item); //添加模型提示图元
 	void generateAnnotation();
 	void Mask2Item();
-
-	void clearMask();
 	void removeAllPromptsItems(); //移除所有提示图元
 
 public slots:
@@ -42,16 +40,19 @@ private:
 		std::list<cv::Point> negative_points{};
 		cv::Rect box_prompt = {};
 	};
-	void initMaskItem();
-	bool loadImage(const QString& image_path);
-	void segmentAnything();
-	void mask2Rect(const cv::Mat& mask);
-	void mask2Polygon(const cv::Mat& mask);
-	void generateGiantMaskItem(const cv::Mat& mask);
-	void removeItemFromPromptList(); //从模型提示图元列表移除
-	void getSamPromptItems(QList<GraphicsItem*>&, SamPromptItems&);
-	void clearPromptList();
+	void initMaskItem(); //初始化掩码图元
+	bool loadImage(const QString&); //加载图片
 
+	void getSamPromptItems(QList<GraphicsItem*>&, SamPromptItems&); //获取模型提示图元
+	void generateGiantMaskItem(const cv::Mat&); //生成掩码图元
+	void segmentAnything(); //模型分割
+
+	void removeItemFromPromptList(); //从模型提示图元列表移除
+	void clearPromptList(); //清除提示图元列表
+	void clearMask(); //清除掩码
+
+	void mask2Rect(const cv::Mat&); //掩码转矩形
+	void mask2Polygon(const cv::Mat&); //掩码转多边形
 	GraphicsScene* m_scene = nullptr;
 	GiantImageItem* pixmap_item = nullptr;
 	Sam* sam = nullptr;

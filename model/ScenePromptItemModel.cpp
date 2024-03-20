@@ -56,6 +56,7 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 void ScenePromptItemModel::acceptMaskItem()
 {
     current_mask_item->setMaskOpacity(0.8);
+    m_scene->addMaskItem(current_mask_item);
     removeAllPromptsItems();
     initMaskItem();
 }
@@ -73,8 +74,13 @@ void ScenePromptItemModel::initMaskItem()
 bool ScenePromptItemModel::loadImage(const QString& image_path)
 {
     if (!sam)return false;
-    cv::Mat load_image{};
-    cv::resize(m_scene->getPixmapItem()->getOrignImageMat(false), load_image, input_size);
+    cv::Mat load_image = pixmap_item->getOrignImageMat(false);
+    if (load_image.channels() != 3) {
+        if(load_image.channels() == 4)cvtColor(load_image, load_image, cv::COLOR_BGRA2BGR);
+        else if(load_image.channels() == 1) cvtColor(load_image, load_image, cv::COLOR_GRAY2BGR);
+        else qDebug() << "ScenePromptItemModel::loadImage can ont convert image channel to 3" << load_image.channels();
+    }
+    cv::resize(load_image, load_image, input_size);
     if (sam->loadImage(load_image)) {
         is_load_image = true;
         load_image_path = image_path;
@@ -82,7 +88,8 @@ bool ScenePromptItemModel::loadImage(const QString& image_path)
         return true;
     }
     else {
-        qDebug() << "SamWidget::loadImage load image fail";
+        is_load_image = false;
+        qDebug() << "ScenePromptItemModel::loadImage load image fail";
         return false;
     }
 }
@@ -97,13 +104,13 @@ void ScenePromptItemModel::segmentAnything()
         qDebug() << "SamWidget::no load model";
         return;
     }
-    if (m_scene->getPixmapItem()->getPixmapPath() == "") {
+    if (m_scene->getPixmapItem()->getImagePath() == "") {
         qDebug() << "SamWidget::no input image";
         return;
     }
-    if (pixmap_item->getPixmapPath() != load_image_path)
+    if (pixmap_item->getImagePath() != load_image_path)
     {
-        QString path = pixmap_item->getPixmapPath();
+        QString path = pixmap_item->getImagePath();
         loadImage(path);
     }
     cv::Mat maskAuto = sam->autoSegment({ 10, 10 });
@@ -185,11 +192,10 @@ void ScenePromptItemModel::generateAnnotation()
     clearPromptList();
     getSamPromptItems(prompt_list, sam_prompt_items);
 
-    QString image_path = pixmap_item->getPixmapPath();
-    if (pixmap_item->getPixmapPath() != load_image_path) {
-        loadImage(image_path);
+    QString image_path = pixmap_item->getImagePath();
+    if (pixmap_item->getImagePath() != load_image_path) {
+        if(!loadImage(image_path))return;
     }
-    
     mask = sam->getMask(sam_prompt_items.positive_points, sam_prompt_items.negative_points, sam_prompt_items.box_prompt);
     cv::resize(mask, mask, cv_fscale_size);
     generateGiantMaskItem(mask);

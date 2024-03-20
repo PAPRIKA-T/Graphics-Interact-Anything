@@ -115,7 +115,7 @@ void ForePlayWidget::saveItemToPathAllForm(GraphicsScene* scene)
         //qDebug() << "Save FilePath is null";
         return;
     }
-    QString save_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getPixmapPath());
+    QString save_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getImagePath());
     if (save_pixmap_name == "") {
         //qDebug() << "Save PixmapPath is null";
         return;
@@ -150,7 +150,7 @@ void ForePlayWidget::readItemFromPathAllForm(GraphicsScene* scene)
         //qDebug() << "Read FilePath is null";
         return;
     }
-    QString read_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getPixmapPath());
+    QString read_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getImagePath());
     if (read_pixmap_name == "") {
         //qDebug() << "Read PixmapPath is null";
         return;

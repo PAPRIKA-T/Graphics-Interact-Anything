@@ -241,7 +241,7 @@ void Widget::mousePressChangeImageWidget(ImageSceneWidget2D* image_widget)
     image_widget->setStyleSheet("border:1px solid #fe5820;");
     GraphicsScene* m_scene = image_widget->getGraphicsScene();
     connectToolButton(image_widget_2d);
-    QString pix_path = m_scene->getPixmapItem()->getPixmapPath();
+    QString pix_path = m_scene->getPixmapItem()->getImagePath();
     file_view->setFilePath(pix_path);
     file_view->setItemSelected(pix_path);
     status_widget->setRightLabelText(pix_path);
