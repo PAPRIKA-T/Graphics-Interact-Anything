@@ -3,8 +3,10 @@
 #include "widgets/widget.h"
 #include "graphs/Graphicsitem.h"
 #include "model/StyleSheetConfigModel.h"
+#include "graphs/GiantMaskItem.h"
 
 int GraphicsItem::count = 0; 
+int GiantMaskItem::count = 0;
 StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::sheet_type = 
 StyleSheetConfigModel::StyleSheetType::Dark;
 

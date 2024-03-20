@@ -6,6 +6,7 @@ class QColor;
 class GiantMaskItem : public QAbstractGraphicsShapeItem
 {
 public:
+    static int count; //用于计数
     explicit GiantMaskItem(QGraphicsItem* parent = nullptr);
     explicit GiantMaskItem(const QPixmap&, QGraphicsItem* parent = nullptr);
     ~GiantMaskItem();

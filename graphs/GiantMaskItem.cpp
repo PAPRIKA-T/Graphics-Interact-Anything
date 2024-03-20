@@ -5,15 +5,19 @@
 GiantMaskItem::GiantMaskItem(QGraphicsItem* parent)
 	: QAbstractGraphicsShapeItem(parent)
 {
+	++count;
 }
 
 GiantMaskItem::GiantMaskItem(const QPixmap& i, QGraphicsItem* parent)
 	:original_pixmap(i), QAbstractGraphicsShapeItem(parent)
 {
+	++count;
 }
 
 GiantMaskItem::~GiantMaskItem()
 {
+	count--;
+	qDebug()<<"GiantMaskItem::count "<<count;
 }
 
 void GiantMaskItem::setColor(QColor color)

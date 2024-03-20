@@ -76,22 +76,18 @@ bool GraphicsScene::getIsPaintPromptItem()
     return is_paint_prompt_item;
 }
 
-void GraphicsScene::changeShowImage(const QImage& img)
+bool GraphicsScene::changeShowImage(const QImage& img)
 {
-    pixmap_item->setShowImage(img);
-    thumbnail_item->setShowImage(pixmap_item->getShowImage());
-    m_view->getViewTransFormModel()->setOriginPosition(QPoint((width() - pixmap_item->getFscaleW()) / 2,
-        (height() - pixmap_item->getFscaleH()) / 2));
-    m_view->getViewTransFormModel()->resetTransform();
+    if (!pixmap_item->setShowImage(img)) return false;
+    initImageShowSetting();
+    return true;
 }
 
-void GraphicsScene::changeShowImage(const QString& image_path)
+bool GraphicsScene::changeShowImage(const QString& image_path)
 {
-    pixmap_item->setShowImage(image_path);
-    thumbnail_item->setShowImage(pixmap_item->getShowImage());
-    m_view->getViewTransFormModel()->setOriginPosition(QPoint((width() - pixmap_item->getFscaleW()) / 2,
-        (height() - pixmap_item->getFscaleH()) / 2));
-    m_view->getViewTransFormModel()->resetTransform();
+    if(!pixmap_item->setShowImage(image_path)) return false;
+    initImageShowSetting();
+    return true;
 }
 
 GiantImageItem* GraphicsScene::getPixmapItem()
@@ -463,6 +459,14 @@ void GraphicsScene::initItemSettingAfterPaint(GraphicsItem* item)
         qitem->setViewScale(view_scale);
     }
     emit createItemIndex(item);
+}
+
+void GraphicsScene::initImageShowSetting()
+{
+    thumbnail_item->setShowImage(pixmap_item->getShowImage());
+    m_view->getViewTransFormModel()->setOriginPosition(QPoint((width() - pixmap_item->getFscaleW()) / 2,
+        (height() - pixmap_item->getFscaleH()) / 2));
+    m_view->getViewTransFormModel()->resetTransform();
 }
 
 void GraphicsScene::addItemInitAfterPaint(GraphicsItem *item)

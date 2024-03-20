@@ -37,8 +37,8 @@ public:
     bool getIsPaintPromptItem(); //获取是否在绘制提示图元标志
 
     /***********图像设置***********/
-    void changeShowImage(const QImage&);//切换显示图像
-    void changeShowImage(const QString&);//切换显示图像
+    bool changeShowImage(const QImage&);//切换显示图像
+    bool changeShowImage(const QString&);//切换显示图像
 
     /***********scene文本、缩略图图元***********/
     GiantImageItem* getPixmapItem(); //获取图像
@@ -109,6 +109,7 @@ public slots:
     void NPlineSegmentClicked(int checked);
 
 private:
+    void initImageShowSetting(); //初始化图像显示设置
     void addItemInitAfterPaint(GraphicsItem* item);//scene添加item初始化设置(通过绘制方式)
     void initPaintGraphicsItem(); //初始化绘画操作
     void initPaintFinishGraphicsItem(); //取消绘画操作

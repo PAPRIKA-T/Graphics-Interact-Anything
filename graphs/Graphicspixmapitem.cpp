@@ -11,10 +11,13 @@ GiantImageItem::GiantImageItem(const QImage &img)
     if (!img.isNull()) setShowImage(img);
     setData(0,"GiantImageItem");}
 
-void GiantImageItem::setShowImage(const QImage &i)
+bool GiantImageItem::setShowImage(const QImage &i)
 {
     resetImageLoadStatus();
-    if (i.isNull()) pixmap_path = "";
+    if (i.isNull()) {
+        pixmap_path = "";
+        return false;
+    }
     show_image = i;
     origin_width = show_image.width();
     origin_height = show_image.height();
@@ -32,14 +35,15 @@ void GiantImageItem::setShowImage(const QImage &i)
     }
     show_compare_origin_size_scale = fScaleW / origin_width;
     LoadCvImageInNewThread();
+    return true;
 }
 
-void GiantImageItem::setShowImage(const QString& path)
+bool GiantImageItem::setShowImage(const QString& path)
 {
     resetImageLoadStatus();
     if (!show_image.load(path)) {
         qDebug() << path <<"GiantImageItem::setPixmap(image load fail)";
-        return;
+        return false;
     }
     origin_width = show_image.width();
     origin_height = show_image.height();
@@ -57,6 +61,7 @@ void GiantImageItem::setShowImage(const QString& path)
     show_compare_origin_size_scale = fScaleW / origin_width;
     setImagePath(path);
     LoadCvImageInNewThread();
+    return true;
 }
 
 void GiantImageItem::updateShowImage(const QImage& i)

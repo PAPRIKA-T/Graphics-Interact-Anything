@@ -8,8 +8,8 @@ class GiantImageItem:public QObject,public QAbstractGraphicsShapeItem
     Q_OBJECT
 public:
     explicit GiantImageItem(const QImage &); //构造函数
-    void setShowImage(const QImage &);//设置显示图像
-    void setShowImage(const QString&);
+    bool setShowImage(const QImage &);//设置显示图像
+    bool setShowImage(const QString&);
     void updateShowImage(const QImage &);//更新图像，只更新内容
     void showOriginalImage();
 

@@ -54,6 +54,7 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 
 void ScenePromptItemModel::acceptMaskItem()
 {
+    if (prompt_list.size() <= 1)return;
     current_mask_item->acceptMask();
     m_scene->addMaskItem(current_mask_item);
     removeAllPromptsItems();
