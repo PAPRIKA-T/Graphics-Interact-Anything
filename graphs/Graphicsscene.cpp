@@ -498,6 +498,7 @@ void GraphicsScene::addItemInit(GraphicsItem* item)
     }
     item->setViewScale(view_scale);
     addItem(item);
+    if (item->getGraphicsRelationModel().getIsHideChildItemList())item->getGraphicsRelationModel().setAllChildVisible(false);
     QList<GraphicsItem*> child_item_list;
     item->findAllGraphicsChildItems(child_item_list);
     foreach(GraphicsItem * qitem, child_item_list) {
