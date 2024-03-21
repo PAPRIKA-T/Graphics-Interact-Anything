@@ -66,6 +66,11 @@ LabelBoard* GraphicsScene::getLabelBoardWidget()
     return label_board_widget;
 }
 
+GraphicsItem* GraphicsScene::getPaintingItem()
+{
+    return painting_item;
+}
+
 ScenePromptItemModel* GraphicsScene::getScenePromptItemModel()
 {
     return &scene_prompt_model;
@@ -291,8 +296,8 @@ void GraphicsScene::afterSetPromptItemPoint(const QPointF& p)
     is_paint_new_item = false;
     if (set_point_fp_list.isEmpty()) {
         painting_item = nullptr;
-        emit promptContinue();
         startAiModelSegment();
+        emit promptContinue();
     }
 }
 
@@ -556,11 +561,6 @@ void GraphicsScene::createPromptItem()
 {
     if (!is_paint_prompt_item)return;
     if (is_paint_new_item) {
-        if (painting_item->data(1) == "PromptRect") {
-            foreach(GraphicsItem * prompt_item, scene_prompt_model.getPromptItemList()) {
-                if (prompt_item->data(1) == "PromptRect") prompt_item->onActionRemoveSelf();
-            }
-        }
         scene_prompt_model.addPromptItem(painting_item);
     }
 }

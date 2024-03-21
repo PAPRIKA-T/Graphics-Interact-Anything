@@ -687,6 +687,7 @@ void XmlIOstreamModel::addItemList(QList<GraphicsItem*>& items, GraphicsScene* s
             break;
         }
     }
+    if (items.isEmpty())return;
     items.last()->setSelected(false);
 }
 
@@ -1254,6 +1255,7 @@ void XmlIOstreamModel::createGraphicsItemName(QList<GraphicsItem*>& sort_item_li
         if (scene->isPaintItemWithChild(item))
         {
             GraphicsItem* m_item = dynamic_cast<GraphicsItem*>(item);
+            if(!m_item)continue;
             m_item->setName(index);
             index++;
             if (m_item->parentItem() == nullptr)sort_item_list.append(m_item);

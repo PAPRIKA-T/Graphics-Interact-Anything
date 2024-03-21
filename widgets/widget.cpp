@@ -263,10 +263,6 @@ void Widget::disConnectToolButton(ImageSceneWidget2D* image_widget)
 
 void Widget::DimensionTrans()
 {
-    foreach(GraphicsView * view, view_list_container.getViewList()) {
-        view->getGraphicsScene()->getScenePromptItemModel()->
-            removeAllPromptsItems();
-    }
     if (foreplay_widget->getAutoSave())
         foreplay_widget->saveItemToPathAllFormAllScene();
 

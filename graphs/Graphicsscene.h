@@ -31,7 +31,7 @@ public:
     ItemIndexView* getItemIndexView();
     void setLabelBoardWidget(LabelBoard* w);
     LabelBoard* getLabelBoardWidget();
-
+    GraphicsItem* getPaintingItem(); //获取正在绘制的图形对象
     ScenePromptItemModel* getScenePromptItemModel();
 
     bool getIsPaintPromptItem(); //获取是否在绘制提示图元标志
@@ -131,7 +131,7 @@ private:
     GraphicsView* m_view = nullptr;
     LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
-    ScenePromptItemModel scene_prompt_model{};
+    ScenePromptItemModel scene_prompt_model{}; //scene提示图元模型
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象

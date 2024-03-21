@@ -544,6 +544,7 @@ void GraphicsItem::onActionRemoveSelf()
     //slot connect with contextMenuEvent::delete Action
     if (parentItem() == nullptr)
     {
+        setVisible(false);
         //qDebug() << "null" << data(1);
         emit prepareToRemove();
         if (!delete_direct){

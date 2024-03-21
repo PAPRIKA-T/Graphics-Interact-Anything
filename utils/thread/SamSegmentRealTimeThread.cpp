@@ -14,8 +14,6 @@ SamSegmentRealTimeThread::~SamSegmentRealTimeThread()
 void SamSegmentRealTimeThread::run()
 {
     m_scene->samSegmentRealTime();
-    m_scene->getGraphicsView()->viewport()->update();
-    emit finishSamSegmentRealTime();
 }
 
 void SamSegmentRealTimeThread::startSamSegmentRealTime()

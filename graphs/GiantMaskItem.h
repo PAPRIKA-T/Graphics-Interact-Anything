@@ -16,6 +16,7 @@ public:
     void setMask(const QBitmap&);
     void setMaskOpacity(qreal opacity);
     void acceptMask();
+    void resetMask();
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/

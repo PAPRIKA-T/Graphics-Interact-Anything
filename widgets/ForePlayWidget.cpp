@@ -120,7 +120,8 @@ void ForePlayWidget::saveItemToPathAllForm(GraphicsScene* scene)
         //qDebug() << "Save PixmapPath is null";
         return;
     }
-    scene->getScenePromptItemModel()->removeAllPromptsItems();
+
+    scene->getScenePromptItemModel()->onDeleteAllPromptItemBtn();
     if (scene->getIsCreatePolygon()) {
         scene->finishCreatePolygon();
     }

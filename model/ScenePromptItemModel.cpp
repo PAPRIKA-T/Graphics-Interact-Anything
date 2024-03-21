@@ -10,6 +10,7 @@
 #include <QComboBox>
 #include <QPushButton>
 #include "widgets/SAM/sam.h"
+#include "graphs/GraphicsView.h"
 
 #define EPS 1e-5
 
@@ -57,8 +58,8 @@ void ScenePromptItemModel::acceptMaskItem()
     if (prompt_list.size() <= 1)return;
     current_mask_item->acceptMask();
     m_scene->addMaskItem(current_mask_item);
-    removeAllPromptsItems();
     initMaskItem(true);
+    removeAllPromptsItems();
 }
 
 void ScenePromptItemModel::initMaskItem(bool ok)
@@ -70,8 +71,10 @@ void ScenePromptItemModel::initMaskItem(bool ok)
         m_scene->addMaskItem(current_mask_item);
     }
     else {
-        delete current_mask_item;
+        removeAllPromptsItems();
         clearMask();
+        delete current_mask_item;
+        current_mask_item = nullptr;
     }
 }
 
@@ -178,23 +181,23 @@ void ScenePromptItemModel::removeAllPromptsItems()
     if (prompt_list.size() == 0) return;
     foreach(GraphicsItem * prompt_item, prompt_list){
         prompt_item->onActionRemoveSelf();
+        if(prompt_item->scene() == m_scene)m_scene->removeItem(prompt_item);
     }
     emit m_scene->promptContinue();
 }
 
 void ScenePromptItemModel::generateAnnotation()
 {
-    QElapsedTimer timer;
-    timer.start();
     if (!sam)return;
     if (!pixmap_item->getIsLoadImageAllData()) return;
 
     QSize fscale_size = pixmap_item->getFscaleSize(); //返回的是原始图像的尺寸
     if (fscale_size.isEmpty())return;
-    cv::Size cv_fscale_size = { fscale_size.width(),fscale_size.height() };
 
+    cv::Size cv_fscale_size = { fscale_size.width(),fscale_size.height() };
     clearPromptList();
     getSamPromptItems(prompt_list, sam_prompt_items);
+    if (sam_prompt_items.isEmpty()) return;
 
     QString image_path = pixmap_item->getImagePath();
     if (pixmap_item->getImagePath() != load_image_path) {
@@ -203,7 +206,6 @@ void ScenePromptItemModel::generateAnnotation()
     mask = sam->getMask(sam_prompt_items.positive_points, sam_prompt_items.negative_points, sam_prompt_items.box_prompt);
     cv::resize(mask, mask, cv_fscale_size);
     generateGiantMaskItem(mask);
-    qDebug() << "Elapsed time:" << timer.elapsed() << "milliseconds";
 }
 
 void ScenePromptItemModel::Mask2Item()
@@ -223,6 +225,8 @@ void ScenePromptItemModel::Mask2Item()
 void ScenePromptItemModel::clearMask()
 {
     mask = {};
+    if (!current_mask_item)return;
+    current_mask_item->resetMask();
 }
 
 void ScenePromptItemModel::setSamModelInteraction(bool ok)
@@ -233,9 +237,9 @@ void ScenePromptItemModel::setSamModelInteraction(bool ok)
 void ScenePromptItemModel::removeItemFromPromptList()
 {
     GraphicsItem* self = dynamic_cast<GraphicsItem*>(sender());
+    if(!self)return;
     prompt_list.removeOne(self);
     if (prompt_list.size() == 0) {
-        m_scene->getPixmapItem()->showOriginalImage();
         clearMask();
     }
 }
@@ -290,6 +294,10 @@ void ScenePromptItemModel::getSamPromptItems(QList<GraphicsItem*>& l, SamPromptI
         else if (prompt_item->data(1) == "PromptRect") {
             QPointF p_s = prompt_item->getStartMeasurePos();
             QPointF p_e = prompt_item->getEdgeMeasurePos();
+            if (p_s.rx() == p_e.rx() || p_s.ry() == p_e.ry()) {
+                sam_prompt_items.box_prompt = cv::Rect{};
+                continue;
+            }
             double ps_x_convert = (p_s.x() * input_size.width) / cv_origin_size.width;
             double ps_y_convert = (p_s.y() * input_size.height) / cv_origin_size.height;
             double pe_x_convert = (p_e.x() * input_size.width) / cv_origin_size.width;
@@ -297,7 +305,6 @@ void ScenePromptItemModel::getSamPromptItems(QList<GraphicsItem*>& l, SamPromptI
             cv::Point cvPSoint(ps_x_convert, ps_y_convert);
             cv::Point cvPEoint(pe_x_convert, pe_y_convert);
             s.box_prompt = cv::Rect{ cvPSoint, cvPEoint };
-
         }
     }
 }
@@ -306,11 +313,18 @@ void ScenePromptItemModel::clearPromptList()
 {
     sam_prompt_items.positive_points.clear();
     sam_prompt_items.negative_points.clear();
+    sam_prompt_items.box_prompt = cv::Rect{};
 }
 
 void ScenePromptItemModel::addPromptItem(GraphicsItem* item)
 {
-    prompt_list.append(item);
+    prompt_list.push_back(item);
     connect(item, &GraphicsItem::prepareToRemove,
         this, &ScenePromptItemModel::removeItemFromPromptList);
+}
+
+bool ScenePromptItemModel::SamPromptItems::isEmpty()
+{
+    if (positive_points.empty() && box_prompt.empty() && negative_points.empty()) return true;
+    else return false;
 }

@@ -28,9 +28,8 @@ public:
 	void addPromptItem(GraphicsItem* item); //添加模型提示图元
 	void generateAnnotation();
 	void Mask2Item();
-	void removeAllPromptsItems(); //移除所有提示图元
-	void clearMask(); //清除掩码
 	void setSamModelInteraction(bool ok);
+	void clearMask(); //清除掩码
 
 public slots:
 	void onDeleteAllPromptItemBtn();
@@ -41,6 +40,7 @@ private:
 		std::list<cv::Point> positive_points{};
 		std::list<cv::Point> negative_points{};
 		cv::Rect box_prompt = {};
+		bool isEmpty();
 	};
 	void initMaskItem(bool); //初始化掩码图元
 	bool loadImage(const QString&); //加载图片
@@ -49,6 +49,7 @@ private:
 	void generateGiantMaskItem(const cv::Mat&); //生成掩码图元
 	void segmentAnything(); //模型分割
 
+	void removeAllPromptsItems(); //移除所有提示图元
 	void removeItemFromPromptList(); //从模型提示图元列表移除
 	void clearPromptList(); //清除提示图元列表
 
@@ -61,10 +62,10 @@ private:
 	QList<GraphicsItem*> prompt_list{};//model used prompt item list
 	SamPromptItems sam_prompt_items{};
 	MaskToItemType MASK2ITEM_TYPE = MaskToItemType::MaskNoConvert; //掩码生成item的类型
+	cv::Size input_size{};
 	bool is_load_image = false;
 	QString load_image_path = "";
 	
 	cv::Mat mask{};
-	cv::Size input_size{};
 	GiantMaskItem* current_mask_item = nullptr;
 };

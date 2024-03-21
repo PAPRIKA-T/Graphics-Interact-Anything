@@ -59,6 +59,12 @@ void GiantMaskItem::acceptMask()
 	setMaskOpacity(0.8);
 }
 
+void GiantMaskItem::resetMask()
+{
+	if (original_pixmap.isNull())return;
+	original_pixmap.fill(Qt::transparent);
+}
+
 QRectF GiantMaskItem::boundingRect() const
 {
 	QRectF rect;

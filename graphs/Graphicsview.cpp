@@ -294,6 +294,15 @@ void GraphicsView::startSamMode(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton) {
         m_scene->createPaintItemAtPoint(mapToScene(event->pos()));
+        if (m_scene->painting_item->data(1) != "PromptRect") return;
+
+        foreach(GraphicsItem * prompt_item, m_scene->scene_prompt_model.getPromptItemList()) {
+            if (prompt_item->data(1) == "PromptRect" && m_scene->painting_item != prompt_item)
+            {
+                prompt_item->onActionRemoveSelf(); 
+                m_scene->getScenePromptItemModel()->clearMask(); break;
+            }
+        }
     }
     else if (event->button() == Qt::RightButton) {
         if (m_scene->getIsCreatePolygon()) {
@@ -304,7 +313,6 @@ void GraphicsView::startSamMode(QMouseEvent* event)
 
 void GraphicsView::moveAtSamMode(QMouseEvent* event)
 {
-    if (m_scene->getScenePromptItemModel()->getPromptItemList().size() > 1)return;
     if (m_scene->getIsCreatePolygon()) {
         if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
             m_scene->pushBackPolygonPointConsitantly(mapToScene(m_present_pos));
@@ -313,6 +321,7 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
     else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
     if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED ||
         mouse_press_status == MOUSE_PRESS_STATUS::MIDDLE_BUTTON_PRESSED) return;
+    if (m_scene->getScenePromptItemModel()->getPromptItemList().size() > 1)return;
     m_scene->samSegmentRealTime();
 }
 
@@ -619,7 +628,8 @@ void GraphicsView::hideAllText()
         if(m_scene->isPaintItemWithChild(item))
         {
             GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-                if(new_item->parentItem()==nullptr)new_item->getGraphicsTextModel().setIsHideText(true);
+                if(new_item && new_item->parentItem()==nullptr)
+                    new_item->getGraphicsTextModel().setIsHideText(true);
         }
     }
 }
