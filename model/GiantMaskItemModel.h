@@ -13,6 +13,7 @@ public:
 	QList<GiantMaskItem*> getMaskItemList() const;
 	void initForegroundMaskItemImageSetting();
 	void applyForegroundMask2Label();
+	void applySparyRect2Label(const QRect&); //将喷枪mask应用到label
 	void resetMaskItemList(); //重置mask图元列表
 	void setGraphicsScene(GraphicsScene*);
 

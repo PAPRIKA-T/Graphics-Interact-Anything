@@ -67,7 +67,7 @@ void GenericInteractionModel::setRubberInteraction(bool ok)
 
 void GenericInteractionModel::setPaintInteraction(bool ok)
 {
-	m_view->setPaintCross(ok);
+	m_view->setPaintCrossStyle(ok);
 	if (ok) {
 		interaciton_status = InteractionStatus::INTERACTION_PAINT;
 		m_view->viewport()->setCursor(QCursor(Qt::BlankCursor));
@@ -105,7 +105,7 @@ void GenericInteractionModel::setCalculateInteraction(bool ok)
 
 void GenericInteractionModel::setEditPolygonInteraction(bool ok)
 {
-	m_view->setPaintCross(ok);
+	m_view->setPaintCrossStyle(ok);
 	setPolygonItemEdit(ok);
 	if (ok) {
 		interaciton_status = InteractionStatus::INTERACTION_EDIT_POLYGON;
@@ -130,6 +130,19 @@ void GenericInteractionModel::setSamModelInteraction(bool ok)
 	}
 	m_view->initSamSegmentRealTimeThread(ok);
 	m_view->getGraphicsScene()->getScenePromptItemModel()->setSamModelInteraction(ok);
+}
+
+void GenericInteractionModel::setSprayInteraction(bool ok)
+{
+	m_view->setPaintRectStyle(ok);
+	if (ok) {
+		interaciton_status = InteractionStatus::INTERACTION_SPRAY;
+		m_view->setDragMode(QGraphicsView::NoDrag);
+		m_view->viewport()->setCursor(QCursor(Qt::BlankCursor));
+	}
+	else {
+		m_view->viewport()->unsetCursor();
+	}
 }
 
 void GenericInteractionModel::setPolygonItemEdit(bool ok)

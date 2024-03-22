@@ -61,5 +61,6 @@
         <file>res/qss/GenericStyle/background-image/line.png</file>
         <file>res/qss/GenericStyle/background-image/left.png</file>
         <file>res/qss/GenericStyle/background-image/right.png</file>
+        <file>res/qss/GenericStyle/background-image/spray_mode.png</file>
     </qresource>
 </RCC>

@@ -19,6 +19,7 @@ public:
     void setMaskOpacity(qreal opacity);
     void resetMask();
     void addMaskRange(const cv::Mat&);
+    void addRectRange(const QRect&);
 
     const cv::Mat& getOriginalMask();
 protected:

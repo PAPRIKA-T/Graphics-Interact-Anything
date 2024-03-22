@@ -40,6 +40,10 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     draw_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/draw_mode.png"));
     draw_btn->setIconSize(QSize(34, 31));
 
+    spray_btn = new GenericToolButton(this);
+    spray_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/spray_mode.png"));
+    spray_btn->setIconSize(QSize(34, 31));
+
     calculate_btn = new GenericToolButton(this);
     calculate_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/calculate_mode.png"));
     calculate_btn->setIconSize(QSize(20, 26));
@@ -50,6 +54,7 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 
     sam_model_btn->setCustomTooltip("Sam Mode");
     draw_btn->setCustomTooltip("Draw Mode");
+    spray_btn->setCustomTooltip("Spray Mode");
     calculate_btn->setCustomTooltip("Calculate Mode");
     edit_polygon_btn->setCustomTooltip("Edit Polygon Mode");
 
@@ -59,6 +64,7 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     exclusive_button_group->addButton(select_btn);
     exclusive_button_group->addButton(edit_polygon_btn);
     exclusive_button_group->addButton(draw_btn);
+    exclusive_button_group->addButton(spray_btn);
     exclusive_button_group->addButton(sam_model_btn);
     exclusive_button_group->addButton(calculate_btn);
     exclusive_button_group->setExclusive(true);
@@ -80,8 +86,10 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
     connect(draw_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onDrawBtn);
     connect(calculate_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onCalculateBtn);
     connect(sam_model_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onSamModelBtn);
+    connect(spray_btn, &QPushButton::toggled, this, &GiantInteractionModeWidget::onSprayModeBtn);
 
     main_layout->addWidget(draw_btn);
+    main_layout->addWidget(spray_btn);
     main_layout->addWidget(rubber_btn);
     main_layout->addWidget(calculate_btn);
     main_layout->addSpacing(5);
@@ -189,4 +197,9 @@ void GiantInteractionModeWidget::onSamModelBtn(int checked)
     else {
         mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);
     }
+}
+
+void GiantInteractionModeWidget::onSprayModeBtn(int checked)
+{
+    m_view->getGenericInteractionModel()->setSprayInteraction(checked);
 }

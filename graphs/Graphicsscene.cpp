@@ -85,6 +85,11 @@ void GraphicsScene::applyForegroundMask2Label()
     mask_item_model.applyForegroundMask2Label();
 }
 
+void GraphicsScene::applySparyRect2Label(const QRect& r)
+{
+    mask_item_model.applySparyRect2Label(r);
+}
+
 ScenePromptItemModel* GraphicsScene::getScenePromptItemModel()
 {
     return &scene_prompt_model;

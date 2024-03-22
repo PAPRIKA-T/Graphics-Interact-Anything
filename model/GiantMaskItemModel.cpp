@@ -104,3 +104,8 @@ void GiantMaskItemModel::applyForegroundMask2Label()
 		mask_item_list[current_label_index]->addMaskRange(foreground_mask_item->getOriginalMask());
 	}
 }
+
+void GiantMaskItemModel::applySparyRect2Label(const QRect&r)
+{
+	mask_item_list.at(current_label_index)->addRectRange(r);
+}

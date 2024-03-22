@@ -64,7 +64,6 @@ void GraphicsView::initSamSegmentRealTimeThread(bool ok)
 {
     if (ok) {
         sam_segment_real_time_thread = new SamSegmentRealTimeThread(m_scene);
-        sam_segment_real_time_finished = true;
         connect(this, &GraphicsView::startSamSegmentRealTime, sam_segment_real_time_thread, &SamSegmentRealTimeThread::startSamSegmentRealTime);
         connect(sam_segment_real_time_thread, &SamSegmentRealTimeThread::finishSamSegmentRealTime, [this]() {
             //sam_segment_real_time_finished = true;
@@ -105,6 +104,7 @@ void GraphicsView::initGraphicsScene()
     generic_interaction_model.setGraphicsView(this);
     m_transform_model.setGraphicsView(this);
     m_graphics_calculate_model.setGraphicsScene(m_scene);
+    m_graphics_view_paint_model.setGraphicsView(this);
 }
 
 void GraphicsView::initLayout()
@@ -324,6 +324,17 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
     m_scene->samSegmentRealTime();
 }
 
+void GraphicsView::moveAtSprayMode(QMouseEvent* event)
+{
+    if (pixmap_item->getOriginalImage().isNull())return;
+    if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
+        QRect r = m_graphics_view_paint_model.getSprayRect();
+        QPoint convert_lt = mapToScene(r.topLeft()).toPoint();
+        QPoint convert_br = mapToScene(r.bottomRight()).toPoint();
+        m_scene->applySparyRect2Label(QRect(convert_lt, convert_br));
+    }
+}
+
 void GraphicsView::showMenuAfterMouseRelease(QMouseEvent* event)
 {
     if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
@@ -384,6 +395,11 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
 		startSamMode(event);
 	}
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SPRAY) {
+        moveAtSprayMode(event);
+        viewport()->update();
+    }
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
         if (event->button() == Qt::LeftButton) {
@@ -442,6 +458,10 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
         moveAtSamMode(event);
     }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SPRAY) {
+        moveAtSprayMode(event);
+    }
     m_scene->updateRtText();
 }
 
@@ -496,6 +516,7 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         }
     }
     QGraphicsView::mouseReleaseEvent(event);
+    viewport()->update();
 }
 
 void GraphicsView::wheelEvent(QWheelEvent *event)
@@ -725,9 +746,29 @@ void GraphicsView::saveViewImage()
     }
 }
 
-void GraphicsView::setPaintCross(bool ok)
+void GraphicsView::setPaintCrossStyle(bool ok)
 {
-    paint_cross = ok;
+    if (ok) {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_CROSS;
+    }
+    else {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_NONE;
+    }
+    viewport()->update();
+}
+
+void GraphicsView::setPaintRectStyle(bool ok)
+{
+    if (ok) {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_RECT;
+    }
+    else {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_NONE;
+    }
     viewport()->update();
 }
 
@@ -739,20 +780,18 @@ void GraphicsView::setActived(bool ok)
 void GraphicsView::paintEvent(QPaintEvent *event)
 {
     QGraphicsView::paintEvent(event);
-    if(is_enter_view && paint_cross)
+    if (!is_enter_view)return;
+    if(m_graphics_view_paint_model.paint_style_type == 
+        GraphicsViewPaintModel::PaintStyleType::PAINT_CROSS)
     {
-        //画一个交叉线，显示鼠标此时的位置
         QPainter painter(viewport());
-        QPen pen;
-        pen.setColor(QColor(91, 220, 47));
-        pen.setWidth(1);
-        painter.setPen(pen);
-        //绘制横向线
-        painter.drawLine(QPoint(0, m_present_pos.ry()), QPoint(width(), m_present_pos.ry()));
-        pen.setColor(QColor(220, 60, 74));
-        painter.setPen(pen);
-        //绘制纵向线
-        painter.drawLine(QPoint(m_present_pos.rx(), 0), QPoint(m_present_pos.rx(), height()));
+        m_graphics_view_paint_model.paintCrossStyle(&painter);
+    }
+    else if (m_graphics_view_paint_model.paint_style_type ==
+        GraphicsViewPaintModel::PaintStyleType::PAINT_RECT)
+    {
+        QPainter painter(viewport());
+        m_graphics_view_paint_model.paintRectStyle(&painter);
     }
 }
 

@@ -2,6 +2,7 @@
 #include "utils/CVOperation.h"
 #include <QPainter>
 #include <QBitmap>
+#include <QElapsedTimer>
 
 GiantMaskItem::GiantMaskItem(QGraphicsItem* parent)
 	: QAbstractGraphicsShapeItem(parent)
@@ -67,7 +68,16 @@ void GiantMaskItem::resetMask()
 
 void GiantMaskItem::addMaskRange(const cv::Mat& m)
 {
-	setMask(original_mask + m);
+	setMask(original_mask | m);
+}
+
+void GiantMaskItem::addRectRange(const QRect& r)
+{
+	QPointF convert_p = mapFromScene(r.topLeft());
+	cv::Mat m = cv::Mat::zeros(fScaleH, fScaleW, CV_8UC1);
+	cv::rectangle(m, cv::Rect(convert_p.rx(), convert_p.ry(), r.width(), r.height()), 
+		cv::Scalar(255), -1);
+	addMaskRange(m);
 }
 
 const cv::Mat& GiantMaskItem::getOriginalMask()

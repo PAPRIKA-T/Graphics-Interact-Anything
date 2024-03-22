@@ -41,6 +41,7 @@ public:
     /***********Mask Operation***********/
     GiantMaskItem* getForegroundMaskItem(); //获取前景图层对象
     void applyForegroundMask2Label(); //将前景mask应用到label
+    void applySparyRect2Label(const QRect&); //将喷枪mask应用到label
 
     /***********图像设置***********/
     bool changeShowImage(const QImage&);//切换显示图像
