@@ -746,6 +746,11 @@ void GraphicsView::saveViewImage()
     }
 }
 
+void GraphicsView::setSprayRectSize(int i)
+{
+    m_graphics_view_paint_model.setSprayRectSize(i);
+}
+
 void GraphicsView::setPaintCrossStyle(bool ok)
 {
     if (ok) {

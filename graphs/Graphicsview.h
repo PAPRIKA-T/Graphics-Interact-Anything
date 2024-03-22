@@ -81,6 +81,7 @@ public slots:
     void hideAllItemMessage(); //隐藏全部item的extra_text
     void deCalLine(); //删除全部测量线段
     void saveViewImage();// 保存
+    void setSprayRectSize(int);
 
 private:
     void initGraphicsScene(); //初始化scene

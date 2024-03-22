@@ -16,6 +16,7 @@ private:
 	void paintCrossStyle(QPainter*);
 	void paintRectStyle(QPainter*);
 	const QRect& getSprayRect();
+	void setSprayRectSize(int);
 	PaintStyleType paint_style_type{ PaintStyleType::PAINT_NONE };
 	int spray_rect_size{20}; //px
 	QRect spray_rect{};

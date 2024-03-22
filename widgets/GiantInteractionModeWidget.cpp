@@ -202,4 +202,10 @@ void GiantInteractionModeWidget::onSamModelBtn(int checked)
 void GiantInteractionModeWidget::onSprayModeBtn(int checked)
 {
     m_view->getGenericInteractionModel()->setSprayInteraction(checked);
+    if (checked) {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::SprayModeStackWidget);
+    }
+    else {
+        mode_stack_widget->setCurrentIndex(InteractionModeStackWidget::StackWidgetType::NoneStackWidget);
+    }
 }

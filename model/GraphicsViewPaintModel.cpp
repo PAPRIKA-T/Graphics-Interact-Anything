@@ -20,7 +20,7 @@ void GraphicsViewPaintModel::paintCrossStyle(QPainter* painter)
 void GraphicsViewPaintModel::paintRectStyle(QPainter* painter)
 {
     QPen pen;
-    pen.setColor(QColor(220, 60, 74));
+    pen.setColor(QColor(255, 60, 74));
     pen.setWidth(1);
     painter->setPen(pen);
     QPoint& p = m_view->getMousePresentPos();
@@ -32,4 +32,9 @@ void GraphicsViewPaintModel::paintRectStyle(QPainter* painter)
 const QRect& GraphicsViewPaintModel::getSprayRect()
 {
     return spray_rect;
+}
+
+void GraphicsViewPaintModel::setSprayRectSize(int i)
+{
+    spray_rect_size = i;
 }
