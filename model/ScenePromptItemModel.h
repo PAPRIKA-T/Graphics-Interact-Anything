@@ -6,7 +6,6 @@ class GraphicsItem;
 class AiModelInteractWidget;
 class Sam;
 class GiantImageItem;
-class GiantMaskItem;
 
 enum class MaskToItemType
 {
@@ -67,5 +66,4 @@ private:
 	QString load_image_path = "";
 	
 	cv::Mat mask{};
-	GiantMaskItem* current_mask_item = nullptr;
 };

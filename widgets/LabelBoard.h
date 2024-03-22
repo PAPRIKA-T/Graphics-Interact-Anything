@@ -27,7 +27,11 @@ public:
     bool getIsAutoNextline();
 
     void selectNextRow();
+signals:
+    void sentSelectedRowColor(const QColor&);
+
 public slots:
+    void onSelectionChanged(const QItemSelection&, const QItemSelection&);
     void onColorChanged(ColorButton* clr);
     void onCellChanged(int row, int column);
     void saveLabelFileToTxt();

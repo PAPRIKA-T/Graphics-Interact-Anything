@@ -6,6 +6,7 @@
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include "GiantInteractionModeWidget.h"
+#include "utils/CVOperation.h"
 #include "FileView.h"
 
 /*************************SceneToolWidget************************/
@@ -165,7 +166,17 @@ void SceneToolWidget::onColorReverseBtn()
     QImage org_image = m_view->getGraphicsScene()->
         getPixmapItem()->getShowImage();
     if (org_image.isNull()) return;
-    // 循环获得每个像素的rgb，循环减，进行反转
+    //QSize fscale_size = m_view->getGraphicsScene()->
+    //    getPixmapItem()->getFscaleSize();
+    //if (fscale_size.isEmpty())return;
+
+    //cv::Mat result = CVOperation::QImage2cvMat(org_image);
+    //cv::Size cv_fscale_size = { fscale_size.width(),fscale_size.height() };
+    //cv::resize(result, result, cv_fscale_size);
+
+    //std::cout<<result.size()<<std::endl;
+    //cv::bitwise_not(result, result);
+
     for (int w = 0; w < org_image.width(); ++w)
     {
         for (int h = 0; h < org_image.height(); ++h)
@@ -176,6 +187,9 @@ void SceneToolWidget::onColorReverseBtn()
             org_image.setPixel(w, h, rgb.rgba());
         }
     }
+
+    //m_view->getGraphicsScene()->
+    //    getPixmapItem()->updateShowImage(CVOperation::cvMat2QImage(result));
 
     m_view->getGraphicsScene()->
         getPixmapItem()->updateShowImage(org_image);

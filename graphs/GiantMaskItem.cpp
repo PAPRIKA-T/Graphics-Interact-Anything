@@ -1,4 +1,5 @@
 ﻿#include "GiantMaskItem.h"
+#include "utils/CVOperation.h"
 #include <QPainter>
 #include <QBitmap>
 
@@ -14,13 +15,18 @@ GiantMaskItem::GiantMaskItem(const QPixmap& i, QGraphicsItem* parent)
 	++count;
 }
 
+const QPixmap& GiantMaskItem::getOriginalPixmap()
+{
+	return original_pixmap;
+}
+
 GiantMaskItem::~GiantMaskItem()
 {
 	count--;
 	qDebug()<<"GiantMaskItem::count "<<count;
 }
 
-void GiantMaskItem::setColor(QColor color)
+void GiantMaskItem::setColor(const QColor& color)
 {
 	m_color = color;
 }
@@ -30,22 +36,21 @@ QColor GiantMaskItem::getColor() const
 	return m_color;
 }
 
-void GiantMaskItem::setImageSize(const QSize& s, const QSize& o)
+void GiantMaskItem::setImageShowSize(const QSize& s)
 {
 	fScaleW = s.width();
 	fScaleH = s.height();
-
-	originW = o.width();
-	originH = o.height();
 
 	original_pixmap = QPixmap(s);
 	original_pixmap.fill(Qt::transparent);
 }
 
-void GiantMaskItem::setMask(const QBitmap& m)
+void GiantMaskItem::setMask(const cv::Mat& m)
 {
 	original_pixmap.fill(m_color);
-	original_pixmap.setMask(m);
+	original_mask = m;
+	cv::bitwise_not(m, m);
+	original_pixmap.setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(m)));
 }
 
 void GiantMaskItem::setMaskOpacity(qreal opacity)
@@ -84,4 +89,3 @@ void GiantMaskItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 	painter->setOpacity(mask_opacity);
 	painter->drawPixmap(img_rect, original_pixmap);
 }
-

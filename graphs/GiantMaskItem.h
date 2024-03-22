@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <QAbstractGraphicsShapeItem>
 #include <opencv2/opencv.hpp>
+#include "utils/GiantMacros.h"
 class QColor;
 
 class GiantMaskItem : public QAbstractGraphicsShapeItem
@@ -9,11 +10,12 @@ public:
     static int count; //用于计数
     explicit GiantMaskItem(QGraphicsItem* parent = nullptr);
     explicit GiantMaskItem(const QPixmap&, QGraphicsItem* parent = nullptr);
+    const QPixmap& getOriginalPixmap();
     ~GiantMaskItem();
-    void setColor(QColor color);
+    void setColor(const QColor&);
     QColor getColor() const;
-    void setImageSize(const QSize&, const QSize&);
-    void setMask(const QBitmap&);
+    void setImageShowSize(const QSize&);
+    void setMask(const cv::Mat&);
     void setMaskOpacity(qreal opacity);
     void acceptMask();
     void resetMask();
@@ -25,9 +27,7 @@ protected:
         QWidget* widget) override;
 private:
     QPixmap original_pixmap{}; //原始图像
-    QColor m_color = Qt::transparent;
-    qreal originW = 1;
-    qreal originH = 1;
+    QColor m_color = DEFAULT_COLOR_ITEM;
 
     qreal fScaleW = 1;
     qreal fScaleH = 1;

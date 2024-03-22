@@ -7,6 +7,7 @@
 #include "GraphicsTextItem.h"
 #include "utils/ColorOperation.h"
 #include "AllGraphics.h"
+#include "GiantMaskItem.h"
 #include <QTimer>
 #define EPS (1e-5)
 
@@ -22,6 +23,7 @@ GraphicsScene::GraphicsScene(QWidget *parent)
     addItem(thumbnail_item);
     pixmap_item->setFlag(QGraphicsItem::ItemIsMovable,false);
     initTextItem();
+    initForegroundMaskItem();
 }
 
 GraphicsScene::~GraphicsScene()
@@ -32,6 +34,7 @@ GraphicsScene::~GraphicsScene()
     delete text_left_up;
     delete pixmap_item;
     delete thumbnail_item;
+    delete foreground_mask_item;
 }
 
 void GraphicsScene::setGraphicsView(GraphicsView* v)
@@ -59,6 +62,8 @@ void GraphicsScene::setLabelBoardWidget(LabelBoard* w)
 {
     label_board_widget = w;
     scene_prompt_model.setGraphicsScene(this);
+    connect(label_board_widget, &LabelBoard::sentSelectedRowColor,
+        this, &GraphicsScene::receiveSelectedLabelBoardRowColor);
 }
 
 LabelBoard* GraphicsScene::getLabelBoardWidget()
@@ -69,6 +74,19 @@ LabelBoard* GraphicsScene::getLabelBoardWidget()
 GraphicsItem* GraphicsScene::getPaintingItem()
 {
     return painting_item;
+}
+
+GiantMaskItem* GraphicsScene::getForegroundMaskItem()
+{
+    return foreground_mask_item;
+}
+
+void GraphicsScene::applyForegroundMask2Label()
+{
+    if (foreground_mask_item->getOriginalPixmap().isNull())return;
+    if (!mask_item_list.at(2)) {
+        qDebug() << "invalid";
+    }
 }
 
 ScenePromptItemModel* GraphicsScene::getScenePromptItemModel()
@@ -301,6 +319,14 @@ void GraphicsScene::afterSetPromptItemPoint(const QPointF& p)
     }
 }
 
+void GraphicsScene::clearMaskItemList()
+{
+    foreach(GiantMaskItem * mask, mask_item_list) {
+		    delete mask;
+	    }
+	    mask_item_list.clear();
+}
+
 void GraphicsScene::initPaintGraphicsItem()
 {
     is_paint_new_item = true;
@@ -466,12 +492,21 @@ void GraphicsScene::initItemSettingAfterPaint(GraphicsItem* item)
     emit createItemIndex(item);
 }
 
+void GraphicsScene::initForegroundMaskItem()
+{
+    foreground_mask_item = new GiantMaskItem();
+    foreground_mask_item->setImageShowSize(pixmap_item->getFscaleSize());
+    foreground_mask_item->setParentItem(pixmap_item);
+}
+
 void GraphicsScene::initImageShowSetting()
 {
     thumbnail_item->setShowImage(pixmap_item->getShowImage());
     m_view->getViewTransFormModel()->setOriginPosition(QPoint((width() - pixmap_item->getFscaleW()) / 2,
         (height() - pixmap_item->getFscaleH()) / 2));
     m_view->getViewTransFormModel()->resetTransform();
+
+    initForegroundMaskItem();
 }
 
 void GraphicsScene::addItemInitAfterPaint(GraphicsItem *item)
@@ -515,11 +550,6 @@ void GraphicsScene::addItemInit(GraphicsItem* item)
     item->onPointSelected();
     item->onUpdatePointMessage();
     emit createItemIndex(item);
-}
-
-void GraphicsScene::addGiantMaskItem(GiantMaskItem* mask)
-{
-    mask_item_list.push_back(mask);
 }
 
 bool GraphicsScene::getIsCreatePolygon()
@@ -618,6 +648,11 @@ void GraphicsScene::finishCreatePolygon()
     else {
         cancelCreatePolygon();
     }
+}
+
+void GraphicsScene::receiveSelectedLabelBoardRowColor(const QColor& c)
+{
+    foreground_mask_item->setColor(c);
 }
 
 void GraphicsScene::pointClicked(int checked)
@@ -833,6 +868,7 @@ void GraphicsScene::clearSceneGraphicsItem()
     }
     initPaintFinishGraphicsItem();
 
+    clearMaskItemList();
     if(is_paint_prompt_item) emit promptContinue();
     else emit paintContinue();
 }
@@ -841,6 +877,7 @@ void GraphicsScene::resetScene()
 {
     QImage img{};
     clearSceneGraphicsItem();
+    clearMaskItemList();
     changeShowImage(img);
     text_right_bottom->setPlainText("0 of 0");
     updateRtText();

@@ -3,6 +3,7 @@
 #include "LabelBoardToolWidget.h"
 #include "ColorButton.h"
 #include <QHBoxLayout>
+
 /*************************LabelBoard************************/
 LabelBoard::LabelBoard(QWidget* parent)
     :QTableWidget(parent)
@@ -48,11 +49,14 @@ void LabelBoard::initWidget()
     appendBoardRow(DEFAULT_LABEL_ID, Qt::green, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, Qt::yellow, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, QColor(180, 120, 150), DEFAULT_LABEL);
-    setCurrentItem(itemAt(0, 0));
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::DoubleClicked);
+
     connect(this, &QTableWidget::cellChanged, this, &LabelBoard::onCellChanged);
     setAlternatingRowColors(true);
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged, 
+        this, &LabelBoard::onSelectionChanged);
+    setCurrentItem(itemAt(0, 0));
 }
 
 void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QString& label)
@@ -91,7 +95,9 @@ void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QStrin
     item_0->setTextAlignment(Qt::AlignCenter);
     item_2->setTextAlignment(Qt::AlignCenter);
     clr_btn_list.push_back(color_btn);
+    blockSignals(false);
     setCurrentItem(item_0);
+    blockSignals(true);
     scrollToItem(item_0);
     connect(color_btn, &ColorButton::sentSelf, this, &LabelBoard::onColorChanged);
     blockSignals(false);
@@ -156,6 +162,19 @@ void LabelBoard::onRemoveSelectedRowClicked()
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
     removeLabelRow(selected_row);
+}
+
+void LabelBoard::onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+{
+    QModelIndexList indexes = selected.indexes();
+    if (indexes.size() <= 0) return;
+    int row = indexes.at(0).row();
+    QWidget* clr_w = cellWidget(row, 1);
+    if (clr_w == nullptr)return;
+    ColorButton* clr_btn = dynamic_cast<ColorButton*>(clr_w->layout()->itemAt(0)->widget());
+    const QColor bg_c = clr_btn->getBackgroundColor();
+
+    emit sentSelectedRowColor(bg_c);
 }
 
 void LabelBoard::onAppendRowClicked()
@@ -299,4 +318,5 @@ void LabelBoard::onColorChanged(ColorButton* clr)
             }
         }
     }
+    emit sentSelectedRowColor(c);
 }

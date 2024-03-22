@@ -59,8 +59,7 @@ void ScenePromptItemModel::onDeleteAllPromptItemBtn()
 void ScenePromptItemModel::acceptMaskItem()
 {
     if (prompt_list.size() <= 1)return;
-    current_mask_item->acceptMask();
-    m_scene->addGiantMaskItem(current_mask_item);
+    m_scene->applyForegroundMask2Label();
     initMaskItem(true);
     removeAllPromptsItems();
 }
@@ -68,16 +67,10 @@ void ScenePromptItemModel::acceptMaskItem()
 void ScenePromptItemModel::initMaskItem(bool ok)
 {
     if (ok) {
-        current_mask_item = new GiantMaskItem();
-        current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
-        current_mask_item->setParentItem(pixmap_item);
-        m_scene->addGiantMaskItem(current_mask_item);
     }
     else {
         removeAllPromptsItems();
         clearMask();
-        delete current_mask_item;
-        current_mask_item = nullptr;
     }
 }
 
@@ -94,7 +87,6 @@ bool ScenePromptItemModel::loadImage(const QString& image_path)
     if (sam->loadImage(load_image)) {
         is_load_image = true;
         load_image_path = image_path;
-        current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
         return true;
     }
     else {
@@ -172,11 +164,7 @@ void ScenePromptItemModel::mask2Polygon(const cv::Mat& mask)
 
 void ScenePromptItemModel::generateGiantMaskItem(const cv::Mat& mask)
 {
-    QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
-    current_mask_item->setColor(c);
-    cv::bitwise_not(mask, mask);
-    std::cout<<mask.size()<<std::endl;
-    current_mask_item->setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(mask)));
+    m_scene->getForegroundMaskItem()->setMask(mask);
 }
 
 void ScenePromptItemModel::removeAllPromptsItems()
@@ -195,7 +183,7 @@ void ScenePromptItemModel::generateAnnotation()
     if (!sam)return;
     if (!pixmap_item->getIsLoadImageAllData()) return;
 
-    QSize fscale_size = pixmap_item->getFscaleSize(); //返回的是原始图像的尺寸
+    QSize fscale_size = pixmap_item->getFscaleSize();
     if (fscale_size.isEmpty())return;
 
     cv::Size cv_fscale_size = { fscale_size.width(),fscale_size.height() };
@@ -229,8 +217,7 @@ void ScenePromptItemModel::Mask2Item()
 void ScenePromptItemModel::clearMask()
 {
     mask = {};
-    if (!current_mask_item)return;
-    current_mask_item->resetMask();
+    m_scene->getForegroundMaskItem()->resetMask();
 }
 
 void ScenePromptItemModel::setSamModelInteraction(bool ok)

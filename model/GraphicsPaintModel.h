@@ -2,14 +2,7 @@
 #include <QPen>
 #include <QColor>
 #include "graphs/ItemPointF.h"
-#define PEN_WIDTHF 1 //画笔宽度
-#define DEFAULT_COLOR_ITEM Qt::red //item color
-#define DEFAULT_COLOR_POINT_NOSELECTED QColor(255, 249, 57)
-#define DEFAULT_COLOR_POINT_SELECTED QColor(255, 20, 147)
-#define DEFAULT_COLOR_UNIQUE_POINT QColor(237, 153, 74)
-#define ITEM_LINE_LENGTH 6 //item交互十字（点）的大小（px）
-#define INTERACTION_RANGE 6 //item交互十字接收事件的范围
-
+#include "utils/GiantMacros.h"
 class GraphicsPaintModel
 {
 public:

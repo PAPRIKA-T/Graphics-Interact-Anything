@@ -16,6 +16,8 @@ class InteractionPolygon;
 class ThumbnailPixmapItem;
 class GraphicsTextItem;
 class QTimer;
+class GiantMaskItem;
+struct SelectedLabelBoardData;
 
 class GraphicsScene: public QGraphicsScene
 {
@@ -31,10 +33,13 @@ public:
     ItemIndexView* getItemIndexView();
     void setLabelBoardWidget(LabelBoard* w);
     LabelBoard* getLabelBoardWidget();
-    GraphicsItem* getPaintingItem(); //获取正在绘制的图形对象
     ScenePromptItemModel* getScenePromptItemModel();
-
     bool getIsPaintPromptItem(); //获取是否在绘制提示图元标志
+    GraphicsItem* getPaintingItem(); //获取正在绘制的图形对象
+
+    /***********Mask Operation***********/
+    GiantMaskItem* getForegroundMaskItem(); //获取前景图层对象
+    void applyForegroundMask2Label(); //将前景图层应用在对应label
 
     /***********图像设置***********/
     bool changeShowImage(const QImage&);//切换显示图像
@@ -63,8 +68,6 @@ public:
     void addItemAcceptLabelBoardSetting(GraphicsItem*);
     void addItemInit(GraphicsItem*);//scene添加item初始化设置（保存读取、测量等方式添加图元）
 
-    void addGiantMaskItem(GiantMaskItem*); //添加mask图元
-
     /***********多边形绘制相关(坐标相关的参数，一样需要映射到scene)***********/
     bool getIsCreatePolygon();
     void pushBackPolygonPointConsitantly(const QPointF&);
@@ -90,6 +93,8 @@ signals:
     void zoom3DLayout(bool); //true为放大，false为缩小
 
 public slots:
+    void receiveSelectedLabelBoardRowColor(const QColor&); //接收labelBoard选中行颜色
+
     void pointClicked(int checked); //生成点item
     void ellipseClicked(int checked); //生成椭圆item
     void roundClicked(int checked); //生成圆形item
@@ -109,6 +114,7 @@ public slots:
     void NPlineSegmentClicked(int checked);
 
 private:
+    void initForegroundMaskItem(); //初始化前景图层
     void initImageShowSetting(); //初始化图像显示设置
     void addItemInitAfterPaint(GraphicsItem* item);//scene添加item初始化设置(通过绘制方式)
     void labelBoardAutoSelectNextRow(); //labelBoard选择下一行
@@ -129,12 +135,15 @@ private:
     void afterSetPaintItemPoint(const QPointF&);
     void afterSetPromptItemPoint(const QPointF&);
 
+    void clearMaskItemList(); //清除mask图元列表
+
     GraphicsView* m_view = nullptr;
     LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{}; //scene提示图元模型
-    QList<GiantMaskItem*> mask_item_list{}; //mask图元列表
     bool is_paint_prompt_item = false; //是否在绘制模型提示图元
+    QList<GiantMaskItem*> mask_item_list{}; //mask图元列表
+    GiantMaskItem* foreground_mask_item = nullptr; //前景图层
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象
