@@ -111,6 +111,7 @@ public slots:
 private:
     void initImageShowSetting(); //初始化图像显示设置
     void addItemInitAfterPaint(GraphicsItem* item);//scene添加item初始化设置(通过绘制方式)
+    void labelBoardAutoSelectNextRow(); //labelBoard选择下一行
     void initPaintGraphicsItem(); //初始化绘画操作
     void initPaintFinishGraphicsItem(); //取消绘画操作
     void initPaintPromptItem(); //初始化提示图元绘制操作

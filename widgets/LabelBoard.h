@@ -20,12 +20,13 @@ public:
     LabelBoard(int rows, int columns, QWidget* parent = nullptr);
     void setViewListContainer(ViewListContainer*);
 
-    void initWidget();
     void appendBoardRow(const QString& ID, const QColor& c, const QString& label = DEFAULT_LABEL);
     bool isRowHasAdded(const QString& id, const QString& label);
     void setItemParameters(GraphicsItem* item);
     QColor getSelectedColor();
-    void removeLabelRow(int row);
+    bool getIsAutoNextline();
+
+    void selectNextRow();
 public slots:
     void onColorChanged(ColorButton* clr);
     void onCellChanged(int row, int column);
@@ -33,8 +34,12 @@ public slots:
     void readLabelFileFromTxt();
     void onRemoveSelectedRowClicked();
     void onAppendRowClicked();
-
+    void onAutoNextLineChecked(int);
+    
 private:
+    void initWidget();
+    void removeLabelRow(int row);
     QList<ColorButton*> clr_btn_list;
     ViewListContainer* view_list_container = nullptr; //视图容器指针
+    bool is_auto_nextline = false; //是否自动换行
 };

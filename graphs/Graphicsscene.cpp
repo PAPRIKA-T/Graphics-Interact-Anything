@@ -480,10 +480,16 @@ void GraphicsScene::addItemInitAfterPaint(GraphicsItem *item)
     addItem(item);
 }
 
+void GraphicsScene::labelBoardAutoSelectNextRow()
+{
+    if (label_board_widget->getIsAutoNextline()) label_board_widget->selectNextRow();
+}
+
 void GraphicsScene::addItemAcceptLabelBoardSetting(GraphicsItem* item)
 {
     if (item->getIsAcceptOthersSetting()) {
         label_board_widget->setItemParameters(item);
+        labelBoardAutoSelectNextRow();
     }
 }
 

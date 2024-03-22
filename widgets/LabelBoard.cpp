@@ -133,6 +133,23 @@ void LabelBoard::removeLabelRow(int row)
     clr_btn_list.removeAt(row);
 }
 
+bool LabelBoard::getIsAutoNextline()
+{
+    return is_auto_nextline;
+}
+
+void LabelBoard::selectNextRow()
+{
+    QList<QTableWidgetItem*> items = selectedItems();
+	    int selected_row = items.at(0)->row();
+	    if (selected_row < rowCount() - 1) {
+		    setCurrentItem(item(selected_row + 1, 0));
+	    }
+	    else {
+            return;
+	    }
+}
+
 void LabelBoard::onRemoveSelectedRowClicked()
 {
     if (rowCount() == 1)return; //保证至少有一行用于item默认设置
@@ -156,6 +173,11 @@ void LabelBoard::onAppendRowClicked()
         lastItem->setSelected(true);
         editItem(lastItem);
     }
+}
+
+void LabelBoard::onAutoNextLineChecked(int ok)
+{
+    is_auto_nextline = ok;  
 }
 
 void LabelBoard::saveLabelFileToTxt()
