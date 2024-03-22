@@ -37,12 +37,13 @@ public:
 		const double dst_min, const double dst_max);
 	void reset();
 	vtkNew<vtkDiscreteMarchingCubes> ITK2VTKactor();
+
 private:
 	void ITKImageToQImage(QImage& out_image, const GrayImage2DPointerType& itkImage2D, bool reverse);
 	OrgImagePointerType org_image{};
 	GrayImagePointerType gray_image{};
 	OrgImageType::SizeType origin_size;
 	std::vector<int> cur_slice_index{};
-	QString image_path = "";
+	QString image_path{""};
 };
 

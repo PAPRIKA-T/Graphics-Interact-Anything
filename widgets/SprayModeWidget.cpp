@@ -7,7 +7,7 @@ SprayModeWidget::SprayModeWidget(QWidget* parent)
 	:QWidget(parent)
 {
 	main_layout = new QHBoxLayout(this);
-	spray_radius_label = new QLabel("Spray Size:");
+	spray_radius_label = new QLabel("Block Size:");
 	spray_radius_slider = new QSlider(Qt::Horizontal);
 	spray_radius_slider->setRange(1, 50);
 	spray_radius_slider->setFixedWidth(100);

@@ -45,6 +45,8 @@ QComboBox::down-arrow:on
     image: url(:/res/qss/Dark/background-image/bottom_arrow.png); /* 显示上拉箭头 */
 }
 
+/*******************QSlider*********************/
+
 /*******************QLabel*********************/
 QLabel
 {

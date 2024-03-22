@@ -42,7 +42,7 @@ GiantInteractionModeWidget::GiantInteractionModeWidget(QWidget *parent)
 
     spray_btn = new GenericToolButton(this);
     spray_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/spray_mode.png"));
-    spray_btn->setIconSize(QSize(34, 31));
+    spray_btn->setIconSize(QSize(30, 26));
 
     calculate_btn = new GenericToolButton(this);
     calculate_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/calculate_mode.png"));
