@@ -18,6 +18,11 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	accept_btn->setObjectName("view_attach_btn");
 	accept_btn->setFixedSize(48, 20);
 
+	clear_btn = new GenericToolButton(this);
+	clear_btn->setText("Clear");
+	clear_btn->setObjectName("view_attach_btn");
+	clear_btn->setFixedSize(48, 20);
+
 	positive_point = new GenericToolButton(this);
 	positive_point->setIcon(QIcon(":/res/qss/GenericStyle/background-image/positive_point.png"));
 
@@ -51,7 +56,7 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	output_shape_widget->setLabelText("Output:");
 	output_shape_widget->getComboBox()->addItem("Mask");
 	output_shape_widget->getComboBox()->addItem("Polygon");
-	output_shape_widget->getComboBox()->addItem("Rect");
+	//output_shape_widget->getComboBox()->addItem("Rect");
 
 	output_shape_widget->setFixedHeight(26);
 	output_shape_widget->getComboBox()->setMinimumWidth(75);
@@ -60,18 +65,21 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	main_layout->addSpacing(12);
 	main_layout->addWidget(output_shape_widget);
 
-	main_layout->addSpacing(8);
+	main_layout->addSpacing(4);
 	main_layout->addWidget(accept_btn);
+	main_layout->addSpacing(4);
+	main_layout->addWidget(clear_btn);
 	main_layout->setContentsMargins(8, 0, 0, 0);
 	main_layout->setSpacing(1);
 	main_layout->addStretch();
-	setFixedWidth(286);
+	setFixedWidth(340);
 }
 
 AiModelInteractWidget::~AiModelInteractWidget()
 {
 	delete main_layout;
 	delete accept_btn;
+	delete clear_btn;
 	delete exclusive_button_group;
 	delete output_shape_widget;
 }
@@ -107,6 +115,11 @@ void AiModelInteractWidget::promptItemLoad()
 QPushButton* AiModelInteractWidget::getAcceptBtn() const
 {
 	return accept_btn;
+}
+
+QPushButton* AiModelInteractWidget::getClearBtn() const
+{
+	return clear_btn;
 }
 
 void AiModelInteractWidget::connectSceneSignal(GraphicsScene* s)

@@ -29,6 +29,9 @@ void ScenePromptItemModel::setSamInteractWidget(AiModelInteractWidget* s)
     sam_interact_widget = s;
     connect(sam_interact_widget->getAcceptBtn(), &QPushButton::clicked,
         		this, &ScenePromptItemModel::acceptMaskItem);
+
+    connect(sam_interact_widget->getClearBtn(), &QPushButton::clicked,
+        this, &ScenePromptItemModel::onDeleteAllPromptItemBtn);
 }
 
 void ScenePromptItemModel::setSam(Sam* s)
@@ -57,7 +60,7 @@ void ScenePromptItemModel::acceptMaskItem()
 {
     if (prompt_list.size() <= 1)return;
     current_mask_item->acceptMask();
-    m_scene->addMaskItem(current_mask_item);
+    m_scene->addGiantMaskItem(current_mask_item);
     initMaskItem(true);
     removeAllPromptsItems();
 }
@@ -68,7 +71,7 @@ void ScenePromptItemModel::initMaskItem(bool ok)
         current_mask_item = new GiantMaskItem();
         current_mask_item->setImageSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
         current_mask_item->setParentItem(pixmap_item);
-        m_scene->addMaskItem(current_mask_item);
+        m_scene->addGiantMaskItem(current_mask_item);
     }
     else {
         removeAllPromptsItems();
@@ -172,6 +175,7 @@ void ScenePromptItemModel::generateGiantMaskItem(const cv::Mat& mask)
     QColor c = m_scene->getLabelBoardWidget()->getSelectedColor();
     current_mask_item->setColor(c);
     cv::bitwise_not(mask, mask);
+    std::cout<<mask.size()<<std::endl;
     current_mask_item->setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(mask)));
 }
 

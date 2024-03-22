@@ -47,7 +47,7 @@ void LabelBoard::initWidget()
     appendBoardRow(DEFAULT_LABEL_ID, Qt::blue, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, Qt::green, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, Qt::yellow, DEFAULT_LABEL);
-    appendBoardRow(DEFAULT_LABEL_ID, Qt::red, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, QColor(180, 120, 150), DEFAULT_LABEL);
     setCurrentItem(itemAt(0, 0));
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::DoubleClicked);

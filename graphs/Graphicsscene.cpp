@@ -511,7 +511,7 @@ void GraphicsScene::addItemInit(GraphicsItem* item)
     emit createItemIndex(item);
 }
 
-void GraphicsScene::addMaskItem(GiantMaskItem* mask)
+void GraphicsScene::addGiantMaskItem(GiantMaskItem* mask)
 {
     mask_item_list.push_back(mask);
 }

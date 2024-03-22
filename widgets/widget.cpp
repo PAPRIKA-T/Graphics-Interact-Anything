@@ -132,8 +132,8 @@ Widget::Widget(QWidget *parent)
         main_layout->setContentsMargins(1, 0, 1, 0);
         main_layout->setSpacing(0);
     }
-    setWidgetSize();
     initSamModel();
+    setWidgetSize();
 }
 
 Widget::~Widget()

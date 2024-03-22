@@ -20,9 +20,11 @@ public:
     QButtonGroup* getExclusiveButtonGroup() const;
     void promptItemLoad();
     QPushButton* getAcceptBtn() const;
+    QPushButton* getClearBtn() const;
 private:
     void connectSceneSignal(GraphicsScene*);
     GenericToolButton* accept_btn = nullptr;
+    GenericToolButton* clear_btn = nullptr;
 
     QHBoxLayout* main_layout = nullptr;
     GraphicsView* m_view = nullptr;

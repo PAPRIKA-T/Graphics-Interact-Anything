@@ -69,19 +69,19 @@ public:
     void setDeleteDirectly(bool ok);
 
 /********************坐标信息相关********************/
-    ItemPointF getCenter() const;
-    ItemPointF& getRCenter();
-    virtual void setCenter(const QPointF& p);
-    ItemPointF getStart() const;
-    ItemPointF& getRStart();
-    virtual void setStart(const QPointF& p);
-    ItemPointF getEdge() const;
-    ItemPointF& getREdge();
-    virtual void setEdge(const QPointF& p);
-    virtual void setSE(const QPointF& s, const QPointF& e);
-    const QPointF& getStartMeasurePos();
-    const QPointF& getEdgeMeasurePos();
-    const QPointF& getCenterMeasurePos();
+    inline ItemPointF getCenter() const;
+    inline ItemPointF& getRCenter();
+    inline virtual void setCenter(const QPointF& p);
+    inline ItemPointF getStart() const;
+    inline ItemPointF& getRStart();
+    inline virtual void setStart(const QPointF& p);
+    inline ItemPointF getEdge() const;
+    inline ItemPointF& getREdge();
+    inline virtual void setEdge(const QPointF& p);
+    inline virtual void setSE(const QPointF& s, const QPointF& e);
+    inline const QPointF& getStartMeasurePos();
+    inline const QPointF& getEdgeMeasurePos();
+    inline const QPointF& getCenterMeasurePos();
 
 /********************颜色信息相关********************/
     void setGraphicsColor(const QColor&);
@@ -186,4 +186,69 @@ protected:
     GraphicsTransformModel graphics_transform_model{}; //映射参数模型
 };
 
+inline ItemPointF GraphicsItem::getCenter() const
+{
+    return m_center;
+}
+inline ItemPointF& GraphicsItem::getRCenter()
+{
+    return m_center;
+}
+inline void GraphicsItem::setCenter(const QPointF& p)
+{
+    m_center = p;
+    emit updatePointMessage();
+}
+
+inline ItemPointF GraphicsItem::getStart() const
+{
+    return  m_start;
+}
+inline ItemPointF& GraphicsItem::getRStart()
+{
+    return  m_start;
+}
+inline void GraphicsItem::setStart(const QPointF& p)
+{
+    m_start = p;
+    emit updatePointMessage();
+}
+
+inline ItemPointF GraphicsItem::getEdge() const
+{
+    return m_edge;
+}
+inline ItemPointF& GraphicsItem::getREdge()
+{
+    return m_edge;
+}
+inline void GraphicsItem::setEdge(const QPointF& p)
+{
+    m_edge = p;
+    emit updatePointMessage();
+}
+inline void GraphicsItem::setSE(const QPointF& s, const QPointF& e)
+{
+    m_start = s;
+    m_edge = e;
+    emit updatePointMessage();
+}
+
+inline const QPointF& GraphicsItem::getStartMeasurePos()
+{
+    if (graphics_transform_model.getMeasureObject())return m_start_map_to_measure_ob;
+    else return m_start;
+}
+inline const QPointF& GraphicsItem::getEdgeMeasurePos()
+{
+    if (graphics_transform_model.getMeasureObject())return m_edge_map_to_measure_ob;
+    else return m_edge;
+}
+inline const QPointF& GraphicsItem::getCenterMeasurePos()
+{
+    if (graphics_transform_model.getMeasureObject()) {
+        return m_center_map_to_measure_ob;
+    }
+    else return m_center;
+}
 #endif // GRAPHICSITEM_H

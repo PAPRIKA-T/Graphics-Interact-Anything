@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <QAbstractGraphicsShapeItem>
+#include <opencv2/opencv.hpp>
 class QColor;
-
 
 class GiantMaskItem : public QAbstractGraphicsShapeItem
 {
@@ -32,6 +32,7 @@ private:
     qreal fScaleW = 1;
     qreal fScaleH = 1;
 
-    qreal mask_opacity = 0.5; 
+    qreal mask_opacity = 0.5;
+    cv::Mat original_mask{};
 };
 

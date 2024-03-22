@@ -63,7 +63,7 @@ public:
     void addItemAcceptLabelBoardSetting(GraphicsItem*);
     void addItemInit(GraphicsItem*);//scene添加item初始化设置（保存读取、测量等方式添加图元）
 
-    void addMaskItem(GiantMaskItem*); //添加mask图元
+    void addGiantMaskItem(GiantMaskItem*); //添加mask图元
 
     /***********多边形绘制相关(坐标相关的参数，一样需要映射到scene)***********/
     bool getIsCreatePolygon();
@@ -132,6 +132,8 @@ private:
     LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{}; //scene提示图元模型
+    QList<GiantMaskItem*> mask_item_list{}; //mask图元列表
+    bool is_paint_prompt_item = false; //是否在绘制模型提示图元
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象
@@ -147,10 +149,6 @@ private:
     GraphicsTextItem* text_left_up = nullptr; //左上文本
     GraphicsTextItem* text_right_bottom = nullptr; //右下文本
     GraphicsTextItem* text_right_up = nullptr; //右上文本
-
-    QList<GiantMaskItem*> mask_item_list{};
-
-    bool is_paint_prompt_item = false; //是否在绘制模型提示图元
 };
 
 #endif // GRAPHICSSCENE_H
