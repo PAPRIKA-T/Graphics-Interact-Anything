@@ -19,8 +19,8 @@ public:
 
     bool getIsLoadImageAllData() const;
 
-    const QSize& getFscaleSize(){return QSize(fScaleW,fScaleH);} //获取图像显示尺寸
-    const QSize& getOriginSize(){return QSize(origin_width,origin_height);} //获取图像原始尺寸
+    const QSize getFscaleSize(){return QSize(fScaleW,fScaleH);} //获取图像显示尺寸
+    const QSize getOriginSize(){return QSize(origin_width,origin_height);} //获取图像原始尺寸
     const qreal& getFscaleH(){return fScaleH;} //获取图像高度
     const qreal& getFscaleW(){return fScaleW;} //获取图像宽度
     const qreal& getOriginWidth(){return origin_width;} //获取图像原始宽度

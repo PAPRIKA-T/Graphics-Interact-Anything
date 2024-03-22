@@ -2,6 +2,7 @@
 #include "graphs/Graphicsview.h"
 #include "graphs/Graphicsscene.h"
 #include "graphs/GraphicsPolygon.h"
+#include "model/ScenePromptItemModel.h"
 #include <QCursor>
 
 GenericInteractionModel::GenericInteractionModel()

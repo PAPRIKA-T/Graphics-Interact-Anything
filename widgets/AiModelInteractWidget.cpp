@@ -3,6 +3,7 @@
 #include "Graphs/GraphicsScene.h"
 #include "GenericToolButton.h"
 #include "ComboBoxWidget.h"
+#include "model/ScenePromptItemModel.h"
 #include <QHBoxLayout>
 #include <QButtonGroup>
 #include <QComboBox>

@@ -32,7 +32,7 @@ private:
     qreal fScaleW = 1;
     qreal fScaleH = 1;
 
-    qreal mask_opacity = 0.5;
+    qreal mask_opacity = 0.8;
     cv::Mat original_mask{};
 };
 

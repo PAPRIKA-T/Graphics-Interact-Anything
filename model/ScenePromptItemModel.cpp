@@ -40,12 +40,6 @@ void ScenePromptItemModel::setSam(Sam* s)
     input_size = sam->getInputSize();
 }
 
-void ScenePromptItemModel::setGraphicsScene(GraphicsScene* s)
-{
-	m_scene = s;
-    pixmap_item = m_scene->getPixmapItem();
-}
-
 QList<GraphicsItem*> ScenePromptItemModel::getPromptItemList()
 {
     return prompt_list;

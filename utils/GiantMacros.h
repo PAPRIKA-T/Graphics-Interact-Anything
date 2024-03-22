@@ -2,6 +2,7 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QMouseEvent>
+
 #define PEN_WIDTHF 1 //画笔宽度
 #define DEFAULT_COLOR_ITEM Qt::red //item color
 #define DEFAULT_COLOR_POINT_NOSELECTED QColor(255, 249, 57)

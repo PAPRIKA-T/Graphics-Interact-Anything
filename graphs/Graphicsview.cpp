@@ -7,7 +7,6 @@
 #include "widgets/StatusWidget.h"
 #include "widgets/MagnifyingGlassWidget.h"
 #include "widgets/GOpenGLWidgets.h"
-#include "Model/ScenePromptItemModel.h"
 #include "Widgets/ImageSceneWidget2D.h"
 #include "model/StyleSheetConfigModel.h"
 #include "GraphicsPolygon.h"

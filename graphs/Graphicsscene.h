@@ -7,7 +7,8 @@
 #include <QTime>
 #include "Graphicsitem.h"
 #include "Graphicspixmapitem.h"
-#include "Model/ScenePromptItemModel.h"
+#include "model/ScenePromptItemModel.h"
+#include "model/GiantMaskItemModel.h"
 
 class LabelBoard;
 class ItemIndexView;
@@ -39,7 +40,7 @@ public:
 
     /***********Mask Operation***********/
     GiantMaskItem* getForegroundMaskItem(); //获取前景图层对象
-    void applyForegroundMask2Label(); //将前景图层应用在对应label
+    void applyForegroundMask2Label(); //将前景mask应用到label
 
     /***********图像设置***********/
     bool changeShowImage(const QImage&);//切换显示图像
@@ -114,7 +115,6 @@ public slots:
     void NPlineSegmentClicked(int checked);
 
 private:
-    void initForegroundMaskItem(); //初始化前景图层
     void initImageShowSetting(); //初始化图像显示设置
     void addItemInitAfterPaint(GraphicsItem* item);//scene添加item初始化设置(通过绘制方式)
     void labelBoardAutoSelectNextRow(); //labelBoard选择下一行
@@ -135,21 +135,18 @@ private:
     void afterSetPaintItemPoint(const QPointF&);
     void afterSetPromptItemPoint(const QPointF&);
 
-    void clearMaskItemList(); //清除mask图元列表
-
     GraphicsView* m_view = nullptr;
     LabelBoard* label_board_widget = nullptr;
     ItemIndexView* item_index_view = nullptr;
     ScenePromptItemModel scene_prompt_model{}; //scene提示图元模型
-    bool is_paint_prompt_item = false; //是否在绘制模型提示图元
-    QList<GiantMaskItem*> mask_item_list{}; //mask图元列表
-    GiantMaskItem* foreground_mask_item = nullptr; //前景图层
+    GiantMaskItemModel mask_item_model; //mask图元模型
 
     GraphicsItem *painting_item = nullptr; //指向正在绘制的图形对象
     InteractionPolygon* painting_pol_item = nullptr; //指向正在绘制的多边形对象
     QList<QPointF> polygon_list; //多边形点链表
     bool is_creating_polygon = false; //判断是否在绘制多边形
     bool is_paint_new_item = false; //判断是否开始绘制一个新的item
+    bool is_paint_prompt_item = false; //是否在绘制模型提示图元
     int Continuous_point_draw_interval = 20; //连续点绘制间隔
 
     QPointF image_pos_before_move{}; //图像移动前位置

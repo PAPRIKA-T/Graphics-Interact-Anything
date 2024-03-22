@@ -166,6 +166,7 @@ void LabelBoard::onRemoveSelectedRowClicked()
 
 void LabelBoard::onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
+    Q_UNUSED(deselected);
     QModelIndexList indexes = selected.indexes();
     if (indexes.size() <= 0) return;
     int row = indexes.at(0).row();

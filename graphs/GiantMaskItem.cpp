@@ -56,6 +56,7 @@ void GiantMaskItem::setMask(const cv::Mat& m)
 void GiantMaskItem::setMaskOpacity(qreal opacity)
 {
 	mask_opacity = opacity;
+	qDebug()<<"mask_opacity "<<mask_opacity;
 }
 
 void GiantMaskItem::acceptMask()

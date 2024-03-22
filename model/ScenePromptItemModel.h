@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include <opencv2/opencv.hpp>
 #include <QObject>
-class GraphicsScene;
+#include "GenericAbstractModel.h"
+
 class GraphicsItem;
 class AiModelInteractWidget;
 class Sam;
-class GiantImageItem;
 
 enum class MaskToItemType
 {
@@ -14,7 +14,7 @@ enum class MaskToItemType
 	MaskToRect,
 };
 
-class ScenePromptItemModel : public QObject
+class ScenePromptItemModel : public QObject, public GenericAbstractModel
 {
 	Q_OBJECT
 public:
@@ -22,7 +22,6 @@ public:
 	~ScenePromptItemModel();
 	void setSamInteractWidget(AiModelInteractWidget* s);
 	void setSam(Sam*);
-	void setGraphicsScene(GraphicsScene*);
 	QList<GraphicsItem*> getPromptItemList();
 	void addPromptItem(GraphicsItem* item); //添加模型提示图元
 	void generateAnnotation();
@@ -54,8 +53,7 @@ private:
 
 	void mask2Rect(const cv::Mat&); //掩码转矩形
 	void mask2Polygon(const cv::Mat&); //掩码转多边形
-	GraphicsScene* m_scene = nullptr;
-	GiantImageItem* pixmap_item = nullptr;
+
 	Sam* sam = nullptr;
 	AiModelInteractWidget* sam_interact_widget = nullptr;
 	QList<GraphicsItem*> prompt_list{};//model used prompt item list
