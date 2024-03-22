@@ -1252,14 +1252,11 @@ void XmlIOstreamModel::createGraphicsItemName(QList<GraphicsItem*>& sort_item_li
     int index = 0;
     foreach(QGraphicsItem * item, scene->items())
     {
-        if (scene->isPaintItemWithChild(item))
-        {
-            GraphicsItem* m_item = dynamic_cast<GraphicsItem*>(item);
-            if(!m_item)continue;
-            m_item->setName(index);
-            index++;
-            if (m_item->parentItem() == nullptr)sort_item_list.append(m_item);
-        }
+        GraphicsItem* m_item = dynamic_cast<GraphicsItem*>(item);
+        if(!m_item)continue;
+        m_item->setName(index);
+        index++;
+        if (m_item->parentItem() == nullptr)sort_item_list.append(m_item);
     }
 }
 

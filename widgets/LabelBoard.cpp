@@ -47,7 +47,7 @@ void LabelBoard::initWidget()
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_POINT_SELECTED, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, Qt::blue, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, Qt::green, DEFAULT_LABEL);
-    appendBoardRow(DEFAULT_LABEL_ID, Qt::yellow, DEFAULT_LABEL);
+    appendBoardRow(DEFAULT_LABEL_ID, Qt::cyan, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, QColor(180, 120, 150), DEFAULT_LABEL);
     setSelectionMode(QAbstractItemView::SingleSelection);
     setEditTriggers(QAbstractItemView::DoubleClicked);
@@ -101,6 +101,7 @@ void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QStrin
     scrollToItem(item_0);
     connect(color_btn, &ColorButton::sentSelf, this, &LabelBoard::onColorChanged);
     blockSignals(false);
+    emit sentInsertRow(last_row, color_btn->getBackgroundColor());
 }
 
 bool LabelBoard::isRowHasAdded(const QString& id, const QString& label)
@@ -125,18 +126,35 @@ void LabelBoard::setItemParameters(GraphicsItem* item)
     item->setGraphicsColor(clr_btn_list.at(selected_row)->getBackgroundColor());
 }
 
-QColor LabelBoard::getSelectedColor()
+const QColor& LabelBoard::getSelectedColor()
 {
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
     return clr_btn_list.at(selected_row)->getBackgroundColor();
 }
 
+QColor LabelBoard::getRowColor(int r)
+{
+    QWidget* clr_w = cellWidget(r, 1);
+    if (clr_w == nullptr)return QColor{};
+    ColorButton* clr_btn = dynamic_cast<ColorButton*>(clr_w->layout()->itemAt(0)->widget());
+    return clr_btn->getBackgroundColor();
+}
+
 void LabelBoard::removeLabelRow(int row)
 {
     if (row >= rowCount() || row < 0)return;
     removeRow(row);
+    delete clr_btn_list.at(row);
     clr_btn_list.removeAt(row);
+}
+
+void LabelBoard::clearClrBtnList()
+{
+    for(auto clr_btn : clr_btn_list) {
+		delete clr_btn;
+	};
+	clr_btn_list.clear();
 }
 
 bool LabelBoard::getIsAutoNextline()
@@ -156,12 +174,14 @@ void LabelBoard::selectNextRow()
 	    }
 }
 
+
 void LabelBoard::onRemoveSelectedRowClicked()
 {
     if (rowCount() == 1)return; //保证至少有一行用于item默认设置
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
     removeLabelRow(selected_row);
+    emit sentRemoveRow(selected_row);
 }
 
 void LabelBoard::onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
@@ -175,7 +195,7 @@ void LabelBoard::onSelectionChanged(const QItemSelection& selected, const QItemS
     ColorButton* clr_btn = dynamic_cast<ColorButton*>(clr_w->layout()->itemAt(0)->widget());
     const QColor bg_c = clr_btn->getBackgroundColor();
 
-    emit sentSelectedRowColor(bg_c);
+    emit sentSelectedRowColor(row, bg_c);
 }
 
 void LabelBoard::onAppendRowClicked()
@@ -232,12 +252,15 @@ void LabelBoard::saveLabelFileToTxt()
 
 void LabelBoard::readLabelFileFromTxt()
 {
-    blockSignals(true);
+
     QString filepath = QFileDialog::getOpenFileName(this, "Load Label_desc", "./", "Txt files(*.txt)");
     if (filepath.isEmpty())return;
+    emit sentClearAllRows();
+    blockSignals(true);
     clearContents();
     setRowCount(0);
-    clr_btn_list.clear();
+
+    clearClrBtnList();
     QFile txtFile(filepath);
     if (txtFile.open(QIODevice::ReadOnly)) {
         QTextStream in(&txtFile);
@@ -247,7 +270,7 @@ void LabelBoard::readLabelFileFromTxt()
             QStringList list = line.split(" ");
             txt_data.append(list);
         }
-        for (int i = 0; i < txt_data.size(); i++) {
+        for (int i = 0; i < txt_data.size(); ++i) {
             QString id = txt_data[i].at(0);
             QString color_str = txt_data[i].at(1);
             QString label_desc = txt_data[i].at(2);
@@ -319,5 +342,5 @@ void LabelBoard::onColorChanged(ColorButton* clr)
             }
         }
     }
-    emit sentSelectedRowColor(c);
+    emit sentSelectedRowColor(row_index, c);
 }

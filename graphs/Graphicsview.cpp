@@ -269,9 +269,9 @@ void GraphicsView::keyDelete()
     foreach(QGraphicsItem *item, scene()->selectedItems())
     {
         if(!m_scene->items().contains(item)) continue;
-        if(m_scene->isPaintItemWithChild(item))
+        GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+        if(new_item)
         {
-            GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
             new_item->onActionRemoveSelf();
         }
     }
@@ -622,14 +622,11 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
 
 void GraphicsView::hideAllText()
 {
-    foreach(QGraphicsItem *item, items())
+    for(QGraphicsItem *item : items())
     {
-        if(m_scene->isPaintItemWithChild(item))
-        {
-            GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-                if(new_item && new_item->parentItem()==nullptr)
-                    new_item->getGraphicsTextModel().setIsHideText(true);
-        }
+        GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+        if(new_item && new_item->parentItem()==nullptr)
+            new_item->getGraphicsTextModel().setIsHideText(true);
     }
 }
 

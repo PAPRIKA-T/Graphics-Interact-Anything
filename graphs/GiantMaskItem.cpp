@@ -23,7 +23,7 @@ const QPixmap& GiantMaskItem::getOriginalPixmap()
 GiantMaskItem::~GiantMaskItem()
 {
 	count--;
-	qDebug()<<"GiantMaskItem::count "<<count;
+	qDebug() << "GiantMaskItem::count " << count;
 }
 
 void GiantMaskItem::setColor(const QColor& color)
@@ -40,7 +40,7 @@ void GiantMaskItem::setImageShowSize(const QSize& s)
 {
 	fScaleW = s.width();
 	fScaleH = s.height();
-
+	original_mask = cv::Mat(s.height(), s.width(), CV_8UC1);
 	original_pixmap = QPixmap(s);
 	original_pixmap.fill(Qt::transparent);
 }
@@ -48,27 +48,31 @@ void GiantMaskItem::setImageShowSize(const QSize& s)
 void GiantMaskItem::setMask(const cv::Mat& m)
 {
 	original_pixmap.fill(m_color);
-	original_mask = m;
-	cv::bitwise_not(m, m);
+	original_mask = m.clone();
+	cv::bitwise_not(original_mask, m);
 	original_pixmap.setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(m)));
 }
 
 void GiantMaskItem::setMaskOpacity(qreal opacity)
 {
 	mask_opacity = opacity;
-	qDebug()<<"mask_opacity "<<mask_opacity;
-}
-
-void GiantMaskItem::acceptMask()
-{
-	if (original_pixmap.isNull())return;
-	setMaskOpacity(0.8);
 }
 
 void GiantMaskItem::resetMask()
 {
 	if (original_pixmap.isNull())return;
+	original_mask = cv::Mat::zeros(fScaleH, fScaleW, CV_8UC1);
 	original_pixmap.fill(Qt::transparent);
+}
+
+void GiantMaskItem::addMaskRange(const cv::Mat& m)
+{
+	setMask(original_mask + m);
+}
+
+const cv::Mat& GiantMaskItem::getOriginalMask()
+{
+	return original_mask;
 }
 
 QRectF GiantMaskItem::boundingRect() const

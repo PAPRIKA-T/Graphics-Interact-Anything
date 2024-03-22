@@ -4,7 +4,7 @@
 #include "utils/GiantMacros.h"
 class QColor;
 
-class GiantMaskItem : public QAbstractGraphicsShapeItem
+class GiantMaskItem : public QObject, public QAbstractGraphicsShapeItem
 {
 public:
     static int count; //用于计数
@@ -17,8 +17,10 @@ public:
     void setImageShowSize(const QSize&);
     void setMask(const cv::Mat&);
     void setMaskOpacity(qreal opacity);
-    void acceptMask();
     void resetMask();
+    void addMaskRange(const cv::Mat&);
+
+    const cv::Mat& getOriginalMask();
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/
@@ -27,7 +29,7 @@ protected:
         QWidget* widget) override;
 private:
     QPixmap original_pixmap{}; //原始图像
-    QColor m_color = DEFAULT_COLOR_ITEM;
+    QColor m_color = Qt::transparent;
 
     qreal fScaleW = 1;
     qreal fScaleH = 1;

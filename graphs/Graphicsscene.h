@@ -7,6 +7,7 @@
 #include <QTime>
 #include "Graphicsitem.h"
 #include "Graphicspixmapitem.h"
+#include "ThumbnailPixmapItem.h"
 #include "model/ScenePromptItemModel.h"
 #include "model/GiantMaskItemModel.h"
 
@@ -14,7 +15,6 @@ class LabelBoard;
 class ItemIndexView;
 class GraphicsView;
 class InteractionPolygon;
-class ThumbnailPixmapItem;
 class GraphicsTextItem;
 class QTimer;
 class GiantMaskItem;
@@ -94,8 +94,6 @@ signals:
     void zoom3DLayout(bool); //true为放大，false为缩小
 
 public slots:
-    void receiveSelectedLabelBoardRowColor(const QColor&); //接收labelBoard选中行颜色
-
     void pointClicked(int checked); //生成点item
     void ellipseClicked(int checked); //生成椭圆item
     void roundClicked(int checked); //生成圆形item
@@ -150,8 +148,8 @@ private:
     int Continuous_point_draw_interval = 20; //连续点绘制间隔
 
     QPointF image_pos_before_move{}; //图像移动前位置
-    GiantImageItem *pixmap_item= nullptr; //图像项
-    ThumbnailPixmapItem* thumbnail_item = nullptr; //图像缩略图
+    GiantImageItem pixmap_item{ QImage{} }; //图像项
+    ThumbnailPixmapItem thumbnail_item{ QImage{} }; //图像缩略图
     GraphicsTextItem* text_left_bottom = nullptr; //左下文本
     GraphicsTextItem* text_left_up = nullptr; //左上文本
     GraphicsTextItem* text_right_bottom = nullptr; //右下文本

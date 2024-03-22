@@ -11,6 +11,11 @@ GiantImageItem::GiantImageItem(const QImage &img)
     if (!img.isNull()) setShowImage(img);
     setData(0,"GiantImageItem");}
 
+GiantImageItem::~GiantImageItem()
+{
+
+}
+
 bool GiantImageItem::setShowImage(const QImage &i)
 {
     resetImageLoadStatus();
