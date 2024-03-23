@@ -6,23 +6,29 @@ class QColor;
 
 class GiantMaskItem : public QObject, public QAbstractGraphicsShapeItem
 {
+    Q_OBJECT
 public:
     static int count; //用于计数
     explicit GiantMaskItem(QGraphicsItem* parent = nullptr);
     explicit GiantMaskItem(const QPixmap&, QGraphicsItem* parent = nullptr);
     const QPixmap& getOriginalPixmap();
     ~GiantMaskItem();
+    void onDeleteSelf();
     void setColor(const QColor&);
     QColor getColor() const;
     void setImageShowSize(const QSize&, const QSize&);
     void setMask(const cv::Mat&);
     void setMaskOpacity(qreal opacity);
     void resetMask();
-    void addMaskRange(const cv::Mat&);
-    void addRectRange(const QRect&);
+    void applyMaskRangeToLabel(const cv::Mat&);
 
+    void getRectMask(const QRect&,cv::Mat&);
+    void update();
     const cv::Mat& getScaledMask();
     cv::Mat getOriginalMask();
+signals:
+    void preparedToDelete();
+
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/

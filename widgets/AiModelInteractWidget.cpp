@@ -7,6 +7,7 @@
 #include <QHBoxLayout>
 #include <QButtonGroup>
 #include <QComboBox>
+#include <QLabel>
 
 AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	:QWidget(parent)
@@ -54,6 +55,7 @@ AiModelInteractWidget::AiModelInteractWidget(QWidget* parent)
 	positive_point->setChecked(true);
 
 	output_shape_widget = new ComboBoxHWidget(this);
+	output_shape_widget->getLabel()->setObjectName("view_attach_widget");
 	output_shape_widget->setLabelText("Output:");
 	output_shape_widget->getComboBox()->addItem("Mask");
 	output_shape_widget->getComboBox()->addItem("Polygon");

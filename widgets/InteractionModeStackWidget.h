@@ -23,6 +23,7 @@ public:
 	void setGraphicsView(GraphicsView* view);
 	GraphicsItemWidget* getGraphicsItemWidget() const;
 	AiModelInteractWidget* getAiModelInteractWidget() const;
+	SprayModeWidget* getSprayModeWidget() const;
 	void setCurrentIndex(StackWidgetType index);
 	G_Widget_EnterLeaveView
 private:

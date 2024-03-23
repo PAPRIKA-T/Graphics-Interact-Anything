@@ -53,6 +53,11 @@ AiModelInteractWidget* InteractionModeStackWidget::getAiModelInteractWidget() co
 	return ai_model_interact_widget;
 }
 
+SprayModeWidget* InteractionModeStackWidget::getSprayModeWidget() const
+{
+    return spray_mode_widget;
+}
+
 void InteractionModeStackWidget::setCurrentIndex(StackWidgetType index)
 {
     StackWidget::setCurrentIndex((int)index);

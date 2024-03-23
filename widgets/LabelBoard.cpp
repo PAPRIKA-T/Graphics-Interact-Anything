@@ -95,13 +95,11 @@ void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QStrin
     item_0->setTextAlignment(Qt::AlignCenter);
     item_2->setTextAlignment(Qt::AlignCenter);
     clr_btn_list.push_back(color_btn);
-    blockSignals(false);
-    setCurrentItem(item_0);
-    blockSignals(true);
     scrollToItem(item_0);
     connect(color_btn, &ColorButton::sentSelf, this, &LabelBoard::onColorChanged);
     blockSignals(false);
     emit sentInsertRow(last_row, color_btn->getBackgroundColor());
+    setCurrentItem(item_0);
 }
 
 bool LabelBoard::isRowHasAdded(const QString& id, const QString& label)
@@ -126,7 +124,7 @@ void LabelBoard::setItemParameters(GraphicsItem* item)
     item->setGraphicsColor(clr_btn_list.at(selected_row)->getBackgroundColor());
 }
 
-const QColor& LabelBoard::getSelectedColor()
+QColor LabelBoard::getSelectedColor()
 {
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
@@ -181,7 +179,9 @@ void LabelBoard::onRemoveSelectedRowClicked()
     QList<QTableWidgetItem*> items = selectedItems();
     int selected_row = items.at(0)->row();
     removeLabelRow(selected_row);
-    emit sentRemoveRow(selected_row);
+    items = selectedItems();
+    int next_selected_row = items.at(0)->row();
+    emit sentRemoveRow(selected_row, next_selected_row);
 }
 
 void LabelBoard::onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)

@@ -35,6 +35,7 @@ public:
     void setLabelBoardWidget(LabelBoard* w);
     LabelBoard* getLabelBoardWidget();
     ScenePromptItemModel* getScenePromptItemModel();
+    GiantMaskItemModel* getGiantMaskItemModel();
     bool getIsPaintPromptItem(); //获取是否在绘制提示图元标志
     GraphicsItem* getPaintingItem(); //获取正在绘制的图形对象
 

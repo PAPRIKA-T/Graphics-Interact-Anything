@@ -7,7 +7,10 @@
 #include "utils/ColorOperation.h"
 #include "AllGraphics.h"
 #include "GiantMaskItem.h"
+#include "widgets/InteractionModeStackWidget.h"
+#include "widgets/SprayModeWidget.h"
 #include <QTimer>
+#include <QCheckBox>
 #define EPS (1e-5)
 
 GraphicsScene::GraphicsScene(QWidget *parent)
@@ -58,11 +61,14 @@ void GraphicsScene::setLabelBoardWidget(LabelBoard* w)
     connect(label_board_widget, &LabelBoard::sentSelectedRowColor,
         &mask_item_model, &GiantMaskItemModel::receiveSelectedLabelBoardRowColor);
     connect(label_board_widget, &LabelBoard::sentInsertRow,
-        &mask_item_model, &GiantMaskItemModel::insertMaskItem);
+        &mask_item_model, &GiantMaskItemModel::onInsertMaskItem);
     connect(label_board_widget, &LabelBoard::sentRemoveRow,
-        &mask_item_model, &GiantMaskItemModel::removeMaskItem);
+        &mask_item_model, &GiantMaskItemModel::onRemoveMaskItem);
     connect(label_board_widget, &LabelBoard::sentClearAllRows,
-        &mask_item_model, &GiantMaskItemModel::clearMaskItemList);
+        &mask_item_model, &GiantMaskItemModel::onClearMaskItemList);
+
+    connect(m_view->getInteractionModeStackWidget()->getSprayModeWidget()->getCoverCheckBox(), &QCheckBox::stateChanged,
+        &mask_item_model, &GiantMaskItemModel::onCoverCheckBoxChecked);
 }
 
 LabelBoard* GraphicsScene::getLabelBoardWidget()
@@ -98,6 +104,11 @@ void GraphicsScene::applySparyRect2Label(const QRect& r)
 ScenePromptItemModel* GraphicsScene::getScenePromptItemModel()
 {
     return &scene_prompt_model;
+}
+
+GiantMaskItemModel* GraphicsScene::getGiantMaskItemModel()
+{
+    return &mask_item_model;
 }
 
 bool GraphicsScene::getIsPaintPromptItem()

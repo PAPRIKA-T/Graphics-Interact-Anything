@@ -9,13 +9,15 @@
 LabelBoardToolWidget::LabelBoardToolWidget(QWidget *parent)
 	: QWidget(parent)
 {
-    setFixedHeight(32);
+    setFixedHeight(28);
     main_layout = new QHBoxLayout();
     board_add_row_btn = new GenericToolButton();
     board_add_row_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/add_row.png"));
+    board_add_row_btn->setFixedSize(24, 24);
 
     board_remove_row_btn = new GenericToolButton();
     board_remove_row_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/remove_row.png"));
+    board_remove_row_btn->setFixedSize(24, 24);
 
     board_add_row_btn->setCustomTooltip("Add Row");
 	board_remove_row_btn->setCustomTooltip("Remove Row");

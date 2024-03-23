@@ -23,14 +23,14 @@ public:
     void appendBoardRow(const QString& ID, const QColor& c, const QString& label = DEFAULT_LABEL);
     bool isRowHasAdded(const QString& id, const QString& label);
     void setItemParameters(GraphicsItem* item);
-    const QColor& getSelectedColor();
+    QColor getSelectedColor();
     QColor getRowColor(int);
     bool getIsAutoNextline();
 
     void selectNextRow();
 signals:
     void sentSelectedRowColor(int, const QColor&);
-    void sentRemoveRow(int);
+    void sentRemoveRow(int, int);
     void sentInsertRow(int, const QColor&);
     void sentClearAllRows();
 

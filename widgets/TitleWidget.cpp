@@ -192,11 +192,11 @@ void TitleWidget::setParentWidget(Widget* w)
     //主题风格设置信号绑定
     connect(help_menu->actions()[4], &QAction::triggered, [=]() {
         StyleSheetConfigModel style_model;
-        if (style_model.getStyleType() == StyleSheetConfigModel::StyleSheetType::Dark) {
-            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::Light);
+        if (style_model.getStyleType() == StyleSheetConfigModel::StyleSheetType::DARK) {
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::LIGNT);
         }
         else {
-            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::Dark);
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::DARK);
         }
         style_model.setGlobalStyleSheet(par_widget);
         setMenuStyle();

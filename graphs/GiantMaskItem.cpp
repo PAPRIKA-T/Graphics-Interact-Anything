@@ -27,6 +27,12 @@ GiantMaskItem::~GiantMaskItem()
 	qDebug() << "GiantMaskItem::count " << count;
 }
 
+void GiantMaskItem::onDeleteSelf()
+{
+	emit preparedToDelete();
+	deleteLater();
+}
+
 void GiantMaskItem::setColor(const QColor& color)
 {
 	m_color = color;
@@ -43,7 +49,7 @@ void GiantMaskItem::setImageShowSize(const QSize& s, const QSize& o)
 	fScaleH = s.height();
 	original_scaleW = o.width();
 	original_scaleH = o.height();
-	scaled_mask = cv::Mat(s.height(), s.width(), CV_8UC1);
+	scaled_mask = cv::Mat::zeros(s.height(), s.width(), CV_8UC1);
 	original_pixmap = QPixmap(s);
 	original_pixmap.fill(Qt::transparent);
 }
@@ -68,18 +74,27 @@ void GiantMaskItem::resetMask()
 	original_pixmap.fill(Qt::transparent);
 }
 
-void GiantMaskItem::addMaskRange(const cv::Mat& m)
+void GiantMaskItem::applyMaskRangeToLabel(const cv::Mat& m)
 {
 	setMask(scaled_mask | m);
 }
 
-void GiantMaskItem::addRectRange(const QRect& r)
+void GiantMaskItem::getRectMask(const QRect& r, cv::Mat& m)
 {
 	QPointF convert_p = mapFromScene(r.topLeft());
-	cv::Mat m = cv::Mat::zeros(fScaleH, fScaleW, CV_8UC1);
-	cv::rectangle(m, cv::Rect(convert_p.rx(), convert_p.ry(), r.width(), r.height()), 
+	m = cv::Mat::zeros(fScaleH, fScaleW, CV_8UC1);
+	cv::rectangle(m, cv::Rect(convert_p.rx(), convert_p.ry(), r.width(), r.height()),
 		cv::Scalar(255), -1);
-	addMaskRange(m);
+}
+
+void GiantMaskItem::update()
+{
+	if (!cv::countNonZero(scaled_mask))return;
+	std::cout << scaled_mask.size();
+	original_pixmap.fill(m_color);
+	cv::Mat m{};
+	cv::bitwise_not(scaled_mask, m);
+	original_pixmap.setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(m)));
 }
 
 const cv::Mat& GiantMaskItem::getScaledMask()
@@ -110,7 +125,6 @@ void GiantMaskItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 	Q_UNUSED(widget);
 	QRect img_rect(0, 0, static_cast<int>(fScaleW), static_cast<int>(fScaleH));
 	painter->setRenderHint(QPainter::SmoothPixmapTransform);
-	painter->setPen(m_color);
 	painter->setOpacity(mask_opacity);
 	painter->drawPixmap(img_rect, original_pixmap);
 }

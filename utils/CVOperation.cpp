@@ -3,6 +3,7 @@
 #include <QColor>
 #include <QBitmap>
 #include <QDebug>
+#include <QRect>
 
 QImage CVOperation::cvMat2QImage(const cv::Mat& mat)
 {
@@ -121,7 +122,6 @@ QImage CVOperation::setMaskOnImage(const QImage& org_image, const cv::Mat& mask,
     }
     return image;
 }
-
 
 QColor CVOperation::generateRandomQColor()
 {
