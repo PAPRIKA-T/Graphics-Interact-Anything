@@ -283,9 +283,6 @@ void GraphicsView::startPaintMode(QMouseEvent* event)
         m_scene->createPaintItemAtPoint(mapToScene(event->pos()));
     }
     else if (event->button() == Qt::RightButton) {
-        if (m_scene->getIsCreatePolygon()) {
-            m_scene->finishCreatePolygon();
-        }
     }
 }
 
@@ -484,6 +481,9 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         }
         else if (event->button() == Qt::RightButton) {
             if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+                if (m_scene->getIsCreatePolygon()) {
+                    m_scene->finishCreatePolygon();
+                }
                 emit m_scene->paintContinue();
 			}
         }

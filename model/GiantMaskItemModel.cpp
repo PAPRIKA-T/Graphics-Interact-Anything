@@ -40,6 +40,11 @@ void GiantMaskItemModel::resetMaskItemList()
 	for(GiantMaskItem * mask : mask_item_list) {
 		mask->resetMask();
 	}
+	all_color_mask = cv::Mat::zeros(pixmap_item->getFscaleSize().height(),
+		pixmap_item->getFscaleSize().width(), CV_8UC1);
+
+	all_color_image = cv::Mat::zeros(pixmap_item->getFscaleSize().height(),
+		pixmap_item->getFscaleSize().width(), CV_8UC3);
 }
 
 void GiantMaskItemModel::setGraphicsScene(GraphicsScene* s)
@@ -122,14 +127,14 @@ void GiantMaskItemModel::initForegroundMaskItem()
     foreground_mask_item->setParentItem(pixmap_item);
 	foreground_mask_item->setZValue(2);
 	foreground_mask_item->setColor(DEFAULT_COLOR_ITEM);
-    foreground_mask_item->setMaskOpacity(0.5);
+    foreground_mask_item->setMaskOpacity(0.4);
 
 	background_mask_item = new GiantMaskItem();
 	background_mask_item->setImageShowSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
 	background_mask_item->setParentItem(pixmap_item);
 	background_mask_item->setZValue(0);
 	background_mask_item->setColor(DEFAULT_COLOR_ITEM);
-	background_mask_item->setMaskOpacity(0.8);
+	background_mask_item->setMaskOpacity(0.6);
 }
 
 void GiantMaskItemModel::initMaskItemList()
