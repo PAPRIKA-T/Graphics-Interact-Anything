@@ -16,7 +16,6 @@ StatusWidget::StatusWidget(QWidget* parent)
     main_layout->addStretch();
     main_layout->addWidget(right_label);
     main_layout->setContentsMargins(10, 2, 10, 2);
-    setStatusLabelTextColor(200, 200, 200);
 
     /************************************************************************/
     QString str0 = "Image_Size:" + QString::number(0, 'f', 0) + "px," + QString::number(0, 'f', 0) + "px ";
@@ -38,13 +37,4 @@ void StatusWidget::setStatusLabelTextColor(int R, int G, int B)
 {
     left_label->setStyleSheet(QString("QLabel{background-color:transparent;color:rgb(%1,%2,%3);outline: none;border:none;qproperty-alignment: 'AlignVCenter | AlignLeft';}").arg(R).arg(G).arg(B));
     right_label->setStyleSheet(QString("QLabel{background-color:transparent;color:rgb(%1,%2,%3);outline: none;border:none;qproperty-alignment: 'AlignVCenter | AlignLeft';}").arg(R).arg(G).arg(B));
-}
-
-void StatusWidget::paintEvent(QPaintEvent* event)
-{
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-    QWidget::paintEvent(event);
 }

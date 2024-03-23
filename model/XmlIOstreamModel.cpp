@@ -1,7 +1,7 @@
 ﻿#include "XmlIOstreamModel.h"
 #include "graphs/Graphicsitem.h"
 #include "graphs/Graphicsscene.h"
-#include "utils/FilePathOperation.h"
+#include "utils/FileOperation.h"
 #include <QXmlStreamReader>
 #include <QtXml/QDomDocument>
 #include <QPointF>
@@ -60,7 +60,7 @@ bool XmlIOstreamModel::readItemFromXmlFile(const QString& readpath, GraphicsScen
     }
 
     QList<GraphicsItem*> items; //读取所有item（不包含自身子图元）
-    GraphicsPixmapItem* pixmap_item = scene->getPixmapItem();
+    GiantImageItem* pixmap_item = scene->getPixmapItem();
     double m_fscale = pixmap_item->getFscaleW() / (pixmap_item->getOriginWidth() + EPS);
     QPointF point_scale(m_fscale, m_fscale);
 
@@ -687,12 +687,13 @@ void XmlIOstreamModel::addItemList(QList<GraphicsItem*>& items, GraphicsScene* s
             break;
         }
     }
+    if (items.isEmpty())return;
     items.last()->setSelected(false);
 }
 
 GraphicsItem* XmlIOstreamModel::readBPointXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     BPoint* bpoint = new BPoint();
     QPointF itemPosToPixC;
@@ -725,7 +726,7 @@ GraphicsItem* XmlIOstreamModel::readBPointXml(QXmlStreamReader& xmlreader, QStri
 
 GraphicsItem* XmlIOstreamModel::readDoubleEndPointLineXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     DoubleEndPointLine* bline = new DoubleEndPointLine();
     QPointF itemPosToPixS;
@@ -764,7 +765,7 @@ GraphicsItem* XmlIOstreamModel::readDoubleEndPointLineXml(QXmlStreamReader& xmlr
 
 GraphicsItem* XmlIOstreamModel::readInteractionRectXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para, 
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     InteractionRect* rect = new InteractionRect();
     QPointF itemPosToPixS;
@@ -803,7 +804,7 @@ GraphicsItem* XmlIOstreamModel::readInteractionRectXml(QXmlStreamReader& xmlread
 
 GraphicsItem* XmlIOstreamModel::readInteractionEllipseXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     InteractionEllipse* bellipse = new InteractionEllipse();
     QPointF itemPosToPixS;
@@ -843,7 +844,7 @@ GraphicsItem* XmlIOstreamModel::readInteractionEllipseXml(QXmlStreamReader& xmlr
 
 GraphicsItem* XmlIOstreamModel::readInteractionRoundXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     InteractionRound* round = new InteractionRound();
     QPointF itemPosToPixE;
@@ -884,7 +885,7 @@ GraphicsItem* XmlIOstreamModel::readInteractionRoundXml(QXmlStreamReader& xmlrea
 
 GraphicsItem* XmlIOstreamModel::readPolygonXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     InteractionPolygon* polygon_item = new InteractionPolygon();
     QList<ItemPointF> map_to_pixmap_list;
@@ -925,7 +926,7 @@ GraphicsItem* XmlIOstreamModel::readPolygonXml(QXmlStreamReader& xmlreader, QStr
 
 GraphicsItem* XmlIOstreamModel::readLineSegmentXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     LineSegment* lineseg_item = new LineSegment();
     QList<ItemPointF> map_to_pixmap_list;
@@ -965,7 +966,7 @@ GraphicsItem* XmlIOstreamModel::readLineSegmentXml(QXmlStreamReader& xmlreader, 
 
 GraphicsItem* XmlIOstreamModel::readInteractionPieXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     InteractionPie* pie = new InteractionPie();
     QPointF itemPosToPixS;
@@ -1019,7 +1020,7 @@ GraphicsItem* XmlIOstreamModel::readInteractionPieXml(QXmlStreamReader& xmlreade
 
 GraphicsItem* XmlIOstreamModel::readAngleXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     Angle* angle_item = new Angle();
     QPointF itemPosToPixC;
@@ -1072,7 +1073,7 @@ GraphicsItem* XmlIOstreamModel::readAngleXml(QXmlStreamReader& xmlreader, QStrin
 
 GraphicsItem* XmlIOstreamModel::readParallelLineXml(QXmlStreamReader& xmlreader, QString& nodename,
     QList<GraphicsItem*>& items, GraphicsItemIoParameter& item_para,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     ParallelLine* parallel_line = new ParallelLine();
     QPointF itemPosToPixS;
@@ -1251,13 +1252,11 @@ void XmlIOstreamModel::createGraphicsItemName(QList<GraphicsItem*>& sort_item_li
     int index = 0;
     foreach(QGraphicsItem * item, scene->items())
     {
-        if (scene->isPaintItemWithChild(item))
-        {
-            GraphicsItem* m_item = dynamic_cast<GraphicsItem*>(item);
-            m_item->setName(index);
-            index++;
-            if (m_item->parentItem() == nullptr)sort_item_list.append(m_item);
-        }
+        GraphicsItem* m_item = dynamic_cast<GraphicsItem*>(item);
+        if(!m_item)continue;
+        m_item->setName(index);
+        index++;
+        if (m_item->parentItem() == nullptr)sort_item_list.append(m_item);
     }
 }
 
@@ -1267,15 +1266,15 @@ void XmlIOstreamModel::createSaveXmlHeader(QDomDocument& domDoc, QDomElement& an
     version = domDoc.createProcessingInstruction("xml", "version = \"1.0\" encoding = \"UTF-8\"");
     domDoc.appendChild(version);
 
-    GraphicsPixmapItem* pixmap_item = scene->getPixmapItem();
-    QFileInfo info = QFileInfo(scene->getPixmapItem()->getPixmapPath());
+    GiantImageItem* pixmap_item = scene->getPixmapItem();
+    QFileInfo info = QFileInfo(scene->getPixmapItem()->getImagePath());
 
     createXmlElement(domDoc, annotation_element, "folder", 
-        FilePathOperation::getFileFolder(pixmap_item->getPixmapPath())); //创建节点folder
+        FilePathOperation::getFileFolder(pixmap_item->getImagePath())); //创建节点folder
     createXmlElement(domDoc, annotation_element, "filename", 
         info.fileName()); //创建节点filename
     createXmlElement(domDoc, annotation_element, "path", 
-        pixmap_item->getPixmapPath()); //创建节点path
+        pixmap_item->getImagePath()); //创建节点path
 
     QDomElement source_element = domDoc.createElement("source");  //创建父节点source
     {
@@ -1302,7 +1301,7 @@ void XmlIOstreamModel::createSaveXmlHeader(QDomDocument& domDoc, QDomElement& an
 void XmlIOstreamModel::createSaveXmlGraphicsItemInfo(QDomDocument& domDoc, QDomElement& domRootElement,
     QList<GraphicsItem*>& sort_item_list, GraphicsScene* scene)
 {
-    GraphicsPixmapItem* pixmap_item = scene->getPixmapItem();
+    GiantImageItem* pixmap_item = scene->getPixmapItem();
     //计算item坐标系映射到图像坐标系的参数
     double m_fscale = pixmap_item->getOriginWidth() / (pixmap_item->getFscaleW() + EPS);
     QPointF point_scale(m_fscale, m_fscale);
@@ -1554,7 +1553,7 @@ void XmlIOstreamModel::saveInteractionRoundXml(QDomDocument& domDoc, QDomElement
 }
 
 void XmlIOstreamModel::savePolygonXml(QDomDocument& domDoc, QDomElement& domRootElement,
-    QDomElement& objectElement, GraphicsItem* item, GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    QDomElement& objectElement, GraphicsItem* item, GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     InteractionPolygon* painting_pol_item = dynamic_cast<InteractionPolygon*>(item);
     QDomElement polygonElement = domDoc.createElement("polygon");  //创建父节点
@@ -1594,7 +1593,7 @@ void XmlIOstreamModel::savePolygonXml(QDomDocument& domDoc, QDomElement& domRoot
 }
 
 void XmlIOstreamModel::saveLineSegmentXml(QDomDocument& domDoc, QDomElement& domRootElement,
-    QDomElement& objectElement, GraphicsItem* item, GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    QDomElement& objectElement, GraphicsItem* item, GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     LineSegment* lineseg_item = dynamic_cast<LineSegment*>(item);
     QDomElement linesegElement = domDoc.createElement("LineSegment");  //创建父节点
@@ -1669,7 +1668,7 @@ void XmlIOstreamModel::saveInteractionPieXml(QDomDocument& domDoc, QDomElement& 
 
 void XmlIOstreamModel::saveInteractionAngleXml(QDomDocument& domDoc, QDomElement& domRootElement,
     QDomElement& objectElement, GraphicsItem* item, QPointF& center, 
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     Angle* angle = dynamic_cast<Angle*>(item);
     QDomElement AngleElement = domDoc.createElement("Angle");  //创建父节点
@@ -1712,7 +1711,7 @@ void XmlIOstreamModel::saveInteractionAngleXml(QDomDocument& domDoc, QDomElement
 
 void XmlIOstreamModel::saveParallelLineXml(QDomDocument& domDoc, QDomElement& domRootElement,
     QDomElement& objectElement, GraphicsItem* item, QPointF& start, QPointF& edge,
-    GraphicsPixmapItem* pixmap_item, QPointF& point_scale)
+    GiantImageItem* pixmap_item, QPointF& point_scale)
 {
     ParallelLine* para_item = dynamic_cast<ParallelLine*>(item);
     QDomElement ParallelLineElement = domDoc.createElement("ParallelLine");  //创建父节点

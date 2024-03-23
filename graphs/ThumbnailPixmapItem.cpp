@@ -3,14 +3,14 @@
 #include "Graphicsview.h"
 #include "graphs/Graphicspixmapitem.h"
 
-ThumbnailPixmapItem::ThumbnailPixmapItem(const QPixmap& pixmap)
+ThumbnailPixmapItem::ThumbnailPixmapItem(const QImage& img)
 	:QGraphicsPixmapItem()
 {
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemIsSelectable, false);
     setFlag(QGraphicsItem::ItemIsFocusable, false);
     setFlag(QGraphicsItem::ItemIgnoresTransformations);
-    if (!pixmap.isNull())setPixmap(pixmap);
+    if (!img.isNull())setShowImage(img);
     setData(0, "ThumbnailPixmapItem");
     setVisible(false);
 }
@@ -19,17 +19,16 @@ ThumbnailPixmapItem::~ThumbnailPixmapItem()
 {
 }
 
-void ThumbnailPixmapItem::setPixmap(const QPixmap& pixmap)
+void ThumbnailPixmapItem::setShowImage(const QImage& img)
 {
-    if (pixmap.isNull()) {
+    if (img.isNull()) {
         qDebug() << "ThumbnailPixmapItem::setPixmap: pixmap is null!";
         fScaleH = 0;
         fScaleW = 0;
-        QGraphicsPixmapItem::setPixmap(pixmap);
         return;
     }
-    qreal width = pixmap.width();
-    qreal height = pixmap.height();
+    qreal width = img.width();
+    qreal height = img.height();
     m_fScale = width / height;
     if (width > height)
     {
@@ -48,12 +47,13 @@ void ThumbnailPixmapItem::setPixmap(const QPixmap& pixmap)
     resetScaleFactor();
     fScaleH *= scale_factor;
     fScaleW *= scale_factor;
-    QGraphicsPixmapItem::setPixmap(pixmap);
+    show_image = img;
 }
 
-void ThumbnailPixmapItem::updatePixmap(const QPixmap& p)
+void ThumbnailPixmapItem::updateShowImage(const QImage& img)
 {
-    QGraphicsPixmapItem::setPixmap(p);
+    show_image = img;
+    update();
 }
 
 void ThumbnailPixmapItem::updateSize()
@@ -129,7 +129,7 @@ void ThumbnailPixmapItem::paint(QPainter* painter, const QStyleOptionGraphicsIte
     QRect img_rect(0, 0,
         static_cast<int>(fScaleW), static_cast<int>(fScaleH));
     painter->setRenderHint(QPainter::SmoothPixmapTransform);
-    painter->drawPixmap(img_rect, pixmap());
+    painter->drawImage(img_rect, show_image);
     painter->setPen(QPen(QColor(255, 0, 0)));
     painter->drawRect(box_prompt);
     painter->setPen(QPen(QColor(255, 255, 0)));

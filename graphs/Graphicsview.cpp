@@ -7,7 +7,6 @@
 #include "widgets/StatusWidget.h"
 #include "widgets/MagnifyingGlassWidget.h"
 #include "widgets/GOpenGLWidgets.h"
-#include "Model/ScenePromptItemModel.h"
 #include "Widgets/ImageSceneWidget2D.h"
 #include "model/StyleSheetConfigModel.h"
 #include "GraphicsPolygon.h"
@@ -22,6 +21,7 @@
 #include "widgets/InteractionModeStackWidget.h"
 #include "widgets/AiModelInteractWidget.h"
 #include <model/ViewListContainer.h>
+#include "utils/thread/SamSegmentRealTimeThread.h"
 
 #define EPS (1e-5) //除数最小量
 
@@ -47,6 +47,8 @@ GraphicsView::GraphicsView(QWidget *parent) :
     initLayout();
     connect(m_scene, &GraphicsScene::paintContinue, this, &GraphicsView::paintContinue);
     connect(m_scene, &GraphicsScene::promptContinue, this, &GraphicsView::promptContinue);
+
+    //setBackgroundBrush(QBrush(QColor(0, 0, 0)));
 }
 
 GraphicsView::~GraphicsView()
@@ -56,6 +58,26 @@ GraphicsView::~GraphicsView()
     delete main_layout;
     delete view_tool_bar;
     delete interaction_mode_widget;
+}
+
+void GraphicsView::initSamSegmentRealTimeThread(bool ok)
+{
+    if (ok) {
+        sam_segment_real_time_thread = new SamSegmentRealTimeThread(m_scene);
+        connect(this, &GraphicsView::startSamSegmentRealTime, sam_segment_real_time_thread, &SamSegmentRealTimeThread::startSamSegmentRealTime);
+        connect(sam_segment_real_time_thread, &SamSegmentRealTimeThread::finishSamSegmentRealTime, [this]() {
+            //sam_segment_real_time_finished = true;
+            });
+        QTimer* sam_segment_real_time_timer = new QTimer(this);
+        sam_segment_real_time_timer->setInterval(50);
+        connect(sam_segment_real_time_timer, &QTimer::timeout, [this]() {
+				emit startSamSegmentRealTime();
+			});
+        //sam_segment_real_time_timer->start();
+    }
+    else {
+        delete sam_segment_real_time_thread;
+    }
 }
 
 GraphicsScene* GraphicsView::getGraphicsScene() const
@@ -82,6 +104,7 @@ void GraphicsView::initGraphicsScene()
     generic_interaction_model.setGraphicsView(this);
     m_transform_model.setGraphicsView(this);
     m_graphics_calculate_model.setGraphicsScene(m_scene);
+    m_graphics_view_paint_model.setGraphicsView(this);
 }
 
 void GraphicsView::initLayout()
@@ -96,6 +119,7 @@ void GraphicsView::initLayout()
 
     //设置交互模式控件
     interaction_mode_widget = new GiantInteractionModeWidget(this);
+    horizontal_layout->addSpacing(8);
     horizontal_layout->addWidget(interaction_mode_widget);
     horizontal_layout->addStretch();
     horizontal_layout->setSpacing(0);
@@ -169,7 +193,7 @@ void GraphicsView::setEnterView(bool ok)
 
 const QPoint& GraphicsView::getMouseCoordinate()
 {
-    if (pixmap_item->getPixmap().isNull()) {
+    if (pixmap_item->getShowImage().isNull()) {
         m_present_pos_on_origin_image = mapToScene(m_present_pos).toPoint();
     }
     else {
@@ -204,7 +228,7 @@ void GraphicsView::setMagImage(const QPointF& p)
     //r = r.intersected(visibleRect);
     //top_left = r.topLeft() - top_left;
     //mag_glass_widget->setPaintPos(top_left);
-    //grab_map = pixmap_item->getPixmap().copy(r);
+    //grab_map = pixmap_item->getShowPixmap().copy(r);
     //mag_glass_widget->update();
 }
 
@@ -245,9 +269,9 @@ void GraphicsView::keyDelete()
     foreach(QGraphicsItem *item, scene()->selectedItems())
     {
         if(!m_scene->items().contains(item)) continue;
-        if(m_scene->isPaintItemWithChild(item))
+        GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+        if(new_item)
         {
-            GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
             new_item->onActionRemoveSelf();
         }
     }
@@ -259,9 +283,6 @@ void GraphicsView::startPaintMode(QMouseEvent* event)
         m_scene->createPaintItemAtPoint(mapToScene(event->pos()));
     }
     else if (event->button() == Qt::RightButton) {
-        if (m_scene->getIsCreatePolygon()) {
-            m_scene->finishCreatePolygon();
-        }
     }
 }
 
@@ -269,6 +290,15 @@ void GraphicsView::startSamMode(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton) {
         m_scene->createPaintItemAtPoint(mapToScene(event->pos()));
+        if (m_scene->painting_item->data(1) != "PromptRect") return;
+
+        foreach(GraphicsItem * prompt_item, m_scene->scene_prompt_model.getPromptItemList()) {
+            if (prompt_item->data(1) == "PromptRect" && m_scene->painting_item != prompt_item)
+            {
+                prompt_item->onActionRemoveSelf(); 
+                m_scene->getScenePromptItemModel()->clearMask(); break;
+            }
+        }
     }
     else if (event->button() == Qt::RightButton) {
         if (m_scene->getIsCreatePolygon()) {
@@ -285,7 +315,21 @@ void GraphicsView::moveAtSamMode(QMouseEvent* event)
         }
     }
     else m_scene->setPaintItemPoint(mapToScene(m_present_pos));
-    if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED) return;
+    if (mouse_press_status == MOUSE_PRESS_STATUS::RIGHT_BUTTON_PRESSED ||
+        mouse_press_status == MOUSE_PRESS_STATUS::MIDDLE_BUTTON_PRESSED) return;
+    if (m_scene->getScenePromptItemModel()->getPromptItemList().size() > 1)return;
+    m_scene->samSegmentRealTime();
+}
+
+void GraphicsView::moveAtSprayMode(QMouseEvent* event)
+{
+    if (pixmap_item->getOriginalImage().isNull())return;
+    if (mouse_press_status == MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) {
+        QRect r = m_graphics_view_paint_model.getSprayRect();
+        QPoint convert_lt = mapToScene(r.topLeft()).toPoint();
+        QPoint convert_br = mapToScene(r.bottomRight()).toPoint();
+        m_scene->applySparyRect2Label(QRect(convert_lt, convert_br));
+    }
 }
 
 void GraphicsView::showMenuAfterMouseRelease(QMouseEvent* event)
@@ -347,9 +391,12 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
     else if (generic_interaction_model.getInteractionStatus() ==
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
 		startSamMode(event);
-        if(mouse_press_status != MOUSE_PRESS_STATUS::LEFT_BUTTON_PRESSED) 
-            m_scene->getSamSegmentTimer()->stop();
 	}
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SPRAY) {
+        moveAtSprayMode(event);
+        viewport()->update();
+    }
     else if (generic_interaction_model.getInteractionStatus() == 
         GenericInteractionModel::InteractionStatus::INTERACTION_CALCULATE) {
         if (event->button() == Qt::LeftButton) {
@@ -408,6 +455,10 @@ void GraphicsView::mouseMoveEvent(QMouseEvent *event)
         GenericInteractionModel::InteractionStatus::INTERACTION_SAM) {
         moveAtSamMode(event);
     }
+    else if (generic_interaction_model.getInteractionStatus() ==
+        GenericInteractionModel::InteractionStatus::INTERACTION_SPRAY) {
+        moveAtSprayMode(event);
+    }
     m_scene->updateRtText();
 }
 
@@ -430,6 +481,9 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         }
         else if (event->button() == Qt::RightButton) {
             if (mouse_interaction == MOUSE_INTERACTION::PRESSED_NO_MOVE) {
+                if (m_scene->getIsCreatePolygon()) {
+                    m_scene->finishCreatePolygon();
+                }
                 emit m_scene->paintContinue();
 			}
         }
@@ -445,7 +499,6 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
                     emit m_scene->promptContinue();
                 }
             }
-            m_scene->getSamSegmentTimer()->start();
         }
     }
     else if (generic_interaction_model.getInteractionStatus() == 
@@ -463,6 +516,7 @@ void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
         }
     }
     QGraphicsView::mouseReleaseEvent(event);
+    viewport()->update();
 }
 
 void GraphicsView::wheelEvent(QWheelEvent *event)
@@ -589,13 +643,11 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
 
 void GraphicsView::hideAllText()
 {
-    foreach(QGraphicsItem *item, items())
+    for(QGraphicsItem *item : items())
     {
-        if(m_scene->isPaintItemWithChild(item))
-        {
-            GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
-                if(new_item->parentItem()==nullptr)new_item->getGraphicsTextModel().setIsHideText(true);
-        }
+        GraphicsItem* new_item = dynamic_cast<GraphicsItem*>(item);
+        if(new_item && new_item->parentItem()==nullptr)
+            new_item->getGraphicsTextModel().setIsHideText(true);
     }
 }
 
@@ -663,8 +715,8 @@ void GraphicsView::saveViewImage()
     }
     else pix = grab(viewport()->rect());
     // 抓取图像后,开启信息显示
-    m_scene->getLeftUpTextItem()->setVisible(true);
-    m_scene->getLeftBottomTextItem()->setVisible(true);
+    //m_scene->getLeftUpTextItem()->setVisible(true);
+    //m_scene->getLeftBottomTextItem()->setVisible(true);
     m_scene->getRightUpTextItem()->setVisible(true);
     m_scene->getRightBottomTextItem()->setVisible(true);
     showAllText();
@@ -694,9 +746,34 @@ void GraphicsView::saveViewImage()
     }
 }
 
-void GraphicsView::setPaintCross(bool ok)
+void GraphicsView::setSprayRectSize(int i)
 {
-    paint_cross = ok;
+    m_graphics_view_paint_model.setSprayRectSize(i);
+}
+
+void GraphicsView::setPaintCrossStyle(bool ok)
+{
+    if (ok) {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_CROSS;
+    }
+    else {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_NONE;
+    }
+    viewport()->update();
+}
+
+void GraphicsView::setPaintRectStyle(bool ok)
+{
+    if (ok) {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_RECT;
+    }
+    else {
+        m_graphics_view_paint_model.paint_style_type =
+            GraphicsViewPaintModel::PaintStyleType::PAINT_NONE;
+    }
     viewport()->update();
 }
 
@@ -708,22 +785,19 @@ void GraphicsView::setActived(bool ok)
 void GraphicsView::paintEvent(QPaintEvent *event)
 {
     QGraphicsView::paintEvent(event);
-    if(is_enter_view && paint_cross)
+    if (!is_enter_view)return;
+    if(m_graphics_view_paint_model.paint_style_type == 
+        GraphicsViewPaintModel::PaintStyleType::PAINT_CROSS)
     {
-        //画一个交叉线，显示鼠标此时的位置
         QPainter painter(viewport());
-        QPen pen;
-        pen.setColor(QColor(91, 220, 47));
-        pen.setWidth(1);
-        painter.setPen(pen);
-        //绘制横向线
-        painter.drawLine(QPoint(0, m_present_pos.ry()), QPoint(width(), m_present_pos.ry()));
-        pen.setColor(QColor(220, 60, 74));
-        painter.setPen(pen);
-        //绘制纵向线
-        painter.drawLine(QPoint(m_present_pos.rx(), 0), QPoint(m_present_pos.rx(), height()));
+        m_graphics_view_paint_model.paintCrossStyle(&painter);
     }
-
+    else if (m_graphics_view_paint_model.paint_style_type ==
+        GraphicsViewPaintModel::PaintStyleType::PAINT_RECT)
+    {
+        QPainter painter(viewport());
+        m_graphics_view_paint_model.paintRectStyle(&painter);
+    }
 }
 
 void GraphicsView::enterEvent(QEnterEvent* event)

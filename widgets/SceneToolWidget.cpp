@@ -6,6 +6,7 @@
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include "GiantInteractionModeWidget.h"
+#include "utils/CVOperation.h"
 #include "FileView.h"
 
 /*************************SceneToolWidget************************/
@@ -15,27 +16,37 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     main_layout = new QHBoxLayout(this);
     zoom_btn = new GenericToolButton(this);
     zoom_btn->setCheckable(true);
-    zoom_btn->setIcon(QIcon(":/res/qss/Dark/background-image/zoom_in.png"));
+    zoom_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/zoom_in.png"));
     camera_btn = new GenericToolButton(this);
-    camera_btn->setIcon(QIcon(":/res/qss/Dark/background-image/camera.png"));
+    camera_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/camera.png"));
     color_reverse_btn = new GenericToolButton(this);
-    color_reverse_btn->setIcon(QIcon(":/res/qss/Dark/background-image/reverse.png"));
+    color_reverse_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/reverse.png"));
     fix_screen_btn = new GenericToolButton(this);
-    fix_screen_btn->setIcon(QIcon(":/res/qss/Dark/background-image/fix_screen.png"));
+    fix_screen_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/fix_screen.png"));
     center_on_btn = new GenericToolButton(this);
-    center_on_btn->setIcon(QIcon(":/res/qss/Dark/background-image/center.png"));
+    center_on_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/center.png"));
     rotateR_btn = new GenericToolButton(this);
-    rotateR_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rotate_R.png"));
+    rotateR_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/rotate_R.png"));
     rotateL_btn = new GenericToolButton(this);
-    rotateL_btn->setIcon(QIcon(":/res/qss/Dark/background-image/rotate_L.png"));
+    rotateL_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/rotate_L.png"));
 
     turn_left_btn = new GenericToolButton(this);
-    turn_left_btn->setIcon(QIcon(":/res/qss/Dark/background-image/left.png"));
+    turn_left_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/left.png"));
     turn_right_btn = new GenericToolButton(this);
-    turn_right_btn->setIcon(QIcon(":/res/qss/Dark/background-image/right.png"));
+    turn_right_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/right.png"));
 
     mask_to_graphicsitem = new GenericToolButton(this);
-    mask_to_graphicsitem->setIcon(QIcon(":/res/qss/Dark/background-image/mask_to_item.png"));
+    mask_to_graphicsitem->setIcon(QIcon(":/res/qss/GenericStyle/background-image/mask_to_item.png"));
+
+    clear_scene_btn = new GenericToolButton(this);
+    clear_scene_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/deleteall_btn.png"));
+    clear_scene_btn->setCustomTooltip("Delete All Annotation");
+    clear_scene_btn->setIconSize(QSize(20, 20));
+
+    clear_calculate_btn = new GenericToolButton(this);
+    clear_calculate_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/delete_cal_btn.png"));
+    clear_calculate_btn->setCustomTooltip("Delete All Calculate Item");
+    clear_calculate_btn->setIconSize(QSize(20, 20));
 
     mask_to_graphicsitem->setCustomTooltip("Mask To Item");
     zoom_btn->setCustomTooltip("Zoom In");
@@ -48,6 +59,24 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     turn_left_btn->setCustomTooltip("Previous");
     turn_right_btn->setCustomTooltip("Next");
 
+    button_list.append(mask_to_graphicsitem);
+    button_list.append(camera_btn);
+    button_list.append(zoom_btn);
+    button_list.append(color_reverse_btn);
+    button_list.append(fix_screen_btn);
+    button_list.append(center_on_btn);
+    button_list.append(rotateR_btn);
+    button_list.append(rotateL_btn);
+    button_list.append(turn_left_btn);
+    button_list.append(turn_right_btn);
+    button_list.append(clear_scene_btn);
+    button_list.append(clear_calculate_btn);
+
+    foreach(QPushButton * btn, button_list) {
+        btn->setObjectName("view_attach_btn");
+        btn->setFixedSize(24, 24);
+    }
+
     connect(mask_to_graphicsitem, &QPushButton::clicked, this, &SceneToolWidget::onMaskToGraphicsItemBtn);
     connect(camera_btn, &QPushButton::clicked, this, &SceneToolWidget::onCameraBtn);
     connect(zoom_btn, &QPushButton::clicked, this, &SceneToolWidget::onZoomSceneBtn);
@@ -59,19 +88,20 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     connect(turn_left_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnLeftBtn);
     connect(turn_right_btn, &QPushButton::clicked, this, &SceneToolWidget::onTurnRightBtn);
 
+    connect(clear_scene_btn, &QPushButton::clicked, this, [this]() {
+        m_view->getGraphicsScene()->clearSceneGraphicsItem(); });
+
+    connect(clear_calculate_btn, &QPushButton::clicked, this, [this]() {
+        m_view->deCalLine(); });
+    main_layout->addWidget(clear_scene_btn);
+    main_layout->addWidget(clear_calculate_btn);
+
+    main_layout->addSpacing(10);
+
     main_layout->addWidget(turn_left_btn);
     main_layout->addWidget(turn_right_btn);
 
-    QFrame* line_thr = new QFrame(this);
-    line_thr->setFrameShape(QFrame::VLine);
-    line_thr->setFrameShadow(QFrame::Plain);
-    line_thr->setLineWidth(1);
-    line_thr->setContentsMargins(2, 5, 2, 5);
-    QPalette palette = line_thr->palette();
-    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
-    line_thr->setPalette(palette);
-
-    main_layout->addWidget(line_thr);
+    main_layout->addSpacing(10);
 
     main_layout->addWidget(fix_screen_btn);
     main_layout->addWidget(center_on_btn);
@@ -79,22 +109,14 @@ SceneToolWidget::SceneToolWidget(QWidget* parent)
     main_layout->addWidget(rotateL_btn);
     main_layout->addWidget(rotateR_btn);
 
-    QFrame* line_second = new QFrame(this);
-    line_second->setFrameShape(QFrame::VLine);
-    line_second->setFrameShadow(QFrame::Plain);
-    line_second->setLineWidth(1);
-    line_second->setContentsMargins(2, 5, 2, 5);
-    palette = line_second->palette();
-    palette.setColor(QPalette::WindowText, QColor(100, 100, 100));
-    line_second->setPalette(palette);
-
-    main_layout->addWidget(line_second);
+    main_layout->addSpacing(10);
 
     main_layout->addWidget(camera_btn);
     main_layout->addWidget(zoom_btn);
     main_layout->addWidget(mask_to_graphicsitem);
-    main_layout->setContentsMargins(2, 2, 2, 2);
+    main_layout->setContentsMargins(0, 0, 0, 0);
     main_layout->setSpacing(6);
+
     setLayout(main_layout);
 }
 
@@ -142,9 +164,19 @@ void SceneToolWidget::onZoomSceneBtn(int checked)
 void SceneToolWidget::onColorReverseBtn()
 {
     QImage org_image = m_view->getGraphicsScene()->
-        getPixmapItem()->getPixmap().toImage();
+        getPixmapItem()->getShowImage();
     if (org_image.isNull()) return;
-    // 循环获得每个像素的rgb，循环减，进行反转
+    //QSize fscale_size = m_view->getGraphicsScene()->
+    //    getPixmapItem()->getFscaleSize();
+    //if (fscale_size.isEmpty())return;
+
+    //cv::Mat result = CVOperation::QImage2cvMat(org_image);
+    //cv::Size cv_fscale_size = { fscale_size.width(),fscale_size.height() };
+    //cv::resize(result, result, cv_fscale_size);
+
+    //std::cout<<result.size()<<std::endl;
+    //cv::bitwise_not(result, result);
+
     for (int w = 0; w < org_image.width(); ++w)
     {
         for (int h = 0; h < org_image.height(); ++h)
@@ -156,8 +188,11 @@ void SceneToolWidget::onColorReverseBtn()
         }
     }
 
+    //m_view->getGraphicsScene()->
+    //    getPixmapItem()->updateShowImage(CVOperation::cvMat2QImage(result));
+
     m_view->getGraphicsScene()->
-        getPixmapItem()->updatePixmap(QPixmap::fromImage(org_image));
+        getPixmapItem()->updateShowImage(org_image);
 }
 
 void SceneToolWidget::onFixScreenBtn()

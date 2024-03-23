@@ -16,10 +16,10 @@ public:
 		ThreeFourRotate,
 		NoRotate,
 	};
-	explicit ThumbnailPixmapItem(const QPixmap& pixmap); //构造函数
+	explicit ThumbnailPixmapItem(const QImage& pixmap); //构造函数
 	~ThumbnailPixmapItem();
-	void setPixmap(const QPixmap&);//设置显示图像
-	void updatePixmap(const QPixmap& p);//更新图像，只更新内容
+	void setShowImage(const QImage&);//设置显示图像
+	void updateShowImage(const QImage& p);//更新图像，只更新内容
 	void updateSize(); //根据scene大小调整size
 	void updateDecorator(); //更新
 	qreal getFscaleH() { return fScaleH; } //获取图像高度
@@ -49,4 +49,5 @@ private:
 	QRect box_prompt{}; //矩形框区域
 	QPointF m_press_pos; //鼠标点击时pos
 	RotateMode box_rotate_mode = RotateMode::NoRotate; //矩形框区域旋转模式
+	QImage show_image; //显示图像
 };

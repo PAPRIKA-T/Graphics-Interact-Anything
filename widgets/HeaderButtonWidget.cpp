@@ -31,14 +31,6 @@ HeaderButtonWidget::~HeaderButtonWidget()
     delete header_btn_layout;
 }
 
-void HeaderButtonWidget::paintEvent(QPaintEvent* event)
-{
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-}
-
 void HeaderButtonWidget::setWindowWidget(Widget* widget)
 {
     window_widget = widget;

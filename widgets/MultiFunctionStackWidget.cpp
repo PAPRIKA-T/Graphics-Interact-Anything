@@ -9,7 +9,7 @@ MultiFunctionStackWidget::MultiFunctionStackWidget(QWidget* parent)
 
     stack_icon_widget = new StackIconWidget();
     stack_widget = new StackWidget();
-    stack_widget->setObjectName("stack_widget");
+    stack_widget->setObjectName("multi_fuction_stack_widget");
     stack_widget->setContentsMargins(0, 0, 0, 0);
     main_layout->addWidget(stack_icon_widget);
     main_layout->addWidget(stack_widget);

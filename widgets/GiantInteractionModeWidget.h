@@ -21,6 +21,7 @@ public:
 
 protected:
     G_Widget_EnterLeaveView
+    G_Widget_PaintEventOverride
 
 private slots:
     void onRubberBtn(int checked); //橡皮擦模式
@@ -30,6 +31,7 @@ private slots:
     void onEditPolygonBtn(int checked); //编辑多边形模式
     void onCalculateBtn(int checked); //测量模式
     void onSamModelBtn(int checked); //sam模式
+    void onSprayModeBtn(int checked); //喷涂模式
 private:
     QButtonGroup* exclusive_button_group = nullptr;
     QVBoxLayout* main_layout = nullptr;
@@ -41,11 +43,10 @@ private:
     GenericToolButton* observe_btn = nullptr;
     GenericToolButton* select_btn = nullptr;
     GenericToolButton* draw_btn = nullptr;
+    GenericToolButton* spray_btn = nullptr;
     GenericToolButton* edit_polygon_btn = nullptr;
     GenericToolButton* calculate_btn = nullptr;
 
-    GenericToolButton* clear_scene_btn = nullptr;
-    GenericToolButton* clear_calculate_btn = nullptr;
     GenericToolButton* fit_screen_btn = nullptr;
 
     /****************stack widgets*******************/

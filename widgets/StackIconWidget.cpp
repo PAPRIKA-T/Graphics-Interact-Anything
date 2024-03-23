@@ -9,7 +9,7 @@ StackIconWidget::StackIconWidget(QWidget *parent)
 {
 	setFixedWidth(30);
     stack_btn_layout = new QVBoxLayout(this);
-
+    setObjectName("stack_icon_widget");
     file_view_btn = new GenericToolButton(this);
     file_view_btn->setObjectName("stack_btn");
     file_view_btn->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_stack_icon.png"));
@@ -32,7 +32,7 @@ StackIconWidget::StackIconWidget(QWidget *parent)
     stack_btn_layout->addWidget(item_list_btn);
     //stack_btn_layout->addWidget(color_adjust_btn);
     stack_btn_layout->addStretch();
-    stack_btn_layout->setContentsMargins(2, 0, 0, 2);
+    stack_btn_layout->setContentsMargins(0, 0, 0, 2);
     stack_btn_layout->setSpacing(6);
 
     file_view_btn->setCustomTooltip(tr("FileView"));

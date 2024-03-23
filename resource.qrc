@@ -4,43 +4,13 @@
         <file>res/qss/Dark/MenuStyle.qss</file>
         <file>res/qss/Light/Default.qss</file>
         <file>res/qss/Light/MenuStyle.qss</file>
-        <file>res/qss/Dark/background-image/angle.png</file>
         <file>res/qss/Dark/background-image/bottom_arrow.png</file>
         <file>res/qss/Dark/background-image/branch_fold.png</file>
         <file>res/qss/Dark/background-image/branch_unfold.png</file>
-        <file>res/qss/Dark/background-image/cal_angle.png</file>
-        <file>res/qss/Dark/background-image/cal_center.png</file>
-        <file>res/qss/Dark/background-image/cal_verti.png</file>
-        <file>res/qss/Dark/background-image/camera.png</file>
-        <file>res/qss/Dark/background-image/center.png</file>
-        <file>res/qss/Dark/background-image/ellipse.png</file>
         <file>res/qss/Dark/background-image/ellipsis.png</file>
         <file>res/qss/Dark/background-image/eye.png</file>
-        <file>res/qss/Dark/background-image/fix_screen.png</file>
-        <file>res/qss/Dark/background-image/input2.png</file>
         <file>res/qss/Dark/background-image/label.png</file>
-        <file>res/qss/Dark/background-image/layout_mode.png</file>
-        <file>res/qss/Dark/background-image/left.png</file>
         <file>res/qss/Dark/background-image/left_arrow.png</file>
-        <file>res/qss/Dark/background-image/line.png</file>
-        <file>res/qss/Dark/background-image/line_segment.png</file>
-        <file>res/qss/Dark/background-image/mask_to_item.png</file>
-        <file>res/qss/Dark/background-image/open_annotation.png</file>
-        <file>res/qss/Dark/background-image/Parallel_line.png</file>
-        <file>res/qss/Dark/background-image/pie.png</file>
-        <file>res/qss/Dark/background-image/point.png</file>
-        <file>res/qss/Dark/background-image/polygon.png</file>
-        <file>res/qss/Dark/background-image/read_label.png</file>
-        <file>res/qss/Dark/background-image/rect.png</file>
-        <file>res/qss/Dark/background-image/restore.png</file>
-        <file>res/qss/Dark/background-image/reverse.png</file>
-        <file>res/qss/Dark/background-image/right.png</file>
-        <file>res/qss/Dark/background-image/rotate_L.png</file>
-        <file>res/qss/Dark/background-image/rotate_R.png</file>
-        <file>res/qss/Dark/background-image/round.png</file>
-        <file>res/qss/Dark/background-image/save.png</file>
-        <file>res/qss/Dark/background-image/save_label.png</file>
-        <file>res/qss/Dark/background-image/zoom_in.png</file>
         <file>res/qss/GenericStyle/background-image/add_row.png</file>
         <file>res/qss/GenericStyle/background-image/checkbox.png</file>
         <file>res/qss/GenericStyle/background-image/color_adjust_btn.png</file>
@@ -68,5 +38,29 @@
         <file>res/qss/GenericStyle/background-image/delete_cal_btn.png</file>
         <file>res/qss/GenericStyle/background-image/fit_screen_btn.png</file>
         <file>res/qss/GenericStyle/background-image/sam_mode.png</file>
+        <file>res/qss/GenericStyle/background-image/angle.png</file>
+        <file>res/qss/GenericStyle/background-image/cal_angle.png</file>
+        <file>res/qss/GenericStyle/background-image/cal_center.png</file>
+        <file>res/qss/GenericStyle/background-image/cal_verti.png</file>
+        <file>res/qss/GenericStyle/background-image/camera.png</file>
+        <file>res/qss/GenericStyle/background-image/center.png</file>
+        <file>res/qss/GenericStyle/background-image/ellipse.png</file>
+        <file>res/qss/GenericStyle/background-image/fix_screen.png</file>
+        <file>res/qss/GenericStyle/background-image/line_segment.png</file>
+        <file>res/qss/GenericStyle/background-image/mask_to_item.png</file>
+        <file>res/qss/GenericStyle/background-image/Parallel_line.png</file>
+        <file>res/qss/GenericStyle/background-image/pie.png</file>
+        <file>res/qss/GenericStyle/background-image/point.png</file>
+        <file>res/qss/GenericStyle/background-image/polygon.png</file>
+        <file>res/qss/GenericStyle/background-image/rect.png</file>
+        <file>res/qss/GenericStyle/background-image/reverse.png</file>
+        <file>res/qss/GenericStyle/background-image/rotate_L.png</file>
+        <file>res/qss/GenericStyle/background-image/rotate_R.png</file>
+        <file>res/qss/GenericStyle/background-image/round.png</file>
+        <file>res/qss/GenericStyle/background-image/zoom_in.png</file>
+        <file>res/qss/GenericStyle/background-image/line.png</file>
+        <file>res/qss/GenericStyle/background-image/left.png</file>
+        <file>res/qss/GenericStyle/background-image/right.png</file>
+        <file>res/qss/GenericStyle/background-image/spray_mode.png</file>
     </qresource>
 </RCC>

@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <QThread>
+#include <QImage>
 #include <opencv2/opencv.hpp>
 class ImageCvLoaderThread : public QThread
 {
@@ -14,9 +15,9 @@ protected:
     void run() override;
 
 public slots:
-    void setPixmapPath(const QString& path);
+    void translateQImage2cvMat(const QImage&);
 
 private:
-    QString pixmapPath{};
-    cv::Mat orgin_img{};
+    QImage i{};
+    cv::Mat orgin_image_mat{};
 };

@@ -13,6 +13,7 @@ void GraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
 {
     painter->setPen(back_ground_color);
     painter->setBrush(back_ground_color);
+    painter->setOpacity(0.8);
     painter->drawRect(boundingRect());
     painter->setBrush(Qt::NoBrush);
     QGraphicsTextItem::paint(painter, option, widget);
@@ -21,6 +22,5 @@ void GraphicsTextItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
 void GraphicsTextItem::setBackGroundColor(const QColor& c)
 {
     back_ground_color = c; 
-    back_ground_color.setAlpha(100);
 }
 

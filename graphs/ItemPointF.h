@@ -40,11 +40,11 @@ public:
 
     ItemPointF& operator=(const QPointF& p) { setX(p.x()); setY(p.y()); return *this; }
 
-    void setPaintType(PointPaintType type) { paint_type = type; }
-    PointPaintType getPaintType() { return paint_type; }
+    inline void setPaintType(PointPaintType type) { paint_type = type; }
+    inline PointPaintType getPaintType() { return paint_type; }
 
-    void setPointType(PointType type) { point_type = type; }
-    PointType getPointType() { return point_type; }
+    inline void setPointType(PointType type) { point_type = type; }
+    inline PointType getPointType() { return point_type; }
 private:
     PointPaintType paint_type = PointPaintType::Round;
     PointType point_type = PointType::Other;

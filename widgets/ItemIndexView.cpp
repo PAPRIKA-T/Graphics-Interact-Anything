@@ -36,6 +36,7 @@ ItemIndexView::ItemIndexView(QWidget* parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     QHeaderView* header = horizontalHeader();
     verticalHeader()->setVisible(false);
+    verticalHeader()->setDefaultSectionSize(18);
     header->setStretchLastSection(true);
     header->setSectionResizeMode(QHeaderView::Interactive);
     header->setMinimumSectionSize(30);//设置最小列宽
@@ -216,7 +217,7 @@ void ItemIndexView::onItemChanged(QStandardItem* item)
             m_item->getGraphicsTextModel().setLabelText(text);
             const QString id = m_item->getGraphicsTextModel().getLabelID();
             if (!label_board_widget->isRowHasAdded(id, text))
-                label_board_widget->appendBoardRow(id, ColorOperation::generate_color_by_text(text), text);
+                label_board_widget->appendBoardRow(id, ColorOperation::GenerateColorByText(text), text);
             label_board_widget->setItemParameters(m_item);
         }
         else if (index.column() == 0) {
@@ -225,7 +226,7 @@ void ItemIndexView::onItemChanged(QStandardItem* item)
             m_item->getGraphicsTextModel().setLabelID(text);
             const QString label_text = m_item->getGraphicsTextModel().getLabelText();
             if (!label_board_widget->isRowHasAdded(text, label_text))
-                label_board_widget->appendBoardRow(text, ColorOperation::generate_color_by_text(text), label_text);
+                label_board_widget->appendBoardRow(text, ColorOperation::GenerateColorByText(text), label_text);
             label_board_widget->setItemParameters(m_item);
         }
         else if (index.column() == 1) {
