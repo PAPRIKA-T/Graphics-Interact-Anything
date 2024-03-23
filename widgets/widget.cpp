@@ -292,7 +292,7 @@ void Widget::DimensionTrans()
             file_view, &FileView::onSliceChangeOneByOne);
         connect(image_widget_3d->getSceneWidgetCoronal()->getGraphicsView(), &GraphicsView::sliceChangeOneByOne,
             file_view, &FileView::onSliceChangeOneByOne);
-
+        image_widget_3d->resize(800, 550);
         //mousePressChangeImageWidget(image_widget_3d->getSceneWidgetSagittal());
     }
     else if (image_widget_3d) {

@@ -1,15 +1,10 @@
 #pragma once
 #include<itkImageFileReader.h>
-#include<itkNiftiImageIO.h>
-#include<itkImageRegionConstIterator.h>
-#include<itkRescaleIntensityImageFilter.h>
-#include <itkExtractImageFilter.h>
-#include <itkImageToVTKImageFilter.h>
-#include<QPixmap>
-#include <QDebug>
 #include <vtkDiscreteMarchingCubes.h>
+#include <QString>
+class QImage;
 
-class ITKImageIoModel
+class GiantITKImageReadModel
 {
 	using GrayPixelType = unsigned char;
 	using OrgPixelType = short;
@@ -26,7 +21,7 @@ class ITKImageIoModel
 	using GrayImage2DType = itk::Image<GrayPixelType, 2>;
 	using GrayImage2DPointerType = GrayImage2DType::Pointer;
 public:
-	ITKImageIoModel();
+	GiantITKImageReadModel();
 	void readNiiImage(const char* file_path);
 	void processAndConvertToQImage(QImage&, int dimension, int slice_index = -1);
 	int getCurSliceIndex(int dimension) { return cur_slice_index[dimension]; }

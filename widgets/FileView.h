@@ -28,7 +28,7 @@ private:
     bool is_itk_image_item = false;
 };
 
-class ITKImageIoModel;
+class GiantITKImageReadModel;
 class ViewListContainer;
 class VTKWidget;
 class StatusWidget;
@@ -85,6 +85,6 @@ private:
     QAction* remove_img = new QAction("remove");
     QModelIndex current_index; // 当前选中的位置
     QList<FileViewParentItem*> parent_item_list; //父节点容器
-    ITKImageIoModel* itk_helper = nullptr; //ITKImageHelper指针，管理itk三维数据
+    GiantITKImageReadModel* itk_helper = nullptr; //ITKImageHelper指针，管理itk三维数据
     VTKWidget* vtk_widget = nullptr; //vtkWidget指针
 };

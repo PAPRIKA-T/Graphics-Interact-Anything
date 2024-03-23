@@ -80,6 +80,11 @@ GiantMaskItem* GraphicsScene::getForegroundMaskItem()
     return mask_item_model.getForegroundMaskItem();
 }
 
+QList<GiantMaskItem*> GraphicsScene::getMaskItemList() const
+{
+    return QList<GiantMaskItem*>(mask_item_model.getMaskItemList());
+}
+
 void GraphicsScene::applyForegroundMask2Label()
 {
     mask_item_model.applyForegroundMask2Label();

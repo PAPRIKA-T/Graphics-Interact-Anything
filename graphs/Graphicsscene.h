@@ -40,6 +40,7 @@ public:
 
     /***********Mask Operation***********/
     GiantMaskItem* getForegroundMaskItem(); //获取前景图层对象
+    QList<GiantMaskItem*> getMaskItemList() const;
     void applyForegroundMask2Label(); //将前景mask应用到label
     void applySparyRect2Label(const QRect&); //将喷枪mask应用到label
 

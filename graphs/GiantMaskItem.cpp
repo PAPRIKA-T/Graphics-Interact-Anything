@@ -37,11 +37,13 @@ QColor GiantMaskItem::getColor() const
 	return m_color;
 }
 
-void GiantMaskItem::setImageShowSize(const QSize& s)
+void GiantMaskItem::setImageShowSize(const QSize& s, const QSize& o)
 {
 	fScaleW = s.width();
 	fScaleH = s.height();
-	original_mask = cv::Mat(s.height(), s.width(), CV_8UC1);
+	original_scaleW = o.width();
+	original_scaleH = o.height();
+	scaled_mask = cv::Mat(s.height(), s.width(), CV_8UC1);
 	original_pixmap = QPixmap(s);
 	original_pixmap.fill(Qt::transparent);
 }
@@ -49,8 +51,8 @@ void GiantMaskItem::setImageShowSize(const QSize& s)
 void GiantMaskItem::setMask(const cv::Mat& m)
 {
 	original_pixmap.fill(m_color);
-	original_mask = m.clone();
-	cv::bitwise_not(original_mask, m);
+	scaled_mask = m.clone();
+	cv::bitwise_not(scaled_mask, m);
 	original_pixmap.setMask(QBitmap::fromImage(CVOperation::cvMat2QImage(m)));
 }
 
@@ -62,13 +64,13 @@ void GiantMaskItem::setMaskOpacity(qreal opacity)
 void GiantMaskItem::resetMask()
 {
 	if (original_pixmap.isNull())return;
-	original_mask = cv::Mat::zeros(fScaleH, fScaleW, CV_8UC1);
+	scaled_mask = cv::Mat::zeros(fScaleH, fScaleW, CV_8UC1);
 	original_pixmap.fill(Qt::transparent);
 }
 
 void GiantMaskItem::addMaskRange(const cv::Mat& m)
 {
-	setMask(original_mask | m);
+	setMask(scaled_mask | m);
 }
 
 void GiantMaskItem::addRectRange(const QRect& r)
@@ -80,9 +82,17 @@ void GiantMaskItem::addRectRange(const QRect& r)
 	addMaskRange(m);
 }
 
-const cv::Mat& GiantMaskItem::getOriginalMask()
+const cv::Mat& GiantMaskItem::getScaledMask()
 {
-	return original_mask;
+	return scaled_mask;
+}
+
+cv::Mat GiantMaskItem::getOriginalMask()
+{
+	cv::Mat original_mask{};
+	cv::Size original_size(original_scaleW, original_scaleH);
+	cv::resize(scaled_mask, original_mask, original_size);
+	return original_mask.clone();
 }
 
 QRectF GiantMaskItem::boundingRect() const

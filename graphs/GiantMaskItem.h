@@ -14,14 +14,15 @@ public:
     ~GiantMaskItem();
     void setColor(const QColor&);
     QColor getColor() const;
-    void setImageShowSize(const QSize&);
+    void setImageShowSize(const QSize&, const QSize&);
     void setMask(const cv::Mat&);
     void setMaskOpacity(qreal opacity);
     void resetMask();
     void addMaskRange(const cv::Mat&);
     void addRectRange(const QRect&);
 
-    const cv::Mat& getOriginalMask();
+    const cv::Mat& getScaledMask();
+    cv::Mat getOriginalMask();
 protected:
     virtual QRectF boundingRect() const override;
 /****************************************************事件函数*********************************************************/
@@ -34,8 +35,10 @@ private:
 
     qreal fScaleW = 1;
     qreal fScaleH = 1;
+    qreal original_scaleW = 1;
+    qreal original_scaleH = 1;
 
     qreal mask_opacity = 0.8;
-    cv::Mat original_mask{};
+    cv::Mat scaled_mask{};
 };
 

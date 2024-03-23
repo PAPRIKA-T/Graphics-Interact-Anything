@@ -1,11 +1,11 @@
 ﻿#include "FileView.h"
 #include "Model/ViewListContainer.h"
-#include "Model/ItkTool/ITKImageIoModel.h"
+#include "Model/ItkTool/GiantITKImageReadModel.h"
 #include "ForePlayWidget.h"
 #include "graphs/ThumbnailPixmapItem.h"
 #include "graphs/Graphicspixmapitem.h"
 #include "StatusWidget.h"
-#include "utils/FilePathOperation.h"
+#include "utils/FileOperation.h"
 #include "model/StyleSheetConfigModel.h"
 
 /****************************************************导入文件索引的树状控件*********************************************************/
@@ -31,7 +31,7 @@ FileViewChildItem::~FileViewChildItem()
 FileView::FileView(QWidget* parent)
     : QTreeView(parent)
 {
-    itk_helper = new ITKImageIoModel{};
+    itk_helper = new GiantITKImageReadModel{};
     setContextMenuPolicy(Qt::CustomContextMenu);
     setEditTriggers(QTreeView::NoEditTriggers);
     tree_model = new QStandardItemModel(this);

@@ -1,13 +1,20 @@
-﻿#include "ITKImageIoModel.h"
+﻿#include "GiantITKImageReadModel.h"
+#include<itkNiftiImageIO.h>
+#include<itkImageRegionConstIterator.h>
+#include<itkRescaleIntensityImageFilter.h>
+#include <itkExtractImageFilter.h>
+#include <itkImageToVTKImageFilter.h>
 
-ITKImageIoModel::ITKImageIoModel()
+#include<QPixmap>
+
+GiantITKImageReadModel::GiantITKImageReadModel()
 {
 	cur_slice_index.push_back(-1);
 	cur_slice_index.push_back(-1);
 	cur_slice_index.push_back(-1);
 }
 
-void ITKImageIoModel::readNiiImage(const char* file_path)
+void GiantITKImageReadModel::readNiiImage(const char* file_path)
 {
 	using ReaderType = itk::ImageFileReader<OrgImageType>;
 	// 设置读取的文件类型
@@ -22,9 +29,22 @@ void ITKImageIoModel::readNiiImage(const char* file_path)
 	origin_size = org_image->GetLargestPossibleRegion().GetSize();
 	image_path = file_path;
 	normalizeImageByFilter(org_image, gray_image, 0, 255);
+
+	// 查看spacing
+	itk::Image<double, 3>::SpacingType spacing = org_image->GetSpacing();
+	cout << "spacing:\n " << spacing << endl;
+	// 查看direction
+	itk::Image<double, 3>::DirectionType direction = org_image->GetDirection();
+	cout << "direction:\n " << direction << endl;
+	// 查看origin
+	itk::Image<double, 3>::PointType origin = org_image->GetOrigin();
+	cout << "origin: \n" << origin << endl;
+	// 查看大小: x,y,z
+	itk::Image<double, 3>::SizeType size = org_image->GetLargestPossibleRegion().GetSize();
+	cout << "size: \n" << size << endl;
 }
 
-void ITKImageIoModel::processAndConvertToQImage(QImage& out_image, int dimension, int slice_index)
+void GiantITKImageReadModel::processAndConvertToQImage(QImage& out_image, int dimension, int slice_index)
 {
 	if (dimension < 0 || dimension>2) {
 		std::cout <<"ITKImageHelper::processAndConvertToPixmap dimension wrong!" << std::endl;
@@ -65,7 +85,7 @@ void ITKImageIoModel::processAndConvertToQImage(QImage& out_image, int dimension
 	return;
 }
 
-void ITKImageIoModel::normalizeImageByFilter(const OrgImagePointerType& input_image, GrayImagePointerType& out_image, const double dst_min, const double dst_max)
+void GiantITKImageReadModel::normalizeImageByFilter(const OrgImagePointerType& input_image, GrayImagePointerType& out_image, const double dst_min, const double dst_max)
 {
 	using rescaleFilterType = itk::RescaleIntensityImageFilter<OrgImageType, GrayImageType>;
 	auto rescaleFilter = rescaleFilterType::New();
@@ -81,7 +101,7 @@ void ITKImageIoModel::normalizeImageByFilter(const OrgImagePointerType& input_im
 	out_image = rescaleFilter->GetOutput();
 }
 
-void ITKImageIoModel::reset()
+void GiantITKImageReadModel::reset()
 {
 	org_image = nullptr;
 	gray_image = nullptr;
@@ -93,7 +113,7 @@ void ITKImageIoModel::reset()
 	image_path.clear();
 }
 
-vtkNew<vtkDiscreteMarchingCubes> ITKImageIoModel::ITK2VTKactor()
+vtkNew<vtkDiscreteMarchingCubes> GiantITKImageReadModel::ITK2VTKactor()
 {
 	// Convert itkImage to vtkImage
 	using ConvertFilter = itk::ImageToVTKImageFilter<OrgImageType>;
@@ -107,7 +127,7 @@ vtkNew<vtkDiscreteMarchingCubes> ITKImageIoModel::ITK2VTKactor()
 	return contour;
 }
 
-void ITKImageIoModel::ITKImageToQImage(QImage& out_image, const GrayImage2DPointerType& itkImage2D, bool reverse)
+void GiantITKImageReadModel::ITKImageToQImage(QImage& out_image, const GrayImage2DPointerType& itkImage2D, bool reverse)
 {
 	const OrgImage2DType::RegionType& region = itkImage2D->GetLargestPossibleRegion();
 	OrgImage2DType::SizeType size = region.GetSize();

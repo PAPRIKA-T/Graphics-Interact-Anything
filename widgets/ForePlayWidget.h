@@ -42,6 +42,10 @@ public slots:
 private:
     void readItemFromPathXml(const QString& ,GraphicsScene*); //pascalVoc Input
     void saveItemToPathXml(const QString&, GraphicsScene*); //pascalVoc Output
+
+    void saveMaskToPathNii(const QString&, GraphicsScene*); //nii Output
+
+
     void annotationReadPathChange(const QString& path);
     void annotationSavePathChange(const QString& path);
 

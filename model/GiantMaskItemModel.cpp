@@ -22,9 +22,9 @@ QList<GiantMaskItem*> GiantMaskItemModel::getMaskItemList() const
 
 void GiantMaskItemModel::initForegroundMaskItemImageSetting()
 {
-    foreground_mask_item->setImageShowSize(pixmap_item->getFscaleSize());
+    foreground_mask_item->setImageShowSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
 	for (GiantMaskItem* mask : mask_item_list) {
-		mask->setImageShowSize(pixmap_item->getFscaleSize());
+		mask->setImageShowSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
 	}
 }
 
@@ -56,7 +56,7 @@ void GiantMaskItemModel::insertMaskItem(int i, const QColor& c)
 	mask_item_list.insert(i, new GiantMaskItem());
 	mask_item_list.at(i)->setParentItem(pixmap_item);
 	mask_item_list.at(i)->setColor(c);
-	mask_item_list.at(i)->setImageShowSize(pixmap_item->getFscaleSize());
+	mask_item_list.at(i)->setImageShowSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
 }
 
 void GiantMaskItemModel::removeMaskItem(int i)
@@ -76,7 +76,7 @@ void GiantMaskItemModel::receiveSelectedLabelBoardRowColor(int r, const QColor& 
 void GiantMaskItemModel::initForegroundMaskItem()
 {
 	foreground_mask_item = new GiantMaskItem();
-    foreground_mask_item->setImageShowSize(pixmap_item->getFscaleSize());
+    foreground_mask_item->setImageShowSize(pixmap_item->getFscaleSize(), pixmap_item->getOriginSize());
     foreground_mask_item->setParentItem(pixmap_item);
 	foreground_mask_item->setColor(DEFAULT_COLOR_ITEM);
     foreground_mask_item->setMaskOpacity(0.5);
@@ -101,7 +101,7 @@ void GiantMaskItemModel::applyForegroundMask2Label()
 	}
 	else {
 		qDebug()<<"GiantMaskItemModel::applyForegroundMask2Label() "<<current_label_index;
-		mask_item_list[current_label_index]->addMaskRange(foreground_mask_item->getOriginalMask());
+		mask_item_list[current_label_index]->addMaskRange(foreground_mask_item->getScaledMask());
 	}
 }
 
