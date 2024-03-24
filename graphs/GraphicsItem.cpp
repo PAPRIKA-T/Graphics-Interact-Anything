@@ -98,90 +98,13 @@ void GraphicsItem::generateOtherItems(const QPointF& pos)
     Q_UNUSED(pos);
 }
 
-ItemPointF GraphicsItem::getCenter() const
-{
-    return m_center;
-}
-
-ItemPointF& GraphicsItem::getRCenter()
-{
-    return m_center;
-}
-
-void GraphicsItem::setCenter(const QPointF& p)
-{
-    m_center = p;
-    emit updatePointMessage();
-}
-
-ItemPointF GraphicsItem::getStart() const
-{
-    return  m_start;
-}
-
-ItemPointF& GraphicsItem::getRStart()
-{
-    return  m_start;
-}
-
-void GraphicsItem::setStart(const QPointF& p)
-{
-    m_start = p; 
-    emit updatePointMessage();
-}
-
-ItemPointF GraphicsItem::getEdge() const
-{
-    return m_edge;
-}
-
-ItemPointF& GraphicsItem::getREdge()
-{
-    return m_edge;
-}
-
-void GraphicsItem::setEdge(const QPointF& p)
-{
-    m_edge = p; 
-    emit updatePointMessage();
-}
-
-void GraphicsItem::setSE(const QPointF& s, const QPointF& e)
-{
-    m_start = s; 
-    m_edge = e; 
-    emit updatePointMessage();
-}
-
-const QPointF& GraphicsItem::getStartMeasurePos()
-{
-    if (graphics_transform_model.getMeasureObject())return m_start_map_to_measure_ob;
-    else return m_start;
-}
-
-const QPointF& GraphicsItem::getEdgeMeasurePos()
-{
-    if (graphics_transform_model.getMeasureObject())return m_edge_map_to_measure_ob;
-    else return m_edge;
-}
-
-const QPointF& GraphicsItem::getCenterMeasurePos()
-{
-    if (graphics_transform_model.getMeasureObject()) {
-        return m_center_map_to_measure_ob;
-    }
-    else return m_center;
-}
-
 void GraphicsItem::setGraphicsColor(const QColor& color)
 {
     graphics_paint_model.getRPenNoSelected().setColor(color);
     graphics_text_model.getTextItem()->setBackGroundColor(color);
 
     graphics_paint_model.getRFillColorHover() = color;
-    graphics_paint_model.getRFillColorHover().setAlpha(100);
     graphics_paint_model.getRFillColorUnselected() = color;
-    graphics_paint_model.getRFillColorUnselected().setAlpha(100);
     if (graphics_relation_model.getIsChildConsistentColor()) {
         foreach(GraphicsItem * item, graphics_relation_model.getChildItemList()) {
             item->setGraphicsColor(color);
@@ -294,12 +217,14 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
             if(graphics_paint_model.getIsFillItem())
             {
                 painter->setBrush(graphics_paint_model.getRFillColorUnselected());
+                painter->setOpacity(graphics_paint_model.getHoverFillOpacity());
                 painter->drawPath(getFillPath());
                 painter->setBrush(Qt::NoBrush);
             }
             else if (is_hover_enter)
             {
                 painter->setBrush(graphics_paint_model.getRFillColorHover());
+                painter->setOpacity(graphics_paint_model.getHoverFillOpacity());
                 painter->drawPath(getFillPath());
                 painter->setBrush(Qt::NoBrush);
             }
@@ -544,6 +469,7 @@ void GraphicsItem::onActionRemoveSelf()
     //slot connect with contextMenuEvent::delete Action
     if (parentItem() == nullptr)
     {
+        setVisible(false);
         //qDebug() << "null" << data(1);
         emit prepareToRemove();
         if (!delete_direct){

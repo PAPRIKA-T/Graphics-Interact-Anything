@@ -6,7 +6,6 @@
 #include <QMenu>
 #include "widget.h"
 #include "graphs/Graphicsview.h"
-#include "SAM/samwidget.h"
 
 HeaderButtonWidget::HeaderButtonWidget(QWidget*parent)
 	: QWidget(parent)
@@ -30,14 +29,6 @@ HeaderButtonWidget::HeaderButtonWidget(QWidget*parent)
 HeaderButtonWidget::~HeaderButtonWidget()
 {
     delete header_btn_layout;
-}
-
-void HeaderButtonWidget::paintEvent(QPaintEvent* event)
-{
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
 }
 
 void HeaderButtonWidget::setWindowWidget(Widget* widget)

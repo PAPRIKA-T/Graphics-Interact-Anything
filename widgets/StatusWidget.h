@@ -14,7 +14,6 @@ public:
     void setRightLabelText(QString s) { right_label->setText(s); }
     void setLabelTextFont(QFont f) { left_label->setFont(f); right_label->setFont(f); }
     void setStatusLabelTextColor(int R, int G, int B); //设置字体颜色
-    virtual void paintEvent(QPaintEvent* event) override;
 private:
     QHBoxLayout* main_layout;
     QLabel* left_label;

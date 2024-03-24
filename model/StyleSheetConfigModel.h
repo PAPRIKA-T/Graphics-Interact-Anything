@@ -8,8 +8,8 @@ class StyleSheetConfigModel
 public:
 	enum class StyleSheetType
     {
-		Dark,
-		Light,
+		DARK,
+		LIGNT,
 	};
 	void setStyleType(StyleSheetType);
 	void setGlobalStyleSheet(QWidget*);

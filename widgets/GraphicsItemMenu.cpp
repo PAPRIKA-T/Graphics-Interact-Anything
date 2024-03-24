@@ -7,6 +7,7 @@
 #include <QActionGroup>
 
 GraphicsItemMenu::GraphicsItemMenu(QWidget* parent)
+    : QMenu(parent)
 {
     destory_btn = new QAction();
     destory_btn->setObjectName("graphicsitem_btn");

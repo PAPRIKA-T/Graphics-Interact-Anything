@@ -1,5 +1,4 @@
 #pragma once
-
 #include <QStackedWidget>
 
 class StackWidget  : public QStackedWidget

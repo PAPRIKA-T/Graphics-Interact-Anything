@@ -1,10 +1,10 @@
-#include "ForePlayWidget.h"
+﻿#include "ForePlayWidget.h"
 #include "FileView.h"
-#include "utils/FilePathOperation.h"
+#include "utils/FileOperation.h"
 #include "ChosePathWidget.h"
 #include "Model/XmlIOstreamModel.h"
-#include "utils/FilePathOperation.h"
 #include "Model/ViewListContainer.h"
+#include "model/ItkTool/GiantITKImageWriteModel.h"
 #include "graphs/Graphicsscene.h"
 #include <QPainter>
 #include <QLineEdit>
@@ -73,15 +73,6 @@ const QString ForePlayWidget::getAnnotationSaveForm()
     return annotation_save_path_widget->getFormComboxContent();
 }
 
-void ForePlayWidget::paintEvent(QPaintEvent* event)
-{
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    QPainter painter(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-    Q_UNUSED(event);
-}
-
 void ForePlayWidget::annotationReadPathChange(const QString& path)
 {
     foreach(FileViewParentItem * parent_item, file_view->getViewParentItemList()) {
@@ -117,6 +108,12 @@ void ForePlayWidget::saveItemToPathXml(const QString& savepath, GraphicsScene* s
     xml_saver.saveItemToXmlFile(savepath, scene);
 }
 
+void ForePlayWidget::saveMaskToPathNii(const QString& savepath, GraphicsScene* scene)
+{
+    GiantITKImageWriteModel itk_saver = GiantITKImageWriteModel();
+    itk_saver.saveCvMatAsNii(scene->getMaskItemList()[0]->getOriginalMask(), savepath.toStdString());
+}
+
 void ForePlayWidget::saveItemToPathAllForm(GraphicsScene* scene)
 {
     QString save_fold = getAnnotationSavePath();
@@ -124,25 +121,25 @@ void ForePlayWidget::saveItemToPathAllForm(GraphicsScene* scene)
         //qDebug() << "Save FilePath is null";
         return;
     }
-    QString save_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getPixmapPath());
+    QString save_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getImagePath());
     if (save_pixmap_name == "") {
         //qDebug() << "Save PixmapPath is null";
         return;
     }
-    scene->getScenePromptItemModel()->removeAllPromptsItems();
+
+    scene->getScenePromptItemModel()->onDeleteAllPromptItemBtn();
     if (scene->getIsCreatePolygon()) {
         scene->finishCreatePolygon();
     }
     QString save_form = getAnnotationSaveForm();
+    QString save_item_full_path{};
+    /********************保存图元信息*************************/
     if (save_form == "pascalVoc")
     {
-        QString save_full_path = save_fold + save_pixmap_name + ".xml";
+        save_item_full_path = save_fold + save_pixmap_name + "_label.xml";
         if (!scene->isPaintItemOnScene()) {
-            QFile file(save_full_path);
-            if (file.exists())(file.remove());
-            return;
         }
-        saveItemToPathXml(save_full_path, scene);
+        saveItemToPathXml(save_item_full_path, scene);
     }
     else if (save_form == "YOLO")
     {
@@ -150,6 +147,19 @@ void ForePlayWidget::saveItemToPathAllForm(GraphicsScene* scene)
     else if (save_form == "COCO")
     {
     }
+    
+    std::vector<std::string> to_zip_file_list{};
+    to_zip_file_list.push_back(save_item_full_path.toStdString());
+
+    /********************保存掩膜信息*************************/
+    save_item_full_path = save_fold + save_pixmap_name + "_label.nii.gz";
+    to_zip_file_list.push_back(save_item_full_path.toStdString());
+    saveMaskToPathNii(save_item_full_path, scene);
+
+    //将图元信息和掩膜信息文件压缩成一个zip文件
+    std::string zipped_file_path = QString(save_fold + save_pixmap_name + "_label.tar").toStdString();
+    FileZipOperation::compressFilesToZip(to_zip_file_list, zipped_file_path);
+    return;
 }
 
 void ForePlayWidget::readItemFromPathAllForm(GraphicsScene* scene)
@@ -159,7 +169,7 @@ void ForePlayWidget::readItemFromPathAllForm(GraphicsScene* scene)
         //qDebug() << "Read FilePath is null";
         return;
     }
-    QString read_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getPixmapPath());
+    QString read_pixmap_name = FilePathOperation::getFileBaseName(scene->getPixmapItem()->getImagePath());
     if (read_pixmap_name == "") {
         //qDebug() << "Read PixmapPath is null";
         return;
@@ -169,7 +179,7 @@ void ForePlayWidget::readItemFromPathAllForm(GraphicsScene* scene)
     if (read_form == "pascalVoc")
     {
         scene->clearSceneGraphicsItem();
-        readItemFromPathXml(read_fold + read_pixmap_name + ".xml", scene);
+        readItemFromPathXml(read_fold + read_pixmap_name + "_label.xml", scene);
     }
     else if (read_form == "YOLO")
     {

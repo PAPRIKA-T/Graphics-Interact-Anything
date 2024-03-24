@@ -2,14 +2,7 @@
 #include <QPen>
 #include <QColor>
 #include "graphs/ItemPointF.h"
-#define PEN_WIDTHF 1 //画笔宽度
-#define DEFAULT_COLOR_ITEM QColor(255, 0, 255) //item color
-#define DEFAULT_COLOR_POINT_NOSELECTED QColor(255, 249, 57)
-#define DEFAULT_COLOR_POINT_SELECTED QColor(255, 20, 147)
-#define DEFAULT_COLOR_UNIQUE_POINT QColor(237, 153, 74)
-#define ITEM_LINE_LENGTH 6 //item交互十字（点）的大小（px）
-#define INTERACTION_RANGE 6 //item交互十字接收事件的范围
-
+#include "utils/GiantMacros.h"
 class GraphicsPaintModel
 {
 public:
@@ -35,32 +28,35 @@ public:
     QColor getFillColorHover() const; //获取悬浮颜色
     QColor& getRFillColorHover(); //获取悬浮颜色引用
 
-    bool getIsCloseItem() const; //获取是否是封闭图形
-    void setIsCloseItem(bool ok); //设置是否是封闭图形
+    inline bool getIsCloseItem() const; //获取是否是封闭图形
+    inline void setIsCloseItem(bool ok); //设置是否是封闭图形
 
-    bool getIsPaintCenter() const;
-    void setIsPaintCenter(bool ok);
+    inline bool getIsPaintCenter() const;
+    inline void setIsPaintCenter(bool ok);
 
-    bool getIsFillItem() const; //是否处于填充状态
-    void setIsFillItem(bool ok); //设置填充状态
+    inline bool getIsFillItem() const; //是否处于填充状态
+    inline void setIsFillItem(bool); //设置填充状态
 
-    const qreal getAdjustSize() const;//获取边缘矩形调整大小
-    void setAdjustSize(const qreal& size); //设置边缘矩形调整大小
+    inline const qreal getAdjustSize() const;//获取边缘矩形调整大小
+    inline void setAdjustSize(const qreal&); //设置边缘矩形调整大小
 
-    bool getIsPaintStrokeShape() const; //获取是否绘制描边shape
-    void setIsPaintStrokeShape(bool ok);
+    inline bool getIsPaintStrokeShape() const; //获取是否绘制描边shape
+    inline void setIsPaintStrokeShape(bool);
 
-    const qreal getScaleFactor() const;
-    void setScaleFactor(const qreal& s);
+    inline qreal getScaleFactor() const;
+    inline void setScaleFactor(const qreal&);
 
-    const qreal getInteracitonRange() const;
-    void setInteracitonRange(const qreal& r);
+    inline qreal getInteracitonRange() const;
+    inline void setInteracitonRange(const qreal&);
 
-    const qreal getLineLength() const;
-    void setLineLength(const qreal& l);
+    inline qreal getLineLength() const;
+    inline void setLineLength(const qreal&);
 
     inline qreal getPenWidth() const;
-    void setPenWidth(const qreal& p);
+    inline void setPenWidth(const qreal&);
+
+    inline qreal getHoverFillOpacity() const;
+    inline void setHoverFillOpacity(const qreal&);
 
     void paintPoint(QPainter* painter, ItemPointF& p); //绘制交互点
 
@@ -80,7 +76,93 @@ private:
     QColor fill_color_unselected{}; //未选中时填充颜色
     QColor fill_color_hover{}; //悬浮填充颜色
     QColor fill_color_selected{}; //选中时填充颜色
+    qreal hover_fill_opacity = 0.8; //item透明度
 };
 
 inline qreal GraphicsPaintModel::getPenWidth() const 
 { return pen_width; }
+inline void GraphicsPaintModel::setPenWidth(const qreal& p)
+{
+    pen_width = p;
+}
+
+inline void GraphicsPaintModel::setScaleFactor(const qreal& s)
+{
+    scale_factor = s;
+}
+inline qreal GraphicsPaintModel::getScaleFactor() const
+{
+    return scale_factor;
+}
+
+inline qreal GraphicsPaintModel::getInteracitonRange() const
+{
+    return interaction_range;
+}
+inline void GraphicsPaintModel::setInteracitonRange(const qreal& r)
+{
+    interaction_range = r;
+}
+
+inline qreal GraphicsPaintModel::getLineLength() const
+{
+    return line_lengh;
+}
+inline void GraphicsPaintModel::setLineLength(const qreal& l)
+{
+    line_lengh = l;
+}
+
+inline bool GraphicsPaintModel::getIsCloseItem() const
+{
+    return is_close_item;
+}
+inline void GraphicsPaintModel::setIsCloseItem(bool ok)
+{
+    is_close_item = ok;
+}
+
+inline bool GraphicsPaintModel::getIsPaintCenter() const
+{
+    return is_paint_center;
+}
+inline void GraphicsPaintModel::setIsPaintCenter(bool ok)
+{
+    is_paint_center = ok;
+}
+
+inline bool GraphicsPaintModel::getIsFillItem() const
+{
+    return is_fill;
+}
+inline void GraphicsPaintModel::setIsFillItem(bool ok)
+{
+    is_fill = ok;
+}
+
+inline const qreal GraphicsPaintModel::getAdjustSize() const
+{
+    return adjust_size;
+}
+inline void GraphicsPaintModel::setAdjustSize(const qreal& size)
+{
+    adjust_size = size;
+}
+
+inline bool GraphicsPaintModel::getIsPaintStrokeShape() const
+{
+    return is_paint_stroke_shape;
+}
+inline void GraphicsPaintModel::setIsPaintStrokeShape(bool ok)
+{
+    is_paint_stroke_shape = ok;
+}
+
+inline qreal GraphicsPaintModel::getHoverFillOpacity() const
+{
+    return hover_fill_opacity;
+}
+inline void GraphicsPaintModel::setHoverFillOpacity(const qreal& o)
+{
+    hover_fill_opacity = o;
+}

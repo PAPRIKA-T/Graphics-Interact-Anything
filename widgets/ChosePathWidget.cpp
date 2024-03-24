@@ -26,7 +26,7 @@ ChosePathWidget::ChosePathWidget(QWidget* parent)
 
     path_chose_btn = new GenericToolButton(); //初始化路径选择按钮
     path_chose_btn->setFixedSize(21, 21);
-    path_chose_btn->setIcon(QIcon(":/res/background-image/ellipsis.png"));
+    path_chose_btn->setIcon(QIcon(":/res/qss/Dark/background-image/ellipsis.png"));
     connect(path_chose_btn, &QPushButton::clicked, this, &ChosePathWidget::path_chose_btn_clicked);
 
     path_chose_edit = new QLineEdit(); //初始化路径编辑框

@@ -3,10 +3,15 @@
 #include "widgets/widget.h"
 #include "graphs/Graphicsitem.h"
 #include "model/StyleSheetConfigModel.h"
+#include "graphs/GiantMaskItem.h"
+#include<itkNiftiImageIO.h>
+#include<itkImageFileWriter.h>
 
 int GraphicsItem::count = 0; 
-StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::sheet_type = StyleSheetConfigModel::StyleSheetType::Dark;
-
+int GiantMaskItem::count = 0;
+StyleSheetConfigModel::StyleSheetType StyleSheetConfigModel::sheet_type = 
+StyleSheetConfigModel::StyleSheetType::DARK;
+#include <itkImportImageFilter.h>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

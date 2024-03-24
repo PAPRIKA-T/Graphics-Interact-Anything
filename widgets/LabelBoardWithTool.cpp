@@ -35,3 +35,13 @@ LabelBoardToolWidget* LabelBoardWithTool::getLabelBoardToolWidget() const
 {
 	return label_board_tool_widget;
 }
+
+void LabelBoardWithTool::readLabelFileFromTxt()
+{
+	label_board_widget->readLabelFileFromTxt();
+}
+
+void LabelBoardWithTool::saveLabelFileToTxt()
+{
+	label_board_widget->saveLabelFileToTxt();
+}

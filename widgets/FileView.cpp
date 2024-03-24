@@ -1,11 +1,11 @@
 ﻿#include "FileView.h"
 #include "Model/ViewListContainer.h"
-#include "Model/ItkTool/ITKImageIoModel.h"
+#include "Model/ItkTool/GiantITKImageReadModel.h"
 #include "ForePlayWidget.h"
 #include "graphs/ThumbnailPixmapItem.h"
 #include "graphs/Graphicspixmapitem.h"
 #include "StatusWidget.h"
-#include "utils/FilePathOperation.h"
+#include "utils/FileOperation.h"
 #include "model/StyleSheetConfigModel.h"
 
 /****************************************************导入文件索引的树状控件*********************************************************/
@@ -31,7 +31,7 @@ FileViewChildItem::~FileViewChildItem()
 FileView::FileView(QWidget* parent)
     : QTreeView(parent)
 {
-    itk_helper = new ITKImageIoModel{};
+    itk_helper = new GiantITKImageReadModel{};
     setContextMenuPolicy(Qt::CustomContextMenu);
     setEditTriggers(QTreeView::NoEditTriggers);
     tree_model = new QStandardItemModel(this);
@@ -125,16 +125,16 @@ void FileView::readImage()
     {
         GraphicsScene* m_scene = view_list_container->getActivedView()->getGraphicsScene();
         foreplay_widget->saveItemToPathAllForm(m_scene);
-        m_scene->changePixmap(filepath);
+        m_scene->changeShowImage(filepath);
         status_widget->setRightLabelText(filepath);
         setFilePath(filepath);
         QStringList list = filepath.split('/');
         FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last()) - 1]);
         FileViewChildItem* child = new FileViewChildItem(list.last());
-        item->setIcon(QIcon(":/res/background-image/folder_icon.png"));
+        item->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_icon.png"));
         child->setData(filepath);
         child->setToolTip(filepath);
-        child->setIcon(QIcon(":/res/background-image/picture_item.png"));
+        child->setIcon(QIcon(":/res/qss/GenericStyle/background-image/picture_item.png"));
         list.removeAt(list.indexOf(list.last()));
         QString parent_path = list.join("/");
         item->setData(parent_path);
@@ -174,54 +174,54 @@ void FileView::readImageDir()
     QString dirpath = QFileDialog::getExistingDirectory(this, tr("Input Dir"), "C:/Users/Administrator/Desktop", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);  //文件夹路径
     QDir dir(dirpath);  //文件夹
     QFileInfoList fileInfoList = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Dirs);
-    if (!dirpath.trimmed().isEmpty()) {
-        for (QStandardItem* par_item : parent_item_list) {
-            if (par_item->data() == dirpath) return;
-        }
-        GraphicsScene* m_scene = view_list_container->getActivedView()->getGraphicsScene();
-        foreplay_widget->saveItemToPathAllForm(m_scene);
-        QString pixpath;
-        QStringList list = dirpath.split('/');
-        FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last())]);
-        item->setData(dirpath);
-        item->setToolTip(dirpath);
-        item->setIcon(QIcon(":/res/background-image/folder_icon.png"));
-        tree_model->appendRow(item);
-        foreach(auto fileInfo, fileInfoList) {// 遍历文件夹中的所有文件
-            if (fileInfo.isFile()) {
-                pixpath = fileInfo.absoluteFilePath();
-                if (pixpath.contains(".jpg") || pixpath.contains(".bmp")
-                    || pixpath.contains(".png") || pixpath.contains(".jpeg")
-                    || pixpath.contains(".JPG")
-                    ) {   //判断文件是否为图像
-                    list = pixpath.split('/');
-                    FileViewChildItem* child = new FileViewChildItem(list.last());
-                    child->setData(pixpath);
-                    child->setToolTip(pixpath);
-                    list.removeAt(list.indexOf(list.last()));
-                    child->setIcon(QIcon(":/res/background-image/picture_item.png"));
-                    item->appendRow(child);
-                }
+    if (dirpath.trimmed().isEmpty()) return;
+
+    for (QStandardItem* par_item : parent_item_list) {
+        if (par_item->data() == dirpath) return;
+    }
+    GraphicsScene* m_scene = view_list_container->getActivedView()->getGraphicsScene();
+    foreplay_widget->saveItemToPathAllForm(m_scene);
+    QString pixpath;
+    QStringList list = dirpath.split('/');
+    FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last())]);
+    item->setData(dirpath);
+    item->setToolTip(dirpath);
+    item->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_icon.png"));
+    tree_model->appendRow(item);
+    foreach(auto fileInfo, fileInfoList) {// 遍历文件夹中的所有文件
+        if (fileInfo.isFile()) {
+            pixpath = fileInfo.absoluteFilePath();
+            if (pixpath.contains(".jpg") || pixpath.contains(".bmp")
+                || pixpath.contains(".png") || pixpath.contains(".jpeg")
+                || pixpath.contains(".JPG")
+                ) {   //判断文件是否为图像
+                list = pixpath.split('/');
+                FileViewChildItem* child = new FileViewChildItem(list.last());
+                child->setData(pixpath);
+                child->setToolTip(pixpath);
+                list.removeAt(list.indexOf(list.last()));
+                child->setIcon(QIcon(":/res/qss/GenericStyle/background-image/picture_item.png"));
+                item->appendRow(child);
             }
         }
-        if (!item->hasChildren()) {
-            tree_model->removeRow(item->row());
-            return;
-        }
-        parent_item_list.push_back(item);
-        QStandardItem* first_child = tree_model->itemFromIndex(tree_model->index(0, 0, item->index()));
-        pixpath = first_child->data().toString();
-        status_widget->setRightLabelText(pixpath);
-        m_scene->changePixmap(pixpath);
-        dirpath = dirpath + "/";
-        load_filepath = pixpath;
-        foreplay_widget->setAnnotationReadPath(dirpath);
-        foreplay_widget->setAnnotationSavePath(dirpath);
-        foreplay_widget->readItemFromPathAllForm(m_scene);
-        setExpanded(tree_model->indexFromItem(item), 1);
-        setCurrentIndex(first_child->index());
-        m_scene->updateRbText(1, item->rowCount());
     }
+    if (!item->hasChildren()) {
+        tree_model->removeRow(item->row());
+        return;
+    }
+    parent_item_list.push_back(item);
+    QStandardItem* first_child = tree_model->itemFromIndex(tree_model->index(0, 0, item->index()));
+    pixpath = first_child->data().toString();
+    status_widget->setRightLabelText(pixpath);
+    m_scene->changeShowImage(pixpath);
+    dirpath = dirpath + "/";
+    load_filepath = pixpath;
+    foreplay_widget->setAnnotationReadPath(dirpath);
+    foreplay_widget->setAnnotationSavePath(dirpath);
+    foreplay_widget->readItemFromPathAllForm(m_scene);
+    setExpanded(tree_model->indexFromItem(item), 1);
+    setCurrentIndex(first_child->index());
+    m_scene->updateRbText(1, item->rowCount());
 }
 
 //导入ITK数据
@@ -238,11 +238,11 @@ void FileView::readITKImage()
         itk_helper->readNiiImage(filepath.toStdString().c_str());
         //vtk_widget->AddActorFromITK(itk_helper->ITK2VTKactor());
         //vtk_widget->visualizeNii(filepath);
-        QPixmap pix{};
+        QImage img{};
         for (int i = 0; i < 3; ++i) {
-            itk_helper->processAndConvertToPixmap(pix, i);
-            view_list[i]->getGraphicsScene()->changePixmap(pix);
-            view_list[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(filepath);
+            itk_helper->processAndConvertToQImage(img, i);
+            view_list[i]->getGraphicsScene()->changeShowImage(img);
+            view_list[i]->getGraphicsScene()->getPixmapItem()->setImagePath(filepath);
             view_list[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
         setFilePath(filepath);
@@ -252,10 +252,10 @@ void FileView::readITKImage()
         FileViewParentItem* item = new FileViewParentItem(list[list.indexOf(list.last()) - 1]);
         FileViewChildItem* child = new FileViewChildItem(list.last());
         child->setIsItkImageItem(true);
-        item->setIcon(QIcon(":/res/background-image/folder_icon.png"));
+        item->setIcon(QIcon(":/res/qss/GenericStyle/background-image/folder_icon.png"));
         child->setData(filepath);
         child->setToolTip(filepath);
-        child->setIcon(QIcon(":/res/background-image/picture_item.png"));
+        child->setIcon(QIcon(":/res/qss/GenericStyle/background-image/picture_item.png"));
         list.removeAt(list.indexOf(list.last()));
         QString parent_path = list.join("/");
         item->setData(parent_path);
@@ -334,11 +334,11 @@ void FileView::readITKImageDir()
         setFilePath(pixpath);
         status_widget->setRightLabelText(load_filepath);
         itk_helper->readNiiImage(load_filepath.toStdString().c_str());
-        QPixmap pix{};
+        QImage img{};
         for (int i = 0; i < 3; ++i) {
-            itk_helper->processAndConvertToPixmap(pix, i);
-            view_list_container->getViewList()[i]->getGraphicsScene()->changePixmap(pix);
-            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(load_filepath);
+            itk_helper->processAndConvertToQImage(img, i);
+            view_list_container->getViewList()[i]->getGraphicsScene()->changeShowImage(img);
+            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setImagePath(load_filepath);
             view_list_container->getViewList()[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
         dirpath = dirpath + "/";
@@ -377,7 +377,7 @@ void FileView::readImageAtIndex(const QModelIndex& index)
             changeITKImage(load_filepath);
         }
         else {
-            m_scene->changePixmap(load_filepath);
+            m_scene->changeShowImage(load_filepath);
             foreplay_widget->readItemFromPathAllForm(m_scene);
             status_widget->setRightLabelText(load_filepath);
             m_scene->updateRbText(item->row() + 1, parent_item->rowCount());
@@ -394,11 +394,11 @@ void FileView::changeITKImage(const QString filepath)
     if (!filepath.trimmed().isEmpty())
     {
         itk_helper->readNiiImage(filepath.toStdString().c_str());
-        QPixmap pix{};
+        QImage img{};
         for (int i = 0; i < 3; ++i) {
-            itk_helper->processAndConvertToPixmap(pix, i);
-            view_list_container->getViewList()[i]->getGraphicsScene()->changePixmap(pix);
-            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setPixmapPath(filepath);
+            itk_helper->processAndConvertToQImage(img, i);
+            view_list_container->getViewList()[i]->getGraphicsScene()->changeShowImage(img);
+            view_list_container->getViewList()[i]->getGraphicsScene()->getPixmapItem()->setImagePath(filepath);
             view_list_container->getViewList()[i]->getGraphicsScene()->updateRbText(itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
         }
         setFilePath(filepath);
@@ -419,8 +419,8 @@ void FileView::slotCustomContextMenuRequested(QPoint pos)
     {
         QMenu menu;
         StyleSheetConfigModel style_sheet;
-        style_sheet.setMenuStyle(&menu);
         menu.addAction(remove_img);
+        style_sheet.setMenuStyle(&menu);
         menu.exec(QCursor::pos());  //QCursor::pos()让menu的位置在鼠标点击的的位置
     }
 }
@@ -483,11 +483,11 @@ void FileView::removeImage()
     {
         for (GraphicsView* view : view_list_container->getViewList()) {
             GraphicsScene* scene = view->getGraphicsScene();
-            if (load_filepath == scene->getPixmapItem()->getPixmapPath()) {
+            if (load_filepath == scene->getPixmapItem()->getImagePath()) {
                 load_filepath = "";
                 emit viewClear();
             }
-            QString par_path = FilePathOperation::getFileParentPath(scene->getPixmapItem()->getPixmapPath());
+            QString par_path = FilePathOperation::getFileParentPath(scene->getPixmapItem()->getImagePath());
             par_path = par_path.removeLast();
             if (par_path == remove_path) {
                 scene->resetScene();
@@ -527,7 +527,7 @@ void FileView::onSliceChangeOneByOne(bool dir)
 {
     if (!itk_helper)return;
     GraphicsView* emit_view = dynamic_cast<GraphicsView*>(sender());
-    QPixmap pix{};
+    QImage img{};
     QList<GraphicsView*> view_list = view_list_container->getViewList();
     for (int i = 0; i < 3; ++i) {
         if (view_list[i] == emit_view) {
@@ -540,9 +540,9 @@ void FileView::onSliceChangeOneByOne(bool dir)
                 --slice;
                 if (slice < 0)return;
             }
-            itk_helper->processAndConvertToPixmap(pix, i, slice);
-            emit_view->getGraphicsScene()->getPixmapItem()->updatePixmap(pix);
-            emit_view->getGraphicsScene()->getThumbnailItem()->updatePixmap(pix);
+            itk_helper->processAndConvertToQImage(img, i, slice);
+            emit_view->getGraphicsScene()->getPixmapItem()->updateShowImage(img);
+            emit_view->getGraphicsScene()->getThumbnailItem()->updateShowImage(img);
             emit_view->getGraphicsScene()->updateRbText(
                 itk_helper->getCurSliceIndex(i) + 1, itk_helper->getDimensionSize(i));
             return;

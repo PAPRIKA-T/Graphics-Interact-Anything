@@ -258,5 +258,5 @@ PromptRect::PromptRect()
     is_accept_others_setting = false;
     is_generate_context_menu = false;
     is_accept_hover_event = false;
-    setGraphicsColor(ColorOperation::generate_color_by_text("Prompt Rect"));
+    setGraphicsColor(ColorOperation::GenerateColorByText("Prompt Rect"));
 }

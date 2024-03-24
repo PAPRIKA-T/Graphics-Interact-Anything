@@ -1,57 +1,67 @@
 ﻿#pragma once
 #include <opencv2/opencv.hpp>
 #include <QObject>
-class GraphicsScene;
+#include "GenericAbstractModel.h"
+
 class GraphicsItem;
-class SamWidget;
+class AiModelInteractWidget;
+class Sam;
 
 enum class MaskToItemType
 {
+	MaskNoConvert,
 	MaskToPolygon,
 	MaskToRect,
 };
 
-class ScenePromptItemModel : public QObject
+class ScenePromptItemModel : public QObject, public GenericAbstractModel
 {
 	Q_OBJECT
 public:
 	ScenePromptItemModel();
 	~ScenePromptItemModel();
-	void setSamWidget(SamWidget* s);
-
-	void setGraphicsScene(GraphicsScene*);
+	void setSamInteractWidget(AiModelInteractWidget* s);
+	void setSam(Sam*);
 	QList<GraphicsItem*> getPromptItemList();
-	bool getIsAiSegment();
 	void addPromptItem(GraphicsItem* item); //添加模型提示图元
 	void generateAnnotation();
 	void Mask2Item();
-
-	cv::Mat getMask(bool clone);
-	void clearMask();
-	void removeAllPromptsItems(); //移除所有提示图元
+	void setSamModelInteraction(bool ok);
+	void clearMask(); //清除掩码
 
 public slots:
-	void onLoadModelBtn();
 	void onDeleteAllPromptItemBtn();
+	void acceptMaskItem();
 
 private:
-	void loadSamModel();
-	void unloadSamModel();
-	bool loadImage(const QString& image_path);
-	void segmentAnything();
-	void mask2Rect(const cv::Mat& mask);
-	void mask2Polygon(const cv::Mat& mask);
-	void removeItemFromPromptList(); //从模型提示图元列表移除
-	GraphicsScene* m_scene = nullptr;
-	SamWidget* sam_widget = nullptr;
+	struct SamPromptItems {
+		std::list<cv::Point> positive_points{};
+		std::list<cv::Point> negative_points{};
+		cv::Rect box_prompt = {};
+		bool isEmpty();
+	};
+	void initMaskItem(bool); //初始化掩码图元
+	bool loadImage(const QString&); //加载图片
 
-	QList<GraphicsItem*> prompt_list;//model used prompt item list
-	std::list<cv::Point> positive_points = {};
-	std::list<cv::Point> negative_points = {};
-	MaskToItemType MASK2ITEM_TYPE = MaskToItemType::MaskToPolygon; //掩码生成item的类型
-	bool start_ai_segment = false; //使用模型自动分割
-	bool is_load_model = false;
+	void getSamPromptItems(QList<GraphicsItem*>&, SamPromptItems&); //获取模型提示图元
+	void generateGiantMaskItem(const cv::Mat&); //生成掩码图元
+	void segmentAnything(); //模型分割
+
+	void removeAllPromptsItems(); //移除所有提示图元
+	void removeItemFromPromptList(); //从模型提示图元列表移除
+	void clearPromptList(); //清除提示图元列表
+
+	void mask2Rect(const cv::Mat&); //掩码转矩形
+	void mask2Polygon(const cv::Mat&); //掩码转多边形
+
+	Sam* sam = nullptr;
+	AiModelInteractWidget* sam_interact_widget = nullptr;
+	QList<GraphicsItem*> prompt_list{};//model used prompt item list
+	SamPromptItems sam_prompt_items{};
+	MaskToItemType MASK2ITEM_TYPE = MaskToItemType::MaskNoConvert; //掩码生成item的类型
+	cv::Size input_size{};
 	bool is_load_image = false;
 	QString load_image_path = "";
-	cv::Mat mask = {};
+	
+	cv::Mat mask{};
 };

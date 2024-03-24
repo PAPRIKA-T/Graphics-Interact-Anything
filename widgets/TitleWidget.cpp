@@ -4,6 +4,7 @@
 #include "GenericToolButton.h"
 #include "model/StyleSheetConfigModel.h"
 #include "FileView.h"
+#include "LabelBoardWithTool.h"
 #include <QLabel>
 #include <QDesktopServices>
 #include <QMenu>
@@ -30,8 +31,8 @@ TitleWidget::TitleWidget(QWidget* parent)
 {
     setFixedHeight(30);
     main_layout = new QHBoxLayout();
-    title_icon = new QLabel();
-    title_name = new QLabel();
+    title_icon = new QLabel(this);
+    title_name = new QLabel(this);
     title_name->setObjectName("title_name");
 
     //file菜单栏创建
@@ -49,6 +50,8 @@ TitleWidget::TitleWidget(QWidget* parent)
     file_menu->addAction(open_nii);
     file_menu->addAction(open_nii_dir);
     file_menu_btn->setMenu(file_menu);
+    open_nii->setVisible(false);
+    open_nii_dir->setVisible(false);
 
     //segment菜单栏创建
     segment_menu_btn = new GenericToolButton("分割(S)");
@@ -68,6 +71,7 @@ TitleWidget::TitleWidget(QWidget* parent)
 
     edit_menu = new QMenu;
     edit_menu_btn->setMenu(edit_menu);
+    edit_menu_btn->setVisible(false);
 
     //view菜单栏创建
     view_menu_btn = new GenericToolButton("视图(V)");
@@ -77,6 +81,18 @@ TitleWidget::TitleWidget(QWidget* parent)
     QAction* dimension_trans = new QAction("Dimension Trans");
     view_menu->addAction(dimension_trans);
     view_menu_btn->setMenu(view_menu);
+
+    view_menu_btn->setVisible(false);
+
+    //tag菜单栏创建
+    tag_menu_btn = new GenericToolButton("标签(T)");
+    tag_menu_btn->setFixedSize(60, 22);
+    tag_menu = new QMenu;
+    QAction* read_tag_file = new QAction("Read Tag File");
+    QAction* save_tag_file = new QAction("Save Tag File");
+    tag_menu->addAction(read_tag_file);
+    tag_menu->addAction(save_tag_file);
+    tag_menu_btn->setMenu(tag_menu);
 
     //help菜单栏创建
     help_menu_btn = new GenericToolButton("帮助(H)");
@@ -88,8 +104,6 @@ TitleWidget::TitleWidget(QWidget* parent)
     QAction* help_version = new QAction("Version");
     QAction* help_about = new QAction("About");
     QAction* theme_divert = new QAction("Theme Divert");
-    theme_divert->setCheckable(true);
-    theme_divert->setChecked(true);
 
     connect(help_doc, &QAction::triggered, this, &TitleWidget::on_help_doc_clicked);
     connect(help_contact, &QAction::triggered, [=]() {
@@ -125,6 +139,7 @@ TitleWidget::TitleWidget(QWidget* parent)
     main_layout->addSpacing(0);
     main_layout->addWidget(file_menu_btn);
     main_layout->addWidget(segment_menu_btn);
+    main_layout->addWidget(tag_menu_btn);
     main_layout->addWidget(edit_menu_btn);
     main_layout->addWidget(view_menu_btn);
     main_layout->addWidget(help_menu_btn);
@@ -141,6 +156,8 @@ TitleWidget::~TitleWidget()
     delete file_menu;
     delete help_menu;
     delete segment_menu;
+    delete tag_menu;
+
     delete main_layout;
 }
 
@@ -169,15 +186,17 @@ void TitleWidget::setParentWidget(Widget* w)
     connect(file_menu->actions()[3], &QAction::triggered, par_widget->getFileView(), &FileView::readITKImageDir);
     //视图菜单信号绑定
     connect(view_menu->actions()[0], &QAction::triggered, par_widget, &Widget::DimensionTrans);
-
+    //标签菜单信号绑定
+    connect(tag_menu->actions()[0], &QAction::triggered, par_widget->getLabelBoardWithTool(), &LabelBoardWithTool::readLabelFileFromTxt);
+    connect(tag_menu->actions()[1], &QAction::triggered, par_widget->getLabelBoardWithTool(), &LabelBoardWithTool::saveLabelFileToTxt);
     //主题风格设置信号绑定
     connect(help_menu->actions()[4], &QAction::triggered, [=]() {
         StyleSheetConfigModel style_model;
-        if (style_model.getStyleType() == StyleSheetConfigModel::StyleSheetType::Dark) {
-            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::Light);
+        if (style_model.getStyleType() == StyleSheetConfigModel::StyleSheetType::DARK) {
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::LIGNT);
         }
         else {
-            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::Dark);
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::DARK);
         }
         style_model.setGlobalStyleSheet(par_widget);
         setMenuStyle();
@@ -192,13 +211,5 @@ void TitleWidget::setMenuStyle()
     style_model.setMenuStyle(segment_menu);
     style_model.setMenuStyle(view_menu);
     style_model.setMenuStyle(help_menu);
-}
-
-void TitleWidget::paintEvent(QPaintEvent* event)
-{
-    QPainter painter(this);
-    QStyleOption styleOpt;
-    styleOpt.initFrom(this);
-    style()->drawPrimitive(QStyle::PE_Widget, &styleOpt, &painter, this);
-    QWidget::paintEvent(event);
+    style_model.setMenuStyle(tag_menu);
 }

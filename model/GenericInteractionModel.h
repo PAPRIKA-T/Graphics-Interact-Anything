@@ -11,6 +11,8 @@ public:
         INTERACTION_SELECT,
         INTERACTION_CALCULATE,
         INTERACTION_EDIT_POLYGON,
+        INTERACTION_SAM,
+        INTERACTION_SPRAY,
     };
     GenericInteractionModel();
     void setGraphicsView(GraphicsView* view);
@@ -21,8 +23,10 @@ public:
     void setSelectInteraction(bool ok); //选择交互模式
     void setCalculateInteraction(bool ok); //测量交互模式
     void setEditPolygonInteraction(bool ok); //编辑多边形交互模式
+    void setSamModelInteraction(bool ok); //sam模型交互模式
+    void setSprayInteraction(bool ok); //喷涂模式
 private:
     void setPolygonItemEdit(bool ok); //设置多边形item是否可编辑
-    InteractionStatus interaciton_status = InteractionStatus::INTERACTION_OBSERVE;
-    GraphicsView* m_view = nullptr;
+    InteractionStatus interaciton_status{ InteractionStatus::INTERACTION_OBSERVE };
+    GraphicsView* m_view{ nullptr };
 };

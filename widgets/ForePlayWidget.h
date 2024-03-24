@@ -23,7 +23,7 @@ public:
     void setAnnotationSavePath(const QString& path);
     const QString getAnnotationReadForm();
     const QString getAnnotationSaveForm();
-    virtual void paintEvent(QPaintEvent* event) override;
+
     ChosePathWidget* getReadPathWidget() { return annotation_read_path_widget; }
     ChosePathWidget* getSavePathWidget() { return annotation_save_path_widget; }
 
@@ -42,6 +42,10 @@ public slots:
 private:
     void readItemFromPathXml(const QString& ,GraphicsScene*); //pascalVoc Input
     void saveItemToPathXml(const QString&, GraphicsScene*); //pascalVoc Output
+
+    void saveMaskToPathNii(const QString&, GraphicsScene*); //nii Output
+
+
     void annotationReadPathChange(const QString& path);
     void annotationSavePathChange(const QString& path);
 

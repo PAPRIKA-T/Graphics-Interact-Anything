@@ -165,7 +165,7 @@ void ViewTransFormModel::originPositonReturn()
 
 void ViewTransFormModel::fitScreen()
 {
-    if (pixmap_item->getPixmap().isNull())return;
+    if (pixmap_item->getShowImage().isNull())return;
     qreal scaleFactor{};
     if (pixmap_item->getOriginWidth() > pixmap_item->getOriginHeight())
         scaleFactor = m_view->width() / (pixmap_item->getOriginWidth() * image_scale_total);
