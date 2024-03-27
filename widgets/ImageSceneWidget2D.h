@@ -5,6 +5,7 @@ class GraphicsView;
 class GraphicsScene;
 class ViewToolBar;
 class GiantInteractionModeWidget;
+class QVBoxLayout;
 
 class ImageSceneWidget2D  : public QWidget
 {
@@ -22,5 +23,6 @@ protected:
 	virtual void resizeEvent(QResizeEvent* event) override;
 	virtual void paintEvent(QPaintEvent* event) override;
 private:
-	GraphicsView* m_view = nullptr;
+	GraphicsView* m_view{ nullptr };
+	QVBoxLayout* m_layout{ nullptr };
 };

@@ -200,6 +200,7 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     Q_UNUSED(widget);
     if(graphics_paint_model.getIsCloseItem())
     {
+        painter->setOpacity(graphics_paint_model.getHoverFillOpacity());
         if(isSelected())
         {
             if(graphics_paint_model.getIsFillItem())
@@ -217,14 +218,12 @@ void GraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
             if(graphics_paint_model.getIsFillItem())
             {
                 painter->setBrush(graphics_paint_model.getRFillColorUnselected());
-                painter->setOpacity(graphics_paint_model.getHoverFillOpacity());
                 painter->drawPath(getFillPath());
                 painter->setBrush(Qt::NoBrush);
             }
             else if (is_hover_enter)
             {
                 painter->setBrush(graphics_paint_model.getRFillColorHover());
-                painter->setOpacity(graphics_paint_model.getHoverFillOpacity());
                 painter->drawPath(getFillPath());
                 painter->setBrush(Qt::NoBrush);
             }

@@ -139,6 +139,7 @@ void GiantImageItem::LoadCvImageInNewThread()
 		}
         orgin_image_mat = m;
         original_image = show_image;
+        iamge_depth = orgin_image_mat.channels();
         is_load_image_all_data = true;
         });
     image_read_thread->translateQImage2cvMat(show_image);

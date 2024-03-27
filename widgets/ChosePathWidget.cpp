@@ -30,6 +30,7 @@ ChosePathWidget::ChosePathWidget(QWidget* parent)
     connect(path_chose_btn, &QPushButton::clicked, this, &ChosePathWidget::path_chose_btn_clicked);
 
     path_chose_edit = new QLineEdit(); //初始化路径编辑框
+    path_chose_edit->setObjectName("path_chose_edit");
     path_chose_edit->setFixedHeight(25);
     form_selection->setFixedHeight(25);
     form_selection->setMinimumWidth(95);

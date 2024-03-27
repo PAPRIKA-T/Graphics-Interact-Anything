@@ -1287,7 +1287,7 @@ void XmlIOstreamModel::createSaveXmlHeader(QDomDocument& domDoc, QDomElement& an
         createXmlElement(domDoc, size_Element, "height", 
             QString::number(pixmap_item->getOriginHeight())); //创建节点height
         createXmlElement(domDoc, size_Element, "depth", 
-            QString::number(3)); //创建节点depth(需要处理)
+            QString::number(pixmap_item->getImageDepth())); //创建节点depth(需要处理)
     }
     annotation_element.appendChild(source_element); //绑定到顶结点
     annotation_element.appendChild(size_Element); //绑定到顶结点

@@ -4,6 +4,7 @@
 #include "GenericToolButton.h"
 #include "model/StyleSheetConfigModel.h"
 #include "FileView.h"
+#include "ForePlayWidget.h"
 #include "LabelBoardWithTool.h"
 #include <QLabel>
 #include <QDesktopServices>
@@ -59,11 +60,14 @@ TitleWidget::TitleWidget(QWidget* parent)
 
     segment_menu = new QMenu;
     QAction* open_annotation = new QAction("Open Annotation");
+    QAction* save_annotation = new QAction("Save Annotation");
     QAction* open_segmentation = new QAction("Open Segmentation");
 
     segment_menu->addAction(open_annotation);
+    segment_menu->addAction(save_annotation);
     segment_menu->addAction(open_segmentation);
     segment_menu_btn->setMenu(segment_menu);
+    open_segmentation->setVisible(false);
 
     //edit菜单栏创建
     edit_menu_btn = new GenericToolButton("编辑(E)");
@@ -184,6 +188,11 @@ void TitleWidget::setParentWidget(Widget* w)
     connect(file_menu->actions()[1], &QAction::triggered, par_widget->getFileView(), &FileView::readImageDir);
     connect(file_menu->actions()[2], &QAction::triggered, par_widget->getFileView(), &FileView::readITKImage);
     connect(file_menu->actions()[3], &QAction::triggered, par_widget->getFileView(), &FileView::readITKImageDir);
+    //分割菜单信号绑定
+    connect(segment_menu->actions()[0], &QAction::triggered, 
+        par_widget->getForePlayWidget(), &ForePlayWidget::readItemFromPathAllFormAllScene);
+    connect(segment_menu->actions()[1], &QAction::triggered, 
+        par_widget->getForePlayWidget(), &ForePlayWidget::saveItemToPathAllFormAllScene);
     //视图菜单信号绑定
     connect(view_menu->actions()[0], &QAction::triggered, par_widget, &Widget::DimensionTrans);
     //标签菜单信号绑定

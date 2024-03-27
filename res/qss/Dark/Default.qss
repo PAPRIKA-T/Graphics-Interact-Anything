@@ -46,6 +46,22 @@ QComboBox::down-arrow:on
 }
 
 /*******************QSlider*********************/
+QSlider::handle:horizontal {
+    width: 8px;
+    background-color: rgb(255, 255, 255);
+    margin: -4px 0px -4px 0px;
+    border-radius: 4px;
+}
+QSlider::groove:horizontal {
+    height: 2px;
+    background-color: rgb(219, 219, 219);
+}
+QSlider::add-page:horizontal {
+    background-color: rgb(219, 219, 219);
+}
+QSlider::sub-page:horizontal {
+    background-color: rgb(255, 0, 0);
+}
 
 /*******************QLabel*********************/
 QLabel
@@ -60,19 +76,28 @@ QLineEdit
 {
     color: white;
     font-family:MicrosoftYaHei;
+    background-color:#334d80;
+    border:none;
+    border-bottom: 1px solid rgb(150, 150, 150);
+    font-size:12px;
+}
+
+QLineEdit#path_chose_edit 
+{
+    color: white;
+    font-family:MicrosoftYaHei;
     background-color:transparent;
     border:none;
     border-bottom: 1px solid rgb(150, 150, 150);
     font-size:12px;
-
 }
 
 /*******************QCheckBox*********************/
 QCheckBox::indicator
 {/*选择框尺寸*/
     border: 0px;
-	width: 13px;
-	height: 13px;
+	width: 16px;
+	height: 16px;
 }
 
 QCheckBox::indicator:checked
@@ -212,8 +237,8 @@ QTableView
 
 QTableView::indicator:enabled
 { 
-    width:13px;
-    height:13px;
+    width:16px;
+    height:16px;
 }
 
 QTableView::indicator:enabled:unchecked 
