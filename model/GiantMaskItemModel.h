@@ -26,6 +26,7 @@ public slots:
 	void receiveSelectedLabelBoardRowColor(int, const QColor&); //接收labelBoard选中行颜色
 	void onClearMaskItemList(); //清除mask图元列表
 	void onCoverCheckBoxChecked(int);
+
 private:
 	void applyMaskRangeToLabel(const cv::Mat&);
 	void initForegroundMaskItem(); //初始化前景图层

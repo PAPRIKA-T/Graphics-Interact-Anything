@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <QMenu>
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class GraphicsView;
 class GraphicsScene;
 class QAction;

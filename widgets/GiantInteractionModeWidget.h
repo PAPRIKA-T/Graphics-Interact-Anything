@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <QWidget>
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class QButtonGroup;
 class GraphicsView;
 class QVBoxLayout;

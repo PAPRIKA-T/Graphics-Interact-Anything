@@ -1,7 +1,6 @@
 #pragma once
-
 #include <QWidget>
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class GraphicsView;
 class QHBoxLayout;
 class SceneToolWidget;

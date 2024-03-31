@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <QAbstractGraphicsShapeItem>
 #include <opencv2/opencv.hpp>
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class QColor;
 
 class GiantMaskItem : public QObject, public QAbstractGraphicsShapeItem
@@ -17,10 +17,10 @@ public:
     void setColor(const QColor&);
     QColor getColor() const;
     void setImageShowSize(const QSize&, const QSize&);
-    void setMask(const cv::Mat&);
     void setMaskOpacity(qreal opacity);
     void resetMask();
-    void applyMaskRangeToLabel(const cv::Mat&);
+    void setMask(const cv::Mat&, bool ok = true);//ok=1上色，ok=0清除
+    void applyMaskRangeToLabel(const cv::Mat&, bool ok = true);//ok=1上色，ok=0清除
 
     void getRectMask(const QRect&,cv::Mat&);
     void update();

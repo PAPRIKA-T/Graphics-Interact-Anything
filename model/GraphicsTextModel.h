@@ -48,12 +48,12 @@ public slots:
     void setLabelText(const QString& string); //设置label文本
 
 private:
-    GraphicsTextItem* text_item; //文本item
     QString label_text = DEFAULT_LABEL; //文本
     QString ID_label = DEFAULT_LABEL_ID;
     QString item_type = DEFAULT_ITEM_TYPE;
     QString extra_text = DEFAULT_EXTRA_MESSAGE;
 
+    GraphicsTextItem text_item{ item_type }; //文本item
     QColor m_color_font_is_selected; //文本颜色选中
     QColor m_color_font_no_selected; //文本颜色未选中
 

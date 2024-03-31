@@ -2,7 +2,7 @@
 #include <QPen>
 #include <QColor>
 #include "graphs/ItemPointF.h"
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class GraphicsPaintModel
 {
 public:
