@@ -28,7 +28,7 @@ public:
     const qreal& getOriginHeight(){return origin_height;} //获取图像原始高度
     const qreal& getScale(){return m_fScale;} //获取宽高比
     const qreal& getSceneCompareOriginScale() { return show_compare_origin_size_scale; }//获取图像原始尺寸与导入scene尺寸缩放比
-
+    const int& getImageDepth(){return iamge_depth;} //获取图像深度
     void setImagePath(const QString& f);//设置图像路径
     QString& getImagePath() { return pixmap_path; }//获取图像路径
 protected:
@@ -52,6 +52,8 @@ private:
     qreal fScaleW = 1;  //图像宽度
     qreal origin_width = 1; //图像原始宽度
     qreal origin_height = 1; //图像原始高度
+
+    int iamge_depth{ 0 }; //图像深度
     qreal show_compare_origin_size_scale = 1; //图像原始尺寸与导入scene尺寸缩放比
     cv::Mat orgin_image_mat = {}; //原始图像矩阵
 

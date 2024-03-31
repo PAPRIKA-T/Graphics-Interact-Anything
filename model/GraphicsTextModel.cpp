@@ -5,32 +5,30 @@
 GraphicsTextModel::GraphicsTextModel(GraphicsItem* parent)
 {
     // 文本item初始化
-    text_item = new GraphicsTextItem(item_type);
-    text_item->setParentItem(parent);
+    text_item.setParentItem(parent);
     QFont font("微软雅黑");
     font.setBold(false);
     font.setPointSize(8);
-    text_item->setFont(font);
-    text_item->setTextWidth(-1);
-    text_item->setData(0, "GraphicsTextItem");
+    text_item.setFont(font);
+    text_item.setTextWidth(-1);
+    text_item.setData(0, "GraphicsTextItem");
 }
 
 GraphicsTextModel::~GraphicsTextModel()
 {
-    delete text_item;
 }
 
 void GraphicsTextModel::initTextColorSetting()
 {
     m_color_font_is_selected = QColor(0, 255, 0);
     m_color_font_no_selected = QColor(255, 255, 255);
-    text_item->setDefaultTextColor(m_color_font_no_selected);
-    text_item->setBackGroundColor(DEFAULT_COLOR_ITEM);
+    text_item.setDefaultTextColor(m_color_font_no_selected);
+    text_item.setBackGroundColor(DEFAULT_COLOR_ITEM);
 }
 
 GraphicsTextItem* GraphicsTextModel::getTextItem()
 {
-    return text_item;
+    return &text_item;
 }
 
 bool GraphicsTextModel::getIsHideText()
@@ -41,7 +39,7 @@ bool GraphicsTextModel::getIsHideText()
 void GraphicsTextModel::setIsHideText(bool ok)
 {
     is_hide_text = ok;
-    text_item->setVisible(!ok);
+    text_item.setVisible(!ok);
 }
 
 bool GraphicsTextModel::getIsHideExtraText()
@@ -69,13 +67,13 @@ bool GraphicsTextModel::getIsHideIdText()
 void GraphicsTextModel::updateText()
 {
     if (!is_hide_extra_text && !is_hide_labelId_text)
-        text_item->setPlainText(ID_label + " " + label_text + "\n" + extra_text);
+        text_item.setPlainText(ID_label + " " + label_text + "\n" + extra_text);
     else if (!is_hide_extra_text)
-        text_item->setPlainText(label_text + "\n" + extra_text);
+        text_item.setPlainText(label_text + "\n" + extra_text);
     else if (!is_hide_labelId_text)
-        text_item->setPlainText(ID_label + " " + label_text);
+        text_item.setPlainText(ID_label + " " + label_text);
     else
-        text_item->setPlainText(label_text);
+        text_item.setPlainText(label_text);
 }
 
 void GraphicsTextModel::setTextColorSelected(const QColor& c)
@@ -100,7 +98,7 @@ QColor GraphicsTextModel::getTextColorNoSelected()
 
 void GraphicsTextModel::setLabelID(const QString& s)
 {
-    GraphicsItem* par_item = dynamic_cast<GraphicsItem*>(text_item->parentItem());
+    GraphicsItem* par_item = dynamic_cast<GraphicsItem*>(text_item.parentItem());
     emit IdChangeSignal(par_item, s);
     ID_label = s; 
     updateText();
@@ -138,7 +136,7 @@ const QString GraphicsTextModel::getLabelText()
 
 void GraphicsTextModel::setLabelText(const QString& string)
 {
-    GraphicsItem* par_item = dynamic_cast<GraphicsItem*>(text_item->parentItem());
+    GraphicsItem* par_item = dynamic_cast<GraphicsItem*>(text_item.parentItem());
     emit textChangeSignal(par_item, string);
     label_text = string;
     updateText();

@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 
 #define PEN_WIDTHF 1 //画笔宽度
+#define DEFAULT_COLOR_TRANSPARENT Qt::transparent
 #define DEFAULT_COLOR_ITEM Qt::red //item color
 #define DEFAULT_COLOR_POINT_NOSELECTED QColor(255, 249, 57)
 #define DEFAULT_COLOR_POINT_SELECTED QColor(255, 20, 147)

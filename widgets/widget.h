@@ -47,6 +47,7 @@ public:
     FileView* getFileView(); //获取文件索引控件
     Sam* getSam() const; //获取sam
     LabelBoardWithTool* getLabelBoardWithTool() const;
+    ForePlayWidget* getForePlayWidget() const;
 
     void imageWidgetAdd(ImageSceneWidget2D*image_widget); //切换图像显示控件
     void DimensionTrans();//2D\3D布局转换

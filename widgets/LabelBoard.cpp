@@ -42,6 +42,7 @@ void LabelBoard::initWidget()
     setColumnWidth(1, 50);
     setColumnWidth(2, 65);
     setSelectionBehavior(QAbstractItemView::SelectRows);
+    appendClearColorBoardRow();
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_ITEM, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_POINT_NOSELECTED, DEFAULT_LABEL);
     appendBoardRow(DEFAULT_LABEL_ID, DEFAULT_COLOR_POINT_SELECTED, DEFAULT_LABEL);
@@ -56,7 +57,7 @@ void LabelBoard::initWidget()
     setAlternatingRowColors(true);
     connect(selectionModel(), &QItemSelectionModel::selectionChanged, 
         this, &LabelBoard::onSelectionChanged);
-    setCurrentItem(itemAt(0, 0));
+    setCurrentCell(1, 1);
 }
 
 void LabelBoard::appendBoardRow(const QString& ID, const QColor& c, const QString& label)
@@ -153,6 +154,42 @@ void LabelBoard::clearClrBtnList()
 		delete clr_btn;
 	};
 	clr_btn_list.clear();
+}
+
+void LabelBoard::appendClearColorBoardRow()
+{
+    blockSignals(true);
+
+    int last_row = this->rowCount();
+    insertRow(last_row);
+    setRowHeight(last_row, 25);
+
+    QWidget* button_widget = new QWidget();
+    QHBoxLayout* layout = new QHBoxLayout(button_widget);
+    ColorButton* color_btn = new ColorButton{ Qt::black , button_widget };
+    color_btn->setFixedSize(15, 15);
+    color_btn->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(color_btn);
+    layout->setAlignment(Qt::AlignCenter);
+    button_widget->setLayout(layout);
+
+    QTableWidgetItem* item_0 = new QTableWidgetItem(DEFAULT_LABEL_ID);
+    QTableWidgetItem* item_2 = new QTableWidgetItem("Clear Color");
+
+    setItem(last_row, 0, item_0);
+    setCellWidget(last_row, 1, button_widget);
+    setItem(last_row, 2, item_2);
+
+    item_0->setForeground(QColor(Qt::white));
+    item_2->setForeground(QColor(Qt::white));
+    item_0->setTextAlignment(Qt::AlignCenter);
+    item_2->setTextAlignment(Qt::AlignCenter);
+    clr_btn_list.push_back(color_btn);
+    scrollToItem(item_0);
+    blockSignals(false);
+    emit sentInsertRow(last_row, color_btn->getBackgroundColor());
+    setCurrentItem(item_0);
 }
 
 bool LabelBoard::getIsAutoNextline()

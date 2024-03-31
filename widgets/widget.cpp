@@ -107,8 +107,6 @@ Widget::Widget(QWidget *parent)
         right_widget_splitter->setOrientation(Qt::Vertical);
         right_widget_splitter->addWidget(label_board_widget);
         right_widget_splitter->addWidget(rb_stack_widget);
-        right_widget_splitter->setCollapsible(0, false);
-        right_widget_splitter->setCollapsible(1, false);
         right_widget_splitter->setStretchFactor(0, 4);
         right_widget_splitter->setStretchFactor(1, 6);
         right_widget_splitter->setHandleWidth(3);
@@ -119,7 +117,7 @@ Widget::Widget(QWidget *parent)
         center_widget_splitter->addWidget(image_widget_2d);
         center_widget_splitter->addWidget(right_widget_splitter);
         center_widget_splitter->setStretchFactor(0, 6);
-        center_widget_splitter->setStretchFactor(1, 4);
+        center_widget_splitter->setStretchFactor(1, 0);
         center_widget_splitter->setCollapsible(0, false);
         center_widget_splitter->setHandleWidth(4);
         center_widget_splitter->setContentsMargins(0, 0, 0, 2);
@@ -175,12 +173,16 @@ LabelBoardWithTool* Widget::getLabelBoardWithTool() const
     return label_board_widget;
 }
 
+ForePlayWidget* Widget::getForePlayWidget() const
+{
+    return foreplay_widget;
+}
+
 //设置各个控件部分的大小
 void Widget::setWidgetSize()
 {
     resize(1000, 650);
     image_widget_2d->resize(800, 550);
-    right_widget_splitter->setMinimumWidth(250);
     //DimensionTrans();
 }
 

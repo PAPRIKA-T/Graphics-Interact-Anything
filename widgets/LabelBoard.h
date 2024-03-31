@@ -48,6 +48,7 @@ private:
     void initWidget();
     void removeLabelRow(int row);
     void clearClrBtnList();
+    void appendClearColorBoardRow();
     QList<ColorButton*> clr_btn_list;
     ViewListContainer* view_list_container = nullptr; //视图容器指针
     bool is_auto_nextline = false; //是否自动换行

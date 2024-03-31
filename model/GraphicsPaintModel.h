@@ -2,7 +2,7 @@
 #include <QPen>
 #include <QColor>
 #include "graphs/ItemPointF.h"
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class GraphicsPaintModel
 {
 public:
@@ -76,7 +76,7 @@ private:
     QColor fill_color_unselected{}; //未选中时填充颜色
     QColor fill_color_hover{}; //悬浮填充颜色
     QColor fill_color_selected{}; //选中时填充颜色
-    qreal hover_fill_opacity = 0.8; //item透明度
+    qreal hover_fill_opacity = 0.6; //item透明度
 };
 
 inline qreal GraphicsPaintModel::getPenWidth() const 

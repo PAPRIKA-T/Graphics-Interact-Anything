@@ -1,6 +1,6 @@
 #pragma once
 #include "StackWidget.h"
-#include "utils/GiantMacros.h"
+#include "core/GiantMacros.h"
 class GraphicsView;
 class GraphicsItemWidget;
 class CalculateModeWidget;

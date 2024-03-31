@@ -50,7 +50,7 @@ QLabel
 }
 
 /*******************QLineEdit*********************/
-QLineEdit
+.QLineEdit
 {
     color: #1d1c1c;
     font-family:MicrosoftYaHei;
@@ -65,8 +65,8 @@ QLineEdit
 QCheckBox::indicator
 {/*选择框尺寸*/
     border: 0px;
-	width: 13px;
-	height: 13px;
+    width:16px;
+    height:16px;
 }
 
 QCheckBox::indicator:checked
@@ -191,8 +191,8 @@ QTableView
 
 QTableView::indicator:enabled
 { 
-    width:13px;
-    height:13px;
+    width:16px;
+    height:16px;
 }
 
 QTableView::indicator:enabled:unchecked 

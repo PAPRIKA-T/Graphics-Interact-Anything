@@ -1,16 +1,22 @@
 #include "ImageSceneWidget2D.h"
 #include "Graphs/Graphicsview.h"
 #include "Graphs/Graphicsscene.h"
+#include <QVBoxLayout>
 
 ImageSceneWidget2D::ImageSceneWidget2D(QWidget *parent)
 	: QWidget(parent)
 {
+	m_layout = new QVBoxLayout(this);
 	m_view = new GraphicsView(this);
+	setObjectName("ImageSceneWidget2D");
+	//m_layout->addWidget(m_view);
+	//m_layout->setContentsMargins(0, 0, 0, 0);
 }
 
 ImageSceneWidget2D::~ImageSceneWidget2D()
 {
 	delete m_view;
+	delete m_layout;
 }
 
 ViewToolBar* ImageSceneWidget2D::getViewToolBar() const

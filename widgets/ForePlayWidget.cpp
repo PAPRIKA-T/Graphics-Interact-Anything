@@ -196,6 +196,13 @@ void ForePlayWidget::saveItemToPathAllFormAllScene()
     }
 }
 
+void ForePlayWidget::readItemFromPathAllFormAllScene()
+{
+    for (GraphicsView* v : view_list_container->getViewList()) {
+        readItemFromPathAllForm(v->getGraphicsScene());
+    }
+}
+
 void ForePlayWidget::onPathClear()
 {
     setAnnotationReadPath("");

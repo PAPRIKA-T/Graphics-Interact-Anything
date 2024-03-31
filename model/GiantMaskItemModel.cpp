@@ -57,13 +57,22 @@ void GiantMaskItemModel::setGraphicsScene(GraphicsScene* s)
 void GiantMaskItemModel::applyMaskRangeToLabel(const cv::Mat& m)
 {
 	//if(is_cover_label)
+	if (current_label_index == 0) {
+		int s = mask_item_list.size();
+		for (int i = 1; i < s; ++i) {
+			mask_item_list[i]->applyMaskRangeToLabel(m.clone(), false);
+		}
+		cv::bitwise_not(m, m);
+		cv::bitwise_and(m, all_color_mask, all_color_mask); 
+		return;
+	};
 	mask_item_list[current_label_index]->applyMaskRangeToLabel(m);
 	cv::bitwise_or(m, all_color_mask, all_color_mask);
 }
 
 void GiantMaskItemModel::getAvaliableRange(const cv::Mat& src ,cv::Mat& ar) const
 {
-	if (is_cover_label) {
+	if (is_cover_label || current_label_index == 0) {
 		ar = src; return;
 	}
 	cv::bitwise_not(all_color_mask, ar);

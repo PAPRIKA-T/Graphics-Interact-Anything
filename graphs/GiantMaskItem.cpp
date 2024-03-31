@@ -54,7 +54,7 @@ void GiantMaskItem::setImageShowSize(const QSize& s, const QSize& o)
 	original_pixmap.fill(Qt::transparent);
 }
 
-void GiantMaskItem::setMask(const cv::Mat& m)
+void GiantMaskItem::setMask(const cv::Mat& m, bool ok)
 {
 	original_pixmap.fill(m_color);
 	scaled_mask = m.clone();
@@ -74,9 +74,14 @@ void GiantMaskItem::resetMask()
 	original_pixmap.fill(Qt::transparent);
 }
 
-void GiantMaskItem::applyMaskRangeToLabel(const cv::Mat& m)
+void GiantMaskItem::applyMaskRangeToLabel(const cv::Mat& m, bool ok)
 {
-	setMask(scaled_mask | m);
+	if(ok)setMask(scaled_mask | m);
+	else {
+		if (!cv::countNonZero(scaled_mask))return;
+		cv::subtract(scaled_mask, m, m);
+		setMask(m);
+	}
 }
 
 void GiantMaskItem::getRectMask(const QRect& r, cv::Mat& m)
