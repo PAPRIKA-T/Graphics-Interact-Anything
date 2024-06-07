@@ -1,2 +1,4 @@
 # Graphics-Interact-Anything
-source code of the GIANT
+# source code of the GIANT Base on VS2022+QT+ITK+VTK+openCV
+- MainWindow
+![image](https://github.com/PAPRIKA-T/Graphics-Interact-Anything/blob/master/Img/GIANT_MainWindow.png)
