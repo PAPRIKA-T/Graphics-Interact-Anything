@@ -226,6 +226,7 @@ QHeaderView::section
 
 QTableView
 {
+    color:#FFFFFF;
     background-color:transparent;
     alternate-background-color:rgb(58,58,58);
     border: none;

@@ -9,7 +9,7 @@ public:
 	enum class StyleSheetType
     {
 		DARK,
-		LIGNT,
+		LIGHT,
 	};
 	void setStyleType(StyleSheetType);
 	void setGlobalStyleSheet(QWidget*);
