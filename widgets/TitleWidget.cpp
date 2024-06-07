@@ -202,7 +202,7 @@ void TitleWidget::setParentWidget(Widget* w)
     connect(help_menu->actions()[4], &QAction::triggered, [=]() {
         StyleSheetConfigModel style_model;
         if (style_model.getStyleType() == StyleSheetConfigModel::StyleSheetType::DARK) {
-            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::LIGNT);
+            style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::LIGHT);
         }
         else {
             style_model.setStyleType(StyleSheetConfigModel::StyleSheetType::DARK);

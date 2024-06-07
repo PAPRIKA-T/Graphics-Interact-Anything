@@ -39,7 +39,7 @@ QString StyleSheetConfigModel::getStyleSheetParentPath()
     QString p{};
     if(sheet_type == StyleSheetType::DARK)
 		p = ":/res/qss/Dark/";
-	else if(sheet_type == StyleSheetType::LIGNT)
+	else if(sheet_type == StyleSheetType::LIGHT)
 		p = ":/res/qss/Light/";
 	else
 		qDebug() << "StyleSheetConfig::getStyleSheetParentPath: invalid type";
